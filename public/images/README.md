@@ -1,51 +1,55 @@
 # Beeldmateriaal
 
-Elke beeldplek in de site staat in `lib/content.ts` met `src: null`. Zolang
-`src` leeg is rendert de site een technische placeholder die de aspect ratio
-vasthoudt en benoemt welk beeld er hoort. Er is dus geen layout shift wanneer
-het echte beeld later wordt toegevoegd.
+**Je hoeft geen code aan te passen.** Zet een bestand met de juiste naam in
+`renders/` of `photography/` en de site pakt het automatisch op bij de
+volgende build (`npm run build` draait `sync-images` vanzelf; los draaien kan
+met `npm run sync:images`).
 
-## Toevoegen
+Zolang een bestand ontbreekt, rendert die plek een technische placeholder die
+de aspect ratio vasthoudt — er is dus geen layout shift zodra het beeld er wel is.
 
-1. Plaats het bestand in `public/images/renders/` of `public/images/photography/`.
-2. Zet in `lib/content.ts` het bijbehorende `src` op het pad, bijvoorbeeld:
+Ondersteunde extensies: `.avif`, `.webp`, `.jpg`, `.jpeg`, `.png`.
+Staan er meerdere formaten met dezelfde naam, dan wint het modernste.
 
-   ```ts
-   src: '/images/renders/assault-500-aft-quarter.png',
-   ```
+## Renders → `public/images/renders/`
 
-Meer is niet nodig — `next/image` regelt AVIF/WebP, responsive sizes en
-lazy loading.
+Deze staan op een witte achtergrond en worden nooit bijgesneden.
 
-## Verwachte assets
-
-### Renders (witte achtergrond, `fit: 'contain'`, `tone: 'light'`)
-
-| Slot | Voorgesteld pad |
+| Bestandsnaam | Waar het verschijnt |
 | --- | --- |
-| Render · 500 · aft quarter | `/images/renders/assault-500-aft-quarter.png` |
-| Render · 500 Fish · bow quarter | `/images/renders/assault-500-fish-bow-quarter.png` |
-| Render · top down plan | `/images/renders/assault-500-top-down.png` |
-| Render · bow on | `/images/renders/assault-500-bow-on.png` |
+| `render-aft-quarter` | Uitvoeringen (Assault 500) + gallery |
+| `render-bow-quarter` | Uitvoeringen (Assault 500 Fish) + gallery |
+| `render-top-down` | Specificaties (als technische tekening) + gallery |
+| `render-bow-on` | Gallery |
 
-### Fotografie (`fit: 'cover'`, donkere sectie)
+## Fotografie → `public/images/photography/`
 
-| Slot | Voorgesteld pad |
+| Bestandsnaam | Waar het verschijnt |
 | --- | --- |
-| Hero · action shot | `/images/photography/hero-action.jpg` |
-| Romp · side profile | `/images/photography/romp-side-profile.jpg` |
-| Detail · laswerk | `/images/photography/detail-laswerk.jpg` |
-| Open dek | `/images/photography/dek-open.jpg` |
-| Antislip vloer | `/images/photography/dek-antislip.jpg` |
-| Werpdek | `/images/photography/fish-werpdek.jpg` |
-| Hengelberging | `/images/photography/fish-hengelberging.jpg` |
-| Lasdetail | `/images/photography/detail-lasnaad.jpg` |
-| Spiegel · motor | `/images/photography/detail-spiegel-motor.jpg` |
-| Tiller | `/images/photography/detail-tiller.jpg` |
-| Varend · hekgolf | `/images/photography/water-hekgolf.jpg` |
-| Lifestyle · anker | `/images/photography/water-anker.jpg` |
-| Werkplaats | `/images/photography/werkplaats.jpg` |
-| Merch · cap / tee / hoodie | `/images/photography/merch-*.jpg` |
+| `hero-action` | Hero, volledig beeldvullend |
+| `romp-side-profile` | Sectie 01, groot staand beeld |
+| `detail-laswerk` | Sectie 01, klein detailbeeld |
+| `werkplaats` | Contactsectie |
+| `gal-side-profile` | Gallery · Exterieur |
+| `gal-boeg` | Gallery · Exterieur |
+| `gal-open-dek` | Gallery · Dek |
+| `gal-antislip` | Gallery · Dek |
+| `gal-werpdek` | Gallery · Fish |
+| `gal-hengelberging` | Gallery · Fish |
+| `gal-lasdetail` | Gallery · Details |
+| `gal-spiegel-motor` | Gallery · Details |
+| `gal-tiller` | Gallery · Details |
+| `gal-varend` | Gallery · On the water |
+| `gal-anker` | Gallery · On the water |
+| `merch-cap`, `merch-tee`, `merch-hoodie` | Merch |
 
-Let op: waar fotografie een console-uitvoering toont, blijft de UI aangeven
-dat tiller-besturing standaard is en de console optioneel.
+## Een beeldplek toevoegen of hernoemen
+
+Pas de `media(...)`-aanroep in `lib/content.ts` aan; het eerste argument is de
+bestandsnaam. `lib/media-manifest.json` wordt gegenereerd — die niet met de
+hand bewerken.
+
+## Let op
+
+Waar fotografie een console-uitvoering toont, blijft de UI aangeven dat
+tiller-besturing standaard is en de stuurconsole optioneel.

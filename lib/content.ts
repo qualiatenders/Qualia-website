@@ -2,12 +2,21 @@
  * ASSAULT BOATS — content source of truth.
  *
  * All copy, specs and media slots live here so the site can be updated
- * without touching layout code. Every media slot carries `src: null`
- * until the real Assault photography lands; see public/images/README.md.
+ * without touching layout code.
+ *
+ * Beeld hoeft hier NIET ingevuld te worden: elke slot heeft een `key`, en
+ * `scripts/sync-images.mjs` koppelt die aan een bestand in public/images/ met
+ * dezelfde naam. Zolang er geen bestand is, rendert de slot een technische
+ * placeholder die de aspect ratio vasthoudt.
  */
+import manifest from './media-manifest.json';
+
+const FILES = manifest as Record<string, string | undefined>;
 
 export type MediaSlot = {
-  /** Fill with a path under /public once the final asset is delivered. */
+  /** Bestandsnaam (zonder extensie) in public/images/. */
+  key: string;
+  /** Automatisch ingevuld door scripts/sync-images.mjs; null = placeholder. */
   src: string | null;
   alt: string;
   /** Shown inside the placeholder plate so the shot list is unambiguous. */
@@ -18,6 +27,20 @@ export type MediaSlot = {
   /** Drives the placeholder plate and the backing colour behind a render. */
   tone?: 'dark' | 'light';
 };
+
+/** Bouwt een media slot en zoekt het bestand op via de manifest. */
+function media(
+  key: string,
+  alt: string,
+  slot: string,
+  ratio: string,
+  options: Pick<MediaSlot, 'fit' | 'tone'> = {},
+): MediaSlot {
+  return { key, src: FILES[key] ?? null, alt, slot, ratio, ...options };
+}
+
+/** Renders staan op een witte ondergrond en worden nooit bijgesneden. */
+const RENDER = { fit: 'contain', tone: 'light' } as const;
 
 export const NAV_LINKS = [
   { label: 'Assault 500', href: '#assault-500' },
@@ -32,12 +55,7 @@ export const HERO = {
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
   body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
   cta: { label: 'Ontdek de Assault 500', href: '#assault-500' },
-  media: {
-    src: null,
-    alt: 'Assault 500 varend op open water',
-    slot: 'Hero · action shot',
-    ratio: '16 / 9',
-  } satisfies MediaSlot,
+  media: media('hero-action', 'Assault 500 varend op open water', 'Hero · action shot', '16 / 9'),
   stats: [
     { value: '5,00', unit: 'M', label: 'Lengte' },
     { value: '1,96', unit: 'M', label: 'Breedte' },
@@ -60,18 +78,8 @@ export const INTRO = {
     { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
-    primary: {
-      src: null,
-      alt: 'Zijaanzicht van de aluminium romp van de Assault 500',
-      slot: 'Romp · side profile',
-      ratio: '4 / 5',
-    } satisfies MediaSlot,
-    detail: {
-      src: null,
-      alt: 'Detail van het laswerk op de aluminium naad',
-      slot: 'Detail · laswerk',
-      ratio: '1 / 1',
-    } satisfies MediaSlot,
+    primary: media('romp-side-profile', 'Zijaanzicht van de aluminium romp van de Assault 500', 'Romp · side profile', '4 / 5'),
+    detail: media('detail-laswerk', 'Detail van het laswerk op de aluminium naad', 'Detail · laswerk', '1 / 1'),
   },
 };
 
@@ -103,14 +111,7 @@ export const MODELS: Model[] = [
       'Maximaal 60 pk',
     ],
     cta: 'Bekijk de 500',
-    media: {
-      src: null,
-      alt: 'Render van de Assault 500 in de open uitvoering, schuin van achteren',
-      slot: 'Render · 500 · aft quarter',
-      ratio: '16 / 9',
-      fit: 'contain',
-      tone: 'light',
-    },
+    media: media('render-aft-quarter', 'Render van de Assault 500 in de open uitvoering, schuin van achteren', 'Render · 500 · aft quarter', '16 / 9', RENDER),
   },
   {
     id: 'fish',
@@ -128,26 +129,18 @@ export const MODELS: Model[] = [
       'Maximaal 60 pk',
     ],
     cta: 'Bekijk de 500 Fish',
-    media: {
-      src: null,
-      alt: 'Render van de Assault 500 Fish met verhoogd werpdek, schuin van voren',
-      slot: 'Render · 500 Fish · bow quarter',
-      ratio: '16 / 9',
-      fit: 'contain',
-      tone: 'light',
-    },
+    media: media('render-bow-quarter', 'Render van de Assault 500 Fish met verhoogd werpdek, schuin van voren', 'Render · 500 Fish · bow quarter', '16 / 9', RENDER),
   },
 ];
 
 /** Top-down plan render — reads as a technical drawing beside the numbers. */
-export const SPECS_PLAN: MediaSlot = {
-  src: null,
-  alt: 'Bovenaanzicht van de Assault 500 met de volledige dekindeling',
-  slot: 'Render · top down plan',
-  ratio: '16 / 9',
-  fit: 'contain',
-  tone: 'light',
-};
+export const SPECS_PLAN = media(
+  'render-top-down',
+  'Bovenaanzicht van de Assault 500 met de volledige dekindeling',
+  'Render · top down plan',
+  '16 / 9',
+  RENDER,
+);
 
 export const SPECS = [
   { label: 'Lengte', value: '5,00', unit: 'm', span: 'lg:col-span-5' },
@@ -180,22 +173,23 @@ export type GalleryItem = MediaSlot & {
   caption: string;
 };
 
+/** Fotografie leidt; de renders sluiten de rail af. */
 export const GALLERY: GalleryItem[] = [
-  { src: null, alt: 'Assault 500 in zijaanzicht op de kade', slot: 'Side profile', ratio: '4 / 3', category: 'Exterieur', caption: 'Side profile' },
-  { src: null, alt: 'Boeg van de Assault 500 van bovenaf', slot: 'Boeg · top down', ratio: '3 / 4', category: 'Exterieur', caption: 'Boeg' },
-  { src: null, alt: 'Open dekindeling met zijbanken', slot: 'Open dek', ratio: '16 / 10', category: 'Dek', caption: 'Open dek' },
-  { src: null, alt: 'Antislip vloerdelen op het dek', slot: 'Antislip vloer', ratio: '1 / 1', category: 'Dek', caption: 'Antislip' },
-  { src: null, alt: 'Verhoogd werpdek van de Assault 500 Fish', slot: 'Werpdek', ratio: '4 / 3', category: 'Fish', caption: 'Werpdek' },
-  { src: null, alt: 'Geopende hengelberging onder het werpdek', slot: 'Hengelberging', ratio: '3 / 4', category: 'Fish', caption: 'Hengelberging' },
-  { src: null, alt: 'Lasnaad tussen twee aluminium platen', slot: 'Lasdetail', ratio: '1 / 1', category: 'Details', caption: 'Lasdetail' },
-  { src: null, alt: 'Spiegel met langstaartmotor', slot: 'Spiegel · motor', ratio: '4 / 3', category: 'Details', caption: 'Spiegel' },
-  { src: null, alt: 'Tiller-besturing aan boord', slot: 'Tiller', ratio: '3 / 4', category: 'Details', caption: 'Tiller' },
-  { src: null, alt: 'Assault 500 varend met hekgolf', slot: 'Varend · hekgolf', ratio: '16 / 10', category: 'On the water', caption: 'Onderweg' },
-  { src: null, alt: 'Assault 500 voor anker bij zonsondergang', slot: 'Lifestyle · anker', ratio: '4 / 3', category: 'On the water', caption: 'Voor anker' },
-  { src: null, alt: 'Render van de Assault 500 schuin van achteren', slot: 'Render · aft quarter', ratio: '16 / 9', fit: 'contain', tone: 'light', category: 'Renders', caption: 'Aft quarter' },
-  { src: null, alt: 'Render van de Assault 500 schuin van voren', slot: 'Render · bow quarter', ratio: '16 / 9', fit: 'contain', tone: 'light', category: 'Renders', caption: 'Bow quarter' },
-  { src: null, alt: 'Bovenaanzicht render van de Assault 500', slot: 'Render · top down', ratio: '16 / 9', fit: 'contain', tone: 'light', category: 'Renders', caption: 'Top down' },
-  { src: null, alt: 'Render van de Assault 500 recht van voren, dekindeling zichtbaar', slot: 'Render · bow on', ratio: '3 / 4', fit: 'contain', tone: 'light', category: 'Renders', caption: 'Bow on' },
+  { ...media('gal-side-profile', 'Assault 500 in zijaanzicht op de kade', 'Side profile', '4 / 3'), category: 'Exterieur', caption: 'Side profile' },
+  { ...media('gal-boeg', 'Boeg van de Assault 500 van bovenaf', 'Boeg · top down', '3 / 4'), category: 'Exterieur', caption: 'Boeg' },
+  { ...media('gal-open-dek', 'Open dekindeling met zijbanken', 'Open dek', '16 / 10'), category: 'Dek', caption: 'Open dek' },
+  { ...media('gal-antislip', 'Antislip vloerdelen op het dek', 'Antislip vloer', '1 / 1'), category: 'Dek', caption: 'Antislip' },
+  { ...media('gal-werpdek', 'Verhoogd werpdek van de Assault 500 Fish', 'Werpdek', '4 / 3'), category: 'Fish', caption: 'Werpdek' },
+  { ...media('gal-hengelberging', 'Geopende hengelberging onder het werpdek', 'Hengelberging', '3 / 4'), category: 'Fish', caption: 'Hengelberging' },
+  { ...media('gal-lasdetail', 'Lasnaad tussen twee aluminium platen', 'Lasdetail', '1 / 1'), category: 'Details', caption: 'Lasdetail' },
+  { ...media('gal-spiegel-motor', 'Spiegel met langstaartmotor', 'Spiegel · motor', '4 / 3'), category: 'Details', caption: 'Spiegel' },
+  { ...media('gal-tiller', 'Tiller-besturing aan boord', 'Tiller', '3 / 4'), category: 'Details', caption: 'Tiller' },
+  { ...media('gal-varend', 'Assault 500 varend met hekgolf', 'Varend · hekgolf', '16 / 10'), category: 'On the water', caption: 'Onderweg' },
+  { ...media('gal-anker', 'Assault 500 voor anker bij zonsondergang', 'Lifestyle · anker', '4 / 3'), category: 'On the water', caption: 'Voor anker' },
+  { ...media('render-aft-quarter', 'Render van de Assault 500 schuin van achteren', 'Render · aft quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Aft quarter' },
+  { ...media('render-bow-quarter', 'Render van de Assault 500 schuin van voren', 'Render · bow quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Bow quarter' },
+  { ...media('render-top-down', 'Bovenaanzicht render van de Assault 500', 'Render · top down', '16 / 9', RENDER), category: 'Renders', caption: 'Top down' },
+  { ...media('render-bow-on', 'Render van de Assault 500 recht van voren, dekindeling zichtbaar', 'Render · bow on', '3 / 4', RENDER), category: 'Renders', caption: 'Bow on' },
 ];
 
 export const MERCH = {
@@ -203,9 +197,9 @@ export const MERCH = {
   wordmark: 'Assault',
   drop: 'Drop 01',
   media: [
-    { src: null, alt: 'Assault cap uit Drop 01', slot: 'Merch · cap', ratio: '3 / 4' } satisfies MediaSlot,
-    { src: null, alt: 'Assault tee uit Drop 01', slot: 'Merch · tee', ratio: '3 / 4' } satisfies MediaSlot,
-    { src: null, alt: 'Assault hoodie uit Drop 01', slot: 'Merch · hoodie', ratio: '3 / 4' } satisfies MediaSlot,
+    media('merch-cap', 'Assault cap uit Drop 01', 'Merch · cap', '3 / 4'),
+    media('merch-tee', 'Assault tee uit Drop 01', 'Merch · tee', '3 / 4'),
+    media('merch-hoodie', 'Assault hoodie uit Drop 01', 'Merch · hoodie', '3 / 4'),
   ],
 };
 
@@ -225,12 +219,7 @@ export const CONTACT = {
   ],
   primary: { label: 'Kom langs', href: '#contact' },
   whatsapp: { label: 'WhatsApp', href: '#contact' },
-  media: {
-    src: null,
-    alt: 'De Assault 500 in de werkplaats',
-    slot: 'Werkplaats',
-    ratio: '3 / 4',
-  } satisfies MediaSlot,
+  media: media('werkplaats', 'De Assault 500 in de werkplaats', 'Werkplaats', '3 / 4'),
 };
 
 export const PRICE_CTA = {

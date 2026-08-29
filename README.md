@@ -38,10 +38,14 @@ Layout hoeft daarvoor niet aangeraakt te worden.
 
 ## Beeldmateriaal
 
-Beeldplekken staan op `src: null` en renderen dan een technische placeholder
-die de aspect ratio vasthoudt — geen layout shift wanneer het echte beeld
-later wordt toegevoegd. Zie `public/images/README.md` voor de shotlist en de
-verwachte paden.
+Beeld toevoegen vraagt geen codewijziging: zet een bestand met de juiste naam
+in `public/images/renders/` of `public/images/photography/`, en
+`scripts/sync-images.mjs` koppelt het automatisch (draait via `prebuild`, of
+los met `npm run sync:images`).
+
+Zolang een bestand ontbreekt rendert die plek een technische placeholder die
+de aspect ratio vasthoudt — geen layout shift zodra het beeld er wel is.
+Zie `public/images/README.md` voor de complete lijst met bestandsnamen.
 
 ## Design system
 
