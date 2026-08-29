@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------
+   ASSAULT BOATS — DESIGN TOKENS
+   Hull Black · Assault Red · Mill Aluminium · Deck Grey · Bone
+------------------------------------------------------------------ */
+@theme {
+  --color-hull: #000000;
+  --color-hull-soft: #0a0a0a;
+  --color-red: #c0272c;
+  --color-red-hot: #d93036;
+  --color-mill: #999999;
+  --color-deck: #4a4a4a;
+  --color-bone: #f2f1ed;
+  --color-bone-dim: #d8d6d0;
+
+  --font-display: var(--font-archivo), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
+  --font-mono: var(--font-mono-tech), ui-monospace, "SF Mono", Menlo, monospace;
+
+  --ease-out-a: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout-a: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* ------------------------------------------------------------------
+   BASE
+------------------------------------------------------------------ */
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-hull);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: clip;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.92;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: #fff;
+  }
+
+  /* Visible, on-brand focus ring for keyboard users only. */
+  :focus-visible {
+    outline: 2px solid var(--color-red-hot);
+    outline-offset: 3px;
+    border-radius: 1px;
+  }
+
+  /* Section anchors clear the sticky header. */
+  [id] {
+    scroll-margin-top: 96px;
+  }
+}
+
+/* ------------------------------------------------------------------
+   TYPE PRIMITIVES
+------------------------------------------------------------------ */
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(3.75rem, 13vw, 11rem);
+  line-height: 0.84;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+}
+
+@utility type-h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.25rem, 5.4vw, 4.75rem);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+
+@utility type-h3 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.625rem, 3vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+@utility type-stat {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 4.2vw, 3.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Small engraved technical label — the aluminium voice of the brand. */
+@utility type-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+@utility type-body {
+  font-size: clamp(0.9375rem, 1.05vw, 1.0625rem);
+  line-height: 1.65;
+  max-width: 46ch;
+}
+
+/* ------------------------------------------------------------------
+   LAYOUT
+------------------------------------------------------------------ */
+@utility shell {
+  width: 100%;
+  max-width: 1680px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4.5vw, 5rem);
+}
+
+@utility hairline-t {
+  border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+/* ------------------------------------------------------------------
+   MOTION — every animated primitive collapses under reduced motion
+------------------------------------------------------------------ */
+@keyframes a-rise {
+  from { opacity: 0; transform: translate3d(0, 22px, 0); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes a-mask-up {
+  from { transform: translate3d(0, 105%, 0); }
+  to   { transform: none; }
+}
+
+@keyframes a-scale-in {
+  from { transform: scale(1.08); }
+  to   { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  /* Entrance animations are decorative — the content itself must never
+     depend on them, whatever the animation runtime reports. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide scrollbars on the drag-gallery rail without losing scrollability. */
+@utility rail-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

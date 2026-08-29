@@ -1,0 +1,29 @@
+import { ContactSection } from '@/components/ContactSection';
+import { Footer } from '@/components/Footer';
+import { Gallery } from '@/components/Gallery';
+import { Header } from '@/components/Header';
+import { Hero } from '@/components/Hero';
+import { Intro } from '@/components/Intro';
+import { MerchSection } from '@/components/MerchSection';
+import { ModelSelector } from '@/components/ModelSelector';
+import { PriceListCTA } from '@/components/PriceListCTA';
+import { SpecsGrid } from '@/components/SpecsGrid';
+
+export default function HomePage() {
+  return (
+    <>
+      <Header />
+      <main>
+        <Hero />
+        <Intro />
+        <ModelSelector />
+        <SpecsGrid />
+        <Gallery />
+        <MerchSection />
+        <ContactSection />
+        <PriceListCTA />
+      </main>
+      <Footer />
+    </>
+  );
+}
