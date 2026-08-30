@@ -1,4 +1,4 @@
-import { FOOTER } from '@/lib/content';
+import { FOOTER, LOGO } from '@/lib/content';
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -8,13 +8,18 @@ export function Footer() {
       <div className="shell">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            {/* The wordmark is the footer graphic — swap for the logo asset when available. */}
-            <p className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,7vw,6rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.045em] text-bone">
-              Assault
-              <span className="text-red">.</span>
-              <br />
-              Boats
-            </p>
+            {/* The logo is the footer graphic; the wordmark stands in until it lands. */}
+            {LOGO?.src ? (
+              /* eslint-disable-next-line @next/next/no-img-element */
+              <img src={LOGO.src} alt="Assault Boats" className="h-auto w-full max-w-md" />
+            ) : (
+              <p className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,7vw,6rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.045em] text-bone">
+                Assault
+                <span className="text-red">.</span>
+                <br />
+                Boats
+              </p>
+            )}
             <p className="type-label mt-6 text-mill">{FOOTER.tagline}</p>
           </div>
 

@@ -24,7 +24,9 @@ export function Media({ media, className = '', sizes = '100vw', priority = false
 
   return (
     <div
-      className={`group/media relative overflow-hidden ${media.tone === 'light' ? 'bg-bone' : 'bg-hull-soft'} ${className}`}
+      className={`group/media relative overflow-hidden ${
+        contain ? 'bg-white ring-1 ring-inset ring-black/10' : media.tone === 'light' ? 'bg-bone' : 'bg-hull-soft'
+      } ${className}`}
       style={{ aspectRatio: media.ratio }}
     >
       {media.src ? (

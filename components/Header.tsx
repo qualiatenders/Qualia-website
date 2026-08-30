@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { NAV_LINKS } from '@/lib/content';
+import { LOGO, NAV_LINKS } from '@/lib/content';
 import { MobileNavigation } from './MobileNavigation';
 
 /**
@@ -30,12 +30,22 @@ export function Header() {
       >
         <div className="shell flex h-16 items-center justify-between gap-8 lg:h-20">
           <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
-            <span className="font-[family-name:var(--font-display)] text-[1.0625rem] font-extrabold uppercase tracking-[-0.02em] leading-none">
-              Assault
-            </span>
-            <span className="text-[0.625rem] leading-none text-red" aria-hidden="true">
-              &reg;
-            </span>
+            {LOGO?.src ? (
+              /* Fixed box keeps the header height stable whatever the logo's ratio. */
+              <span className="flex h-6 items-center overflow-hidden lg:h-7">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={LOGO.src} alt="Assault Boats" className="h-full w-auto" />
+              </span>
+            ) : (
+              <>
+                <span className="font-[family-name:var(--font-display)] text-[1.0625rem] font-extrabold uppercase tracking-[-0.02em] leading-none">
+                  Assault
+                </span>
+                <span className="text-[0.625rem] leading-none text-red" aria-hidden="true">
+                  &reg;
+                </span>
+              </>
+            )}
           </a>
 
           <nav className="hidden lg:block" aria-label="Hoofdnavigatie">

@@ -14,8 +14,8 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const IMAGES = join(ROOT, 'public', 'images');
 const MANIFEST = join(ROOT, 'lib', 'media-manifest.json');
 
-const EXTENSIONS = ['.avif', '.webp', '.jpg', '.jpeg', '.png'];
-// Eerst in deze volgorde: het modernste formaat wint bij dubbele namen.
+const EXTENSIONS = ['.svg', '.avif', '.webp', '.jpg', '.jpeg', '.png'];
+// Eerst in deze volgorde: svg (logo's) en daarna het modernste rasterformaat wint.
 const rank = (ext) => EXTENSIONS.indexOf(ext.toLowerCase());
 
 function walk(dir) {

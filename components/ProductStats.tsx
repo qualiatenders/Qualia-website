@@ -31,7 +31,7 @@ export function ProductStats() {
               {stat.unit}
             </span>
           </dd>
-          <dt className="type-label text-mill">{stat.label}</dt>
+          <dt className="type-label text-bone/70">{stat.label}</dt>
         </motion.div>
       ))}
     </dl>

@@ -1,1 +1,9 @@
-{}
+{
+  "dek-open": "/images/photography/dek-open.webp",
+  "hero-action": "/images/photography/hero-action.webp",
+  "romp-side-profile": "/images/photography/romp-side-profile.webp",
+  "render-aft-quarter": "/images/renders/render-aft-quarter.jpg",
+  "render-bow-quarter": "/images/renders/render-bow-quarter.jpg",
+  "render-stern-on": "/images/renders/render-stern-on.jpg",
+  "render-top-down": "/images/renders/render-top-down.jpg"
+}
