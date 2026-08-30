@@ -31,8 +31,9 @@ export function Header() {
         <div className="shell flex h-16 items-center justify-between gap-8 lg:h-20">
           <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
             {LOGO?.src ? (
-              /* Fixed box keeps the header height stable whatever the logo's ratio. */
-              <span className="flex h-6 items-center overflow-hidden lg:h-7">
+              /* Fixed box keeps the header height stable whatever the logo's ratio;
+                 the lockup needs real height before the wordmark reads. */
+              <span className="flex h-8 items-center overflow-hidden lg:h-11">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={LOGO.src} alt="Assault Boats" className="h-full w-auto" />
               </span>

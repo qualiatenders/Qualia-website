@@ -11,7 +11,7 @@ export function Footer() {
             {/* The logo is the footer graphic; the wordmark stands in until it lands. */}
             {LOGO?.src ? (
               /* eslint-disable-next-line @next/next/no-img-element */
-              <img src={LOGO.src} alt="Assault Boats" className="h-auto w-full max-w-md" />
+              <img src={LOGO.src} alt="Assault Boats" className="h-auto w-full max-w-[26rem]" />
             ) : (
               <p className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,7vw,6rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.045em] text-bone">
                 Assault
@@ -24,7 +24,7 @@ export function Footer() {
           </div>
 
           <nav className="lg:col-span-5 lg:pt-3" aria-label="Footer">
-            <ul className="grid grid-cols-1 border-t border-white/10 sm:grid-cols-2">
+            <ul className="grid grid-cols-1 border-t border-white/10 sm:grid-cols-2 sm:gap-x-12">
               {FOOTER.links.map((link) => {
                 const external = link.href.startsWith('http');
                 return (

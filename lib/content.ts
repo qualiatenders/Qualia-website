@@ -43,12 +43,18 @@ function media(
 const RENDER = { fit: 'contain', tone: 'light' } as const;
 
 /**
- * Merkasset. Zet een bestand `logo` (bij voorkeur .svg, licht/wit voor de
- * donkere achtergrond) in public/images/brand/ en het vervangt automatisch
- * het getypte woordmerk in de header en de footer.
+ * Merkassets uit public/images/brand/. Zolang `logo` ontbreekt valt de site
+ * terug op het getypte woordmerk, zodat er nooit een gat valt.
+ *
+ * `logo`      — horizontale lockup, draagt de naam: header en footer.
+ * `logo-mark` — rond embleem, ook de bron van de favicon (app/icon.png).
  */
 export const LOGO: MediaSlot | null = FILES['logo']
   ? media('logo', 'Assault Boats', 'Logo', 'auto')
+  : null;
+
+export const LOGO_MARK: MediaSlot | null = FILES['logo-mark']
+  ? media('logo-mark', 'Assault Boats embleem', 'Logo · embleem', '1 / 1')
   : null;
 
 export const NAV_LINKS = [
