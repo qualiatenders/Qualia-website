@@ -64,7 +64,7 @@ export const HERO = {
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
   body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
   cta: { label: 'Ontdek de Assault 500', href: '#assault-500' },
-  media: media('hero-action', 'De Assault 500 op de trailer, gezien vanaf de spiegel', 'Hero · action shot', '16 / 9'),
+  media: media('hero-action', 'Assault 500 varend op open water', 'Hero · action shot', '16 / 9'),
   stats: [
     { value: '5,00', unit: 'M', label: 'Lengte' },
     { value: '1,96', unit: 'M', label: 'Breedte' },
@@ -87,8 +87,8 @@ export const INTRO = {
     { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
-    primary: media('romp-side-profile', 'De aluminium romp van de Assault 500 met verhoogd voordek en opbergluik', 'Romp · voordek', '4 / 5'),
-    detail: media('dek-open', 'De dekindeling van de Assault 500 gezien vanaf de spiegel', 'Dek · indeling', '1 / 1'),
+    primary: media('romp-side-profile', 'Zijaanzicht van de aluminium romp van de Assault 500', 'Romp · side profile', '4 / 5'),
+    detail: media('detail-laswerk', 'Detail van het laswerk op de aluminium naad', 'Detail · laswerk', '1 / 1'),
   },
 };
 
@@ -184,9 +184,9 @@ export type GalleryItem = MediaSlot & {
 
 /** Fotografie leidt; de renders sluiten de rail af. */
 export const GALLERY: GalleryItem[] = [
-  { ...media('hero-action', 'De Assault 500 op de trailer, gezien vanaf de spiegel', 'Op de trailer', '4 / 3'), category: 'Exterieur', caption: 'Op de trailer' },
-  { ...media('romp-side-profile', 'Het verhoogde voordek met opbergluik en antislip', 'Voordek', '3 / 4'), category: 'Exterieur', caption: 'Voordek' },
-  { ...media('dek-open', 'Open dekindeling met opbergluiken en antislip vloerdelen', 'Open dek', '4 / 5'), category: 'Dek', caption: 'Open dek' },
+  { ...media('gal-op-de-trailer', 'De Assault 500 op de trailer, gezien vanaf de spiegel', 'Op de trailer', '4 / 3'), category: 'Exterieur', caption: 'Op de trailer' },
+  { ...media('gal-voordek', 'Het verhoogde voordek met opbergluik en antislip', 'Voordek', '3 / 4'), category: 'Exterieur', caption: 'Voordek' },
+  { ...media('gal-open-dek', 'Open dekindeling met opbergluiken en antislip vloerdelen', 'Open dek', '4 / 5'), category: 'Dek', caption: 'Open dek' },
   { ...media('gal-antislip', 'Antislip vloerdelen op het dek', 'Antislip vloer', '1 / 1'), category: 'Dek', caption: 'Antislip' },
   { ...media('gal-werpdek', 'Verhoogd werpdek van de Assault 500 Fish', 'Werpdek', '4 / 3'), category: 'Fish', caption: 'Werpdek' },
   { ...media('gal-hengelberging', 'Geopende hengelberging onder het werpdek', 'Hengelberging', '3 / 4'), category: 'Fish', caption: 'Hengelberging' },

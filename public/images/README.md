@@ -13,26 +13,32 @@ Staan er meerdere formaten met dezelfde naam, dan wint het modernste.
 
 ## Renders → `public/images/renders/`
 
-Deze staan op een witte achtergrond en worden nooit bijgesneden.
+Deze dragen de productpresentatie. Ze staan op een witte studio-achtergrond,
+worden nooit bijgesneden en krijgen een expliciete witte plaat met haarlijn.
 
 | Bestandsnaam | Waar het verschijnt |
 | --- | --- |
 | `render-aft-quarter` | Uitvoeringen (Assault 500) + gallery |
 | `render-bow-quarter` | Uitvoeringen (Assault 500 Fish) + gallery |
 | `render-top-down` | Specificaties (als technische tekening) + gallery |
-| `render-bow-on` | Gallery |
+| `render-stern-on` | Gallery |
 
 ## Fotografie → `public/images/photography/`
 
+De renders dragen de site; de huidige werffoto's staan bewust alleen in de
+gallery-slider tot er betere fotografie is. Zodra `hero-action`,
+`romp-side-profile` en `detail-laswerk` bestaan, vullen die vanzelf de hero
+en sectie 01 — daar staat nu een placeholder.
+
 | Bestandsnaam | Waar het verschijnt |
 | --- | --- |
-| `hero-action` | Hero, volledig beeldvullend |
-| `romp-side-profile` | Sectie 01, groot staand beeld |
-| `detail-laswerk` | Sectie 01, klein detailbeeld |
-| `werkplaats` | Contactsectie |
-| `gal-side-profile` | Gallery · Exterieur |
-| `gal-boeg` | Gallery · Exterieur |
-| `gal-open-dek` | Gallery · Dek |
+| `hero-action` | Hero, volledig beeldvullend — **nog leeg** |
+| `romp-side-profile` | Sectie 01, groot staand beeld — **nog leeg** |
+| `detail-laswerk` | Sectie 01, klein detailbeeld — **nog leeg** |
+| `werkplaats` | Contactsectie — nog leeg |
+| `gal-op-de-trailer` | Gallery · Exterieur ✓ |
+| `gal-voordek` | Gallery · Exterieur ✓ |
+| `gal-open-dek` | Gallery · Dek ✓ |
 | `gal-antislip` | Gallery · Dek |
 | `gal-werpdek` | Gallery · Fish |
 | `gal-hengelberging` | Gallery · Fish |
@@ -42,6 +48,15 @@ Deze staan op een witte achtergrond en worden nooit bijgesneden.
 | `gal-varend` | Gallery · On the water |
 | `gal-anker` | Gallery · On the water |
 | `merch-cap`, `merch-tee`, `merch-hoodie` | Merch |
+
+## Logo → `public/images/brand/`
+
+| Bestandsnaam | Waar het verschijnt |
+| --- | --- |
+| `logo` | Header en footer — **nog leeg** |
+
+Bij voorkeur `.svg`, in een lichte/witte uitvoering: het staat op een zwarte
+achtergrond. Zonder dit bestand blijft het getypte woordmerk staan.
 
 ## Een beeldplek toevoegen of hernoemen
 

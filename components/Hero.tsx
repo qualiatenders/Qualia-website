@@ -42,12 +42,7 @@ export function Hero() {
       {/* Legibility veil — bottom-weighted so the product stays visible. */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(0,0,0,0.92)_0%,rgba(0,0,0,0.6)_30%,rgba(0,0,0,0.22)_58%,rgba(0,0,0,0.5)_100%)]"
-      />
-      {/* Side scrim: holds the headline column while the product stays readable. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.4)_38%,rgba(0,0,0,0.05)_68%,transparent_100%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.45)_34%,rgba(0,0,0,0.04)_64%,rgba(0,0,0,0.38)_100%)]"
       />
       <motion.div aria-hidden="true" className="absolute inset-0 -z-10 bg-hull" style={reduced ? undefined : { opacity: veil }} />
 
@@ -55,7 +50,7 @@ export function Hero() {
         <div className="flex flex-col gap-8 pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:pb-14">
           <div>
             <motion.p
-              className="type-label flex items-center gap-3 text-bone"
+              className="type-label flex items-center gap-3 text-mill"
               data-reveal
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -78,7 +73,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="text-[1.0625rem] font-medium leading-snug text-bone lg:text-xl">{HERO.lead}</p>
-            <p className="type-body mt-3 text-bone/80">{HERO.body}</p>
+            <p className="type-body mt-3 text-mill">{HERO.body}</p>
             <ArrowLink href={HERO.cta.href} className="mt-7">
               {HERO.cta.label}
             </ArrowLink>

@@ -69,7 +69,7 @@ export function Gallery() {
     <section id="gallery" className="border-t border-white/10 bg-hull py-24 lg:py-36">
       <div className="shell">
         <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHeader index="04" eyebrow="Details" title="Take a closer look." className="lg:max-w-sm lg:shrink-0" />
+          <SectionHeader index="04" eyebrow="Details" title="Take a closer look." className="lg:max-w-md lg:shrink-0" />
 
           <Reveal delay={0.1}>
             <ul className="flex flex-wrap gap-2 lg:justify-end">
