@@ -93,8 +93,9 @@ export const INTRO = {
     { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
-    primary: media('romp-side-profile', 'Zijaanzicht van de aluminium romp van de Assault 500', 'Romp · side profile', '4 / 5'),
-    detail: media('render-stern-on', 'De Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '1 / 1', RENDER),
+    // Sectie 01 is licht: de render draagt het beeld, de detailfoto volgt nog.
+    primary: media('render-stern-on', 'De Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '16 / 9', RENDER),
+    detail: media('detail-laswerk', 'Detail van het laswerk op de aluminium naad', 'Detail · laswerk', '1 / 1', { tone: 'light' }),
   },
 };
 

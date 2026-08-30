@@ -59,7 +59,7 @@ export function Intro() {
             style={reduced ? undefined : { y: drift }}
           >
             <Reveal delay={0.15} y={28}>
-              <div className="border-4 border-bone">
+              <div className="border-8 border-bone">
                 <Media media={INTRO.media.detail} sizes="(max-width: 1024px) 50vw, 25vw" hoverZoom />
               </div>
               <p className="type-label mt-3 text-mill">Al 5083 · 4 mm · binnen + buiten gelast</p>
