@@ -62,7 +62,7 @@ export function Hero() {
           <div>
             <motion.p
               data-reveal
-              className="type-label flex items-center gap-3 text-red sm:gap-4"
+              className="type-label flex items-center gap-3 tracking-[0.11em] text-red sm:gap-4 sm:tracking-[0.18em]"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.15 }}
@@ -88,7 +88,7 @@ export function Hero() {
             transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="text-[1.0625rem] font-medium leading-snug text-bone lg:text-xl">{HERO.lead}</p>
-            <p className="type-body mt-3 text-mill">{HERO.body}</p>
+            <p className="type-body mt-3 text-bone/75">{HERO.body}</p>
             <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:mt-8">
               <ArrowLink href={HERO.cta.href} className="justify-center sm:justify-start">
                 {HERO.cta.label}
