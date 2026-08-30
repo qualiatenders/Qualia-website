@@ -34,7 +34,7 @@ export function ModelSelector() {
         <SectionHeader
           index="02"
           eyebrow="Two setups"
-          title="Pick your setup."
+          title="Kies je opstelling."
           subcopy="Dezelfde Assault 500. Jij bepaalt wat je ermee gaat doen."
           tone="light"
           className="max-w-2xl"

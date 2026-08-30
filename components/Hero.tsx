@@ -30,29 +30,39 @@ export function Hero() {
     <section
       id="top"
       ref={ref}
-      className="relative flex min-h-[92svh] flex-col justify-end overflow-hidden bg-hull pt-24 lg:pt-28"
+      className="relative flex min-h-[88svh] flex-col justify-end overflow-hidden bg-hull pt-24 lg:min-h-[92svh] lg:pt-28"
     >
+      {/* Cropped in close, the way a deck shot fills the frame — atmosphere
+          rather than a product cut-out. */}
       <motion.div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-y-0 right-[-14%] w-[135%] sm:right-[-8%] sm:w-[105%] lg:right-[-6%] lg:w-[72%]"
+        className="pointer-events-none absolute inset-0"
         style={reduced ? undefined : { y: drift, opacity: fade }}
-        initial={reduced ? false : { scale: 1.06, opacity: 0 }}
+        initial={reduced ? false : { scale: 1.08, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Masked on both axes so the render melts into the black instead of
-            stopping at a rectangle. */}
-        <div className="h-full w-full opacity-[0.32] [mask-image:linear-gradient(to_right,transparent,black_38%,black_100%),linear-gradient(to_bottom,transparent,black_22%,black_72%,transparent)] [mask-composite:intersect]">
-          <Media media={HERO.media} priority sizes="100vw" className="h-full w-full !aspect-auto !bg-transparent" />
-        </div>
+        <Media
+          media={HERO.media}
+          priority
+          sizes="100vw"
+          className="h-full w-full !aspect-auto !bg-transparent"
+          imageClassName="scale-[2.6] object-center sm:scale-[2] lg:scale-[1.5]"
+        />
       </motion.div>
 
+      {/* Legibility veil, weighted to the bottom where the type sits. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.82)_34%,rgba(0,0,0,0.55)_66%,rgba(0,0,0,0.75)_100%)]"
+      />
+
       <div className="shell relative w-full">
-        <div className="flex flex-col gap-8 pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:pb-14">
+        <div className="flex flex-col gap-7 pb-8 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:pb-14">
           <div>
             <motion.p
               data-reveal
-              className="type-label flex items-center gap-4 text-red"
+              className="type-label flex items-center gap-3 text-red sm:gap-4"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.15 }}
@@ -62,7 +72,7 @@ export function Hero() {
             </motion.p>
 
             {/* Model name solid, number in outline — the two-tone opener. */}
-            <h1 className="type-display mt-6 text-bone">
+            <h1 className="type-display mt-5 text-bone lg:mt-6">
               <MaskReveal delay={0.28}>{model}</MaskReveal>
               <MaskReveal delay={0.4} className="type-outline">
                 {number}
@@ -79,9 +89,11 @@ export function Hero() {
           >
             <p className="text-[1.0625rem] font-medium leading-snug text-bone lg:text-xl">{HERO.lead}</p>
             <p className="type-body mt-3 text-mill">{HERO.body}</p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ArrowLink href={HERO.cta.href}>{HERO.cta.label}</ArrowLink>
-              <ArrowLink href="#specs" variant="outline">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:mt-8">
+              <ArrowLink href={HERO.cta.href} className="justify-center sm:justify-start">
+                {HERO.cta.label}
+              </ArrowLink>
+              <ArrowLink href="#specs" variant="outline" className="justify-center sm:justify-start">
                 Bekijk specificaties
               </ArrowLink>
             </div>

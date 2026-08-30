@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LOGO_MARK, NAV_LINKS } from '@/lib/content';
+import { LOGO, NAV_LINKS, PRICE_CTA } from '@/lib/content';
 import { MobileNavigation } from './MobileNavigation';
 
 /**
@@ -28,13 +28,13 @@ export function Header() {
           solid ? 'border-b border-white/10 bg-hull/92 backdrop-blur-md' : 'border-b border-transparent bg-transparent'
         }`}
       >
-        <div className="shell flex h-20 items-center justify-between gap-8 lg:h-[6.5rem]">
+        <div className="shell flex h-16 items-center justify-between gap-2 sm:gap-4 lg:h-24 lg:gap-8">
           <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
-            {LOGO_MARK?.src ? (
-              /* Fixed box keeps the header height stable whatever the mark's ratio. */
-              <span className="flex h-14 items-center overflow-hidden lg:h-20">
+            {LOGO?.src ? (
+              /* Fixed box keeps the header height stable whatever the logo's ratio. */
+              <span className="flex h-7 items-center overflow-hidden xs:h-8 lg:h-12">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={LOGO_MARK.src} alt="Assault Boats" className="h-full w-auto" />
+                <img src={LOGO.src} alt="Assault Boats" className="h-full w-auto" />
               </span>
             ) : (
               <>
@@ -65,11 +65,14 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* The price list is the page's main action, so it sits in the bar
+                on every screen — with a shorter label where space is tight. */}
             <a
-              href="#contact"
-              className="cut-tag hidden bg-red px-7 py-3 type-label text-white transition-colors duration-300 hover:bg-red-hot lg:inline-block"
+              href={PRICE_CTA.cta.href}
+              className="cut-tag bg-red px-4 py-2.5 type-label text-white transition-colors duration-300 hover:bg-red-hot xs:px-5 lg:px-7 lg:py-3.5"
             >
-              Prijslijst
+              <span className="xs:hidden">Prijslijst</span>
+              <span className="hidden xs:inline">Download prijslijst</span>
             </a>
 
             <button
@@ -78,7 +81,7 @@ export function Header() {
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
               aria-label={menuOpen ? 'Menu sluiten' : 'Menu openen'}
-              className="relative z-50 -mr-2 flex h-11 w-11 items-center justify-center lg:hidden"
+              className="relative z-50 -mr-2 flex h-11 w-9 shrink-0 items-center justify-center lg:hidden"
             >
               <span className="relative block h-3 w-6">
                 <span

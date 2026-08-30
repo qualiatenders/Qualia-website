@@ -70,7 +70,7 @@ export const HERO = {
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
   body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
   cta: { label: 'Ontdek de Assault 500', href: '#assault-500' },
-  media: media('render-aft-quarter', 'De Assault 500 in de open uitvoering, schuin van achteren', 'Render · hero', '16 / 9', RENDER),
+  media: media('render-top-down', 'Het dek van de Assault 500 van bovenaf', 'Render · hero', '16 / 9', { tone: 'dark' }),
   stats: [
     { value: '5,00', unit: 'M', label: 'Lengte' },
     { value: '1,96', unit: 'M', label: 'Breedte' },
@@ -114,7 +114,7 @@ export const MODELS: Model[] = [
     id: 'open',
     name: 'Assault 500',
     short: '500',
-    title: 'Keep it open.',
+    title: 'Hou het open.',
     body: 'Veel ruimte, een open dek en alle vrijheid om de boot te gebruiken zoals jij wilt. Met de optionele zijbanken creëer je extra zitruimte. Zonnige dag? Plaats het uitneembare zonnedek. Meer ruimte nodig? Dan haal je het er net zo makkelijk weer uit.',
     features: [
       'Open dekindeling',
@@ -132,7 +132,7 @@ export const MODELS: Model[] = [
     id: 'fish',
     name: 'Assault 500 Fish',
     short: '500 Fish',
-    title: 'Built to fish.',
+    title: 'Gebouwd om te vissen.',
     body: 'De Fish krijgt voorin een verhoogd werpdek met daaronder drie afsluitbare opbergruimtes. Eén daarvan is speciaal voor je hengels. Zo blijft je dek vrij en zit alles wat je nodig hebt netjes opgeborgen en binnen handbereik.',
     features: [
       'Verhoogd werpdek',

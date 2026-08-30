@@ -61,7 +61,7 @@ export function Gallery() {
   return (
     <section id="gallery" className="border-t border-white/10 bg-hull py-24 lg:py-36">
       <div className="shell">
-        <SectionHeader index="04" eyebrow="Details" title="Take a closer look." className="max-w-xl" />
+        <SectionHeader index="04" eyebrow="Details" title="Van dichtbij." className="max-w-xl" />
       </div>
 
       {/* Full-bleed rail — starts at the shell gutter, runs off the right edge. */}

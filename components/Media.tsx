@@ -8,6 +8,8 @@ type Props = {
   priority?: boolean;
   /** Subtle zoom on hover — only where the image is interactive. */
   hoverZoom?: boolean;
+  /** Extra classes on the image itself — used to crop the hero in close. */
+  imageClassName?: string;
 };
 
 /**
@@ -19,7 +21,7 @@ type Props = {
  * ratio (no layout shift) and names the shot it is waiting for. Drop a path
  * into `src` in lib/content.ts and the real asset takes over.
  */
-export function Media({ media, className = '', sizes = '100vw', priority = false, hoverZoom = false }: Props) {
+export function Media({ media, className = '', sizes = '100vw', priority = false, hoverZoom = false, imageClassName = '' }: Props) {
   const contain = media.fit === 'contain';
 
   return (
