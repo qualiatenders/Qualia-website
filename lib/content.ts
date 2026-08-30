@@ -220,11 +220,13 @@ export const CONTACT = {
   media: media('werkplaats', 'De Assault 500 in de werkplaats', 'Werkplaats', '3 / 4'),
 };
 
+/**
+ * De prijslijst leeft in de meescrollende CTA en in de header.
+ * TODO — vervang `href` door de URL van de prijslijst-PDF zodra die er is;
+ * tot die tijd landt de bezoeker bij contact.
+ */
 export const PRICE_CTA = {
-  eyebrow: 'Assault 500 · Model 2026',
-  title: 'Build yours.',
-  body: 'Alle uitvoeringen, opties en actuele prijzen overzichtelijk bij elkaar.',
-  cta: { label: 'Download prijslijst', href: '#prijslijst' },
+  cta: { label: 'Prijslijst', href: '#contact' },
 };
 
 export const FOOTER = {
@@ -235,6 +237,6 @@ export const FOOTER = {
     { label: 'Assault 500 Fish', href: '#uitvoeringen' },
     { label: 'Instagram', href: 'https://instagram.com' },
     { label: 'Contact', href: '#contact' },
-    { label: 'Prijslijst', href: '#prijslijst' },
+    { label: 'Prijslijst', href: '#contact' },
   ],
 };

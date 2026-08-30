@@ -66,7 +66,7 @@ export function Header() {
 
           <div className="flex items-center gap-3">
             <a
-              href="#prijslijst"
+              href="#contact"
               className="cut-tag hidden bg-red px-7 py-3 type-label text-white transition-colors duration-300 hover:bg-red-hot lg:inline-block"
             >
               Prijslijst

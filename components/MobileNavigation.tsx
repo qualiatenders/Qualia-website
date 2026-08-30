@@ -75,7 +75,7 @@ export function MobileNavigation({ open, onClose }: Props) {
 
             <div className="flex flex-col gap-5">
               <a
-                href="#prijslijst"
+                href="#contact"
                 onClick={onClose}
                 className="flex items-center justify-between rounded-[2px] bg-red px-6 py-5 type-label text-white"
               >
