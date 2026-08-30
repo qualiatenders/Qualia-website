@@ -19,9 +19,10 @@ worden nooit bijgesneden en krijgen een expliciete witte plaat met haarlijn.
 | Bestandsnaam | Waar het verschijnt |
 | --- | --- |
 | `render-aft-quarter` | Uitvoeringen (Assault 500) + gallery |
-| `render-bow-quarter` | Uitvoeringen (Assault 500 Fish) + gallery |
+| `render-bow-quarter` | Gallery |
 | `render-top-down` | Specificaties (als technische tekening) + gallery |
 | `render-stern-on` | Gallery |
+| `render-fish` | Uitvoeringen (Assault 500 Fish) — **bestaat nog niet** |
 
 ## Fotografie → `public/images/photography/`
 

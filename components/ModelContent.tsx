@@ -19,7 +19,10 @@ export function ModelContent({ activeIndex }: Props) {
     <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-14">
       {/* Media — both frames stacked so the swap is a true crossfade. */}
       <div className="lg:col-span-7">
-        <div className="relative overflow-hidden bg-white ring-1 ring-inset ring-black/10" style={{ aspectRatio: model.media.ratio }}>
+        <div
+          className="relative overflow-hidden bg-white ring-1 ring-inset ring-black/10"
+          style={{ aspectRatio: model.media.ratio }}
+        >
           <AnimatePresence initial={false}>
             <motion.div
               key={model.id}
@@ -51,29 +54,38 @@ export function ModelContent({ activeIndex }: Props) {
         </div>
       </div>
 
-      {/* Copy */}
-      <div className="lg:col-span-5">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={model.id}
-            initial={reduced ? { opacity: 1 } : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={reduced ? { opacity: 1 } : { opacity: 0, y: -8 }}
-            transition={{ duration: reduced ? 0 : 0.4, ease: EASE }}
-          >
-            <p className="type-label text-mill">{model.name}</p>
-            <h3 className="type-h3 mt-4 text-hull">{model.title}</h3>
-            <p className="type-body mt-5 text-deck">{model.body}</p>
+      {/*
+        Copy — both setups occupy the same grid cell so the column is always as
+        tall as the longest of the two. Swapping a tab then crossfades in place
+        instead of reflowing everything below it.
+      */}
+      <div className="grid lg:col-span-5">
+        {MODELS.map((entry, i) => {
+          const active = i === activeIndex;
+          return (
+            <div
+              key={entry.id}
+              // Same cell for every setup.
+              className={`col-start-1 row-start-1 transition-opacity duration-400 ease-[var(--ease-out-a)] ${
+                active ? 'opacity-100' : 'pointer-events-none opacity-0'
+              }`}
+              aria-hidden={!active}
+              inert={!active}
+            >
+              <p className="type-label text-mill">{entry.name}</p>
+              <h3 className="type-h3 mt-4 text-hull">{entry.title}</h3>
+              <p className="type-body mt-5 text-deck">{entry.body}</p>
 
-            <div className="mt-9">
-              <FeatureList features={model.features} tone="light" />
+              <div className="mt-9">
+                <FeatureList features={entry.features} tone="light" />
+              </div>
+
+              <ArrowLink href="#contact" variant="ghost" className="mt-9" tabIndex={active ? undefined : -1}>
+                {entry.cta}
+              </ArrowLink>
             </div>
-
-            <ArrowLink href="#contact" variant="ghost" className="mt-9">
-              {model.cta}
-            </ArrowLink>
-          </motion.div>
-        </AnimatePresence>
+          );
+        })}
       </div>
     </div>
   );

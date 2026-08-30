@@ -144,7 +144,7 @@ export const MODELS: Model[] = [
       'Maximaal 60 pk',
     ],
     cta: 'Bekijk de 500 Fish',
-    media: media('render-bow-quarter', 'Render van de Assault 500 Fish met verhoogd werpdek, schuin van voren', 'Render · 500 Fish · bow quarter', '16 / 9', RENDER),
+    media: media('render-fish', 'Render van de Assault 500 Fish met verhoogd werpdek', 'Render · 500 Fish', '16 / 9', RENDER),
   },
 ];
 
@@ -201,8 +201,8 @@ export const GALLERY: GalleryItem[] = [
   { ...media('gal-tiller', 'Tiller-besturing aan boord', 'Tiller', '3 / 4'), category: 'Details', caption: 'Tiller' },
   { ...media('gal-varend', 'Assault 500 varend met hekgolf', 'Varend · hekgolf', '16 / 10'), category: 'On the water', caption: 'Onderweg' },
   { ...media('gal-anker', 'Assault 500 voor anker bij zonsondergang', 'Lifestyle · anker', '4 / 3'), category: 'On the water', caption: 'Voor anker' },
-  { ...media('render-aft-quarter', 'Render van de Assault 500 schuin van achteren', 'Render · aft quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Aft quarter' },
-  { ...media('render-bow-quarter', 'Render van de Assault 500 schuin van voren', 'Render · bow quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Bow quarter' },
+  { ...media('render-aft-quarter', 'Render van de Assault 500 in de open uitvoering, schuin van achteren', 'Render · aft quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Aft quarter' },
+  { ...media('render-bow-quarter', 'Render van de Assault 500 in de open uitvoering, schuin van voren', 'Render · bow quarter', '16 / 9', RENDER), category: 'Renders', caption: 'Bow quarter' },
   { ...media('render-top-down', 'Bovenaanzicht render van de Assault 500', 'Render · top down', '16 / 9', RENDER), category: 'Renders', caption: 'Top down' },
   { ...media('render-stern-on', 'Render van de Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '16 / 9', RENDER), category: 'Renders', caption: 'Stern on' },
 ];
