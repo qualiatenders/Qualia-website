@@ -8,6 +8,7 @@ import { MerchSection } from '@/components/MerchSection';
 import { ModelSelector } from '@/components/ModelSelector';
 import { PriceListCTA } from '@/components/PriceListCTA';
 import { SpecsGrid } from '@/components/SpecsGrid';
+import { StickyCTA } from '@/components/StickyCTA';
 
 export default function HomePage() {
   return (
@@ -24,6 +25,7 @@ export default function HomePage() {
         <PriceListCTA />
       </main>
       <Footer />
+      <StickyCTA />
     </>
   );
 }

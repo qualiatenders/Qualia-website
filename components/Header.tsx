@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { LOGO, NAV_LINKS } from '@/lib/content';
+import { LOGO_MARK, NAV_LINKS } from '@/lib/content';
 import { MobileNavigation } from './MobileNavigation';
 
 /**
@@ -24,21 +24,17 @@ export function Header() {
   return (
     <>
       <header
-        /* The hero is light, so the transparent state has to read dark. */
-        className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
-          solid
-            ? 'border-b border-white/10 bg-hull/92 text-bone backdrop-blur-md'
-            : 'border-b border-transparent bg-transparent text-hull'
+        className={`fixed inset-x-0 top-0 z-50 text-bone transition-[background-color,border-color,backdrop-filter] duration-500 ${
+          solid ? 'border-b border-white/10 bg-hull/92 backdrop-blur-md' : 'border-b border-transparent bg-transparent'
         }`}
       >
-        <div className="shell flex h-20 items-center justify-between gap-8 lg:h-24">
+        <div className="shell flex h-20 items-center justify-between gap-8 lg:h-[6.5rem]">
           <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
-            {LOGO?.src ? (
-              /* Fixed box keeps the header height stable whatever the logo's ratio;
-                 the lockup needs real height before the wordmark reads. */
-              <span className="flex h-11 items-center overflow-hidden lg:h-16">
+            {LOGO_MARK?.src ? (
+              /* Fixed box keeps the header height stable whatever the mark's ratio. */
+              <span className="flex h-14 items-center overflow-hidden lg:h-20">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={LOGO.src} alt="Assault Boats" className="h-full w-auto" />
+                <img src={LOGO_MARK.src} alt="Assault Boats" className="h-full w-auto" />
               </span>
             ) : (
               <>
@@ -71,9 +67,7 @@ export function Header() {
           <div className="flex items-center gap-3">
             <a
               href="#prijslijst"
-              className={`hidden rounded-[2px] border px-5 py-2.5 type-label transition-colors duration-300 hover:border-red hover:bg-red hover:text-white lg:inline-block ${
-                solid ? 'border-white/25' : 'border-black/25'
-              }`}
+              className="hidden rounded-[2px] border border-white/25 px-5 py-2.5 type-label transition-colors duration-300 hover:border-red hover:bg-red hover:text-white lg:inline-block"
             >
               Prijslijst
             </a>
