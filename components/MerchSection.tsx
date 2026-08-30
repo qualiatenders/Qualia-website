@@ -1,19 +1,14 @@
 import { MERCH } from '@/lib/content';
 import { Media } from './Media';
 import { Reveal } from './Reveal';
+import { SectionHeader } from './SectionHeader';
 
-/** 05 — merch. Two words and three frames. Nothing else. */
+/** 05 — the drop. Photography does the work; the copy stays out of the way. */
 export function MerchSection() {
   return (
     <section id="merch" className="border-t border-white/10 bg-hull py-24 lg:py-36">
       <div className="shell">
-        <Reveal className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-4">
-          <h2 className="type-display text-bone">
-            {MERCH.wordmark}
-            <span className="align-super text-[0.18em] text-red">&reg;</span>
-          </h2>
-          <p className="type-label text-mill">{MERCH.drop}</p>
-        </Reveal>
+        <SectionHeader index={MERCH.index} eyebrow="Merch" title={MERCH.drop} className="max-w-xl" />
 
         <div className="mt-12 grid grid-cols-2 gap-3 lg:mt-16 lg:grid-cols-3 lg:gap-4">
           {MERCH.media.map((item, i) => (

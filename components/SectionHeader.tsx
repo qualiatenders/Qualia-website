@@ -19,12 +19,13 @@ export function SectionHeader({ index, eyebrow, title, subcopy, className = '', 
   return (
     <div className={className}>
       <Reveal className="flex items-center gap-4">
-        <span className="type-label text-red">{index}</span>
-        <span className={`h-px w-8 ${rule}`} aria-hidden="true" />
+        <span className="type-label text-mill">{index}</span>
+        <span className={`h-px w-6 ${rule}`} aria-hidden="true" />
         <span className={`type-label ${labelColor}`}>{eyebrow}</span>
       </Reveal>
       <Reveal delay={0.08} className="mt-7">
         <h2 className="type-h2">{title}</h2>
+        <span className="rule-red mt-7" aria-hidden="true" />
       </Reveal>
       {subcopy ? (
         <Reveal delay={0.14} className="mt-5">

@@ -25,9 +25,10 @@ export function StickyCTA() {
   useEffect(() => {
     const onScroll = () => {
       const pastHero = window.scrollY > window.innerHeight * 0.7;
-      const target = document.getElementById('prijslijst');
-      const atPriceList = target ? target.getBoundingClientRect().top < window.innerHeight * 0.85 : false;
-      setVisible(pastHero && !atPriceList);
+      // Step aside over the closing block so the footer stays uncluttered.
+      const footer = document.querySelector('footer');
+      const atFooter = footer ? footer.getBoundingClientRect().top < window.innerHeight : false;
+      setVisible(pastHero && !atFooter);
     };
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });

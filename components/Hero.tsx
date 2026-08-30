@@ -18,6 +18,8 @@ import { ProductStats } from './ProductStats';
  */
 export function Hero() {
   const reduced = useReducedMotion();
+  // "Assault 500" splits into a solid word and an outlined number.
+  const [model, number] = [HERO.title.replace(/\s+\S+$/, ''), HERO.title.split(' ').pop() ?? ''];
   const ref = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
@@ -40,7 +42,7 @@ export function Hero() {
       >
         {/* Masked on both axes so the render melts into the black instead of
             stopping at a rectangle. */}
-        <div className="h-full w-full opacity-[0.38] [mask-image:linear-gradient(to_right,transparent,black_38%,black_100%),linear-gradient(to_bottom,transparent,black_22%,black_72%,transparent)] [mask-composite:intersect]">
+        <div className="h-full w-full opacity-[0.32] [mask-image:linear-gradient(to_right,transparent,black_38%,black_100%),linear-gradient(to_bottom,transparent,black_22%,black_72%,transparent)] [mask-composite:intersect]">
           <Media media={HERO.media} priority sizes="100vw" className="h-full w-full !aspect-auto !bg-transparent" />
         </div>
       </motion.div>
@@ -50,17 +52,21 @@ export function Hero() {
           <div>
             <motion.p
               data-reveal
-              className="type-label flex items-center gap-3 text-mill"
+              className="type-label flex items-center gap-4 text-red"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.15 }}
             >
-              <span className="h-1.5 w-1.5 shrink-0 bg-red" aria-hidden="true" />
+              <span className="rule-red shrink-0" aria-hidden="true" />
               {HERO.eyebrow}
             </motion.p>
 
-            <h1 className="type-display mt-5 text-bone">
-              <MaskReveal delay={0.28}>{HERO.title}</MaskReveal>
+            {/* Model name solid, number in outline — the two-tone opener. */}
+            <h1 className="type-display mt-6 text-bone">
+              <MaskReveal delay={0.28}>{model}</MaskReveal>
+              <MaskReveal delay={0.4} className="type-outline">
+                {number}
+              </MaskReveal>
             </h1>
           </div>
 
@@ -73,9 +79,12 @@ export function Hero() {
           >
             <p className="text-[1.0625rem] font-medium leading-snug text-bone lg:text-xl">{HERO.lead}</p>
             <p className="type-body mt-3 text-mill">{HERO.body}</p>
-            <ArrowLink href={HERO.cta.href} className="mt-7">
-              {HERO.cta.label}
-            </ArrowLink>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <ArrowLink href={HERO.cta.href}>{HERO.cta.label}</ArrowLink>
+              <ArrowLink href="#specs" variant="outline">
+                Bekijk specificaties
+              </ArrowLink>
+            </div>
           </motion.div>
         </div>
 

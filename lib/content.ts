@@ -190,8 +190,7 @@ export const GALLERY: GalleryItem[] = [
 
 export const MERCH = {
   index: '05',
-  wordmark: 'Assault',
-  drop: 'Drop 01',
+  drop: 'Drop 01.',
   media: [
     media('merch-group-chat', 'Tee met de tekst: the best days don’t make the group chat', 'Merch · tee', '1 / 1'),
     media('merch-your-boat', 'Tee met de tekst: your boat can’t go where I’m going', 'Merch · tee', '1 / 1'),

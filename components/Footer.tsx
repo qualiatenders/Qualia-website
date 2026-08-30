@@ -1,56 +1,34 @@
 import { FOOTER } from '@/lib/content';
 
+/** Compact closing bar: links, origin, legal. Nothing that repeats the page. */
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/10 bg-hull pb-10 pt-20 lg:pt-28">
-      <div className="shell">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
-          <div className="lg:col-span-7">
-            {/* The wordmark carries the footer; the mark stays in the header. */}
-            <p className="font-[family-name:var(--font-display)] text-[clamp(2.5rem,7vw,6rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.045em] text-bone">
-              Assault
-              <span className="text-red">.</span>
-              <br />
-              Boats
-            </p>
-            <p className="type-label mt-6 text-mill">{FOOTER.tagline}</p>
-          </div>
+    <footer className="border-t border-white/10 bg-hull">
+      <div className="shell flex flex-col gap-8 py-10 lg:flex-row lg:items-center lg:justify-between lg:gap-12">
+        <nav aria-label="Footer">
+          <ul className="flex flex-wrap gap-x-8 gap-y-3">
+            {FOOTER.links.map((link) => {
+              const external = link.href.startsWith('http');
+              return (
+                <li key={link.label}>
+                  <a
+                    href={link.href}
+                    {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+                    className="type-label text-mill transition-colors hover:text-bone"
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
 
-          <nav className="lg:col-span-5 lg:pt-3" aria-label="Footer">
-            <ul className="grid grid-cols-1 border-t border-white/10 sm:grid-cols-2 sm:gap-x-12">
-              {FOOTER.links.map((link) => {
-                const external = link.href.startsWith('http');
-                return (
-                  <li key={link.label} className="border-b border-white/10">
-                    <a
-                      href={link.href}
-                      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-                      className="group flex items-center justify-between gap-4 py-4 type-label text-mill transition-colors hover:text-bone"
-                    >
-                      {link.label}
-                      <svg
-                        viewBox="0 0 16 12"
-                        className="h-2.5 w-3.5 shrink-0 text-deck transition-all duration-300 group-hover:translate-x-1 group-hover:text-red"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.5"
-                        aria-hidden="true"
-                      >
-                        <path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5" />
-                      </svg>
-                    </a>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
-        </div>
-
-        <div className="mt-16 flex flex-col gap-3 border-t border-white/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+          <p className="type-label text-deck">{FOOTER.tagline}</p>
           <p className="type-label text-deck">&copy; {year} Assault Boats</p>
-          <p className="type-label text-deck">Model 2026 · Made in NL</p>
         </div>
       </div>
     </footer>

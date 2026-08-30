@@ -1,6 +1,5 @@
 import { CONTACT } from '@/lib/content';
 import { ArrowLink } from './ArrowLink';
-import { Media } from './Media';
 import { Reveal } from './Reveal';
 
 /** WhatsApp glyph, drawn in currentColor so it stays inside the house style. */
@@ -12,59 +11,57 @@ function WhatsAppMark() {
   );
 }
 
-/** 06 — the invitation to come and stand in the boat. */
+/**
+ * The invitation to come and stand in the boat.
+ *
+ * No photograph here: the details are the content, and a placeholder plate
+ * beside them only added weight.
+ */
 export function ContactSection() {
   return (
-    <section id="contact" className="border-t border-white/10 bg-hull">
-      <div className="grid grid-cols-1 lg:grid-cols-2">
-        <div className="relative order-2 lg:order-1">
-          <Media
-            media={CONTACT.media}
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="h-full w-full lg:!aspect-auto lg:absolute lg:inset-0"
-          />
+    <section id="contact" className="border-t border-white/10 bg-hull py-24 lg:py-36">
+      <div className="shell grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-5">
+          <Reveal className="flex items-center gap-4">
+            <span className="type-label text-mill">{CONTACT.index}</span>
+            <span className="h-px w-6 bg-white/15" aria-hidden="true" />
+            <span className="type-label text-mill">Contact</span>
+          </Reveal>
+
+          <Reveal delay={0.08} className="mt-7">
+            <h2 className="type-h2">{CONTACT.title}</h2>
+            <span className="rule-red mt-7" aria-hidden="true" />
+          </Reveal>
+
+          <Reveal delay={0.14} as="p" className="type-body mt-7 text-mill">
+            {CONTACT.body}
+          </Reveal>
+
+          <Reveal delay={0.2} className="mt-10 flex flex-wrap gap-3">
+            <ArrowLink href={CONTACT.whatsapp.href} icon={<WhatsAppMark />}>
+              {CONTACT.whatsapp.label}
+            </ArrowLink>
+            <ArrowLink href={CONTACT.primary.href} variant="outline">
+              {CONTACT.primary.label}
+            </ArrowLink>
+          </Reveal>
         </div>
 
-        <div className="order-1 px-[clamp(1.25rem,4.5vw,5rem)] py-24 lg:order-2 lg:py-36 lg:pr-[clamp(1.25rem,4.5vw,5rem)] lg:pl-16">
-          <div className="max-w-xl">
-            <Reveal className="flex items-center gap-4">
-              <span className="type-label text-red">{CONTACT.index}</span>
-              <span className="h-px w-8 bg-white/15" aria-hidden="true" />
-              <span className="type-label text-mill">Contact</span>
+        <dl className="grid grid-cols-1 content-start gap-x-10 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
+          {CONTACT.details.map((detail, i) => (
+            <Reveal key={detail.label} delay={0.06 + i * 0.05} className="border-t border-white/12 py-6">
+              <dt className="type-label text-mill">{detail.label}</dt>
+              <dd
+                className={`mt-3 text-[1.125rem] font-medium ${
+                  detail.pending ? 'text-deck underline decoration-dotted underline-offset-4' : 'text-bone'
+                }`}
+                title={detail.pending ? 'Nog in te vullen' : undefined}
+              >
+                {detail.value}
+              </dd>
             </Reveal>
-
-            <Reveal delay={0.08} className="mt-7">
-              <h2 className="type-h2">{CONTACT.title}</h2>
-            </Reveal>
-
-            <Reveal delay={0.14} as="p" className="type-body mt-5 text-mill">
-              {CONTACT.body}
-            </Reveal>
-
-            <dl className="mt-12 grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-              {CONTACT.details.map((detail, i) => (
-                <Reveal key={detail.label} delay={0.06 + i * 0.05} className="border-t border-white/12 py-5">
-                  <dt className="type-label text-mill">{detail.label}</dt>
-                  <dd
-                    className={`mt-2 text-[1.0625rem] font-medium ${
-                      detail.pending ? 'text-deck underline decoration-dotted underline-offset-4' : 'text-bone'
-                    }`}
-                    title={detail.pending ? 'Nog in te vullen' : undefined}
-                  >
-                    {detail.value}
-                  </dd>
-                </Reveal>
-              ))}
-            </dl>
-
-            <Reveal delay={0.2} className="mt-10 flex flex-wrap gap-3">
-              <ArrowLink href={CONTACT.primary.href}>{CONTACT.primary.label}</ArrowLink>
-              <ArrowLink href={CONTACT.whatsapp.href} variant="outline" icon={<WhatsAppMark />}>
-                {CONTACT.whatsapp.label}
-              </ArrowLink>
-            </Reveal>
-          </div>
-        </div>
+          ))}
+        </dl>
       </div>
     </section>
   );

@@ -6,7 +6,6 @@ import { Hero } from '@/components/Hero';
 import { Intro } from '@/components/Intro';
 import { MerchSection } from '@/components/MerchSection';
 import { ModelSelector } from '@/components/ModelSelector';
-import { PriceListCTA } from '@/components/PriceListCTA';
 import { SpecsGrid } from '@/components/SpecsGrid';
 import { StickyCTA } from '@/components/StickyCTA';
 
@@ -22,7 +21,6 @@ export default function HomePage() {
         <Gallery />
         <MerchSection />
         <ContactSection />
-        <PriceListCTA />
       </main>
       <Footer />
       <StickyCTA />

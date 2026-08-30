@@ -67,7 +67,7 @@ export function Header() {
           <div className="flex items-center gap-3">
             <a
               href="#prijslijst"
-              className="hidden rounded-[2px] border border-white/25 px-5 py-2.5 type-label transition-colors duration-300 hover:border-red hover:bg-red hover:text-white lg:inline-block"
+              className="cut-tag hidden bg-red px-7 py-3 type-label text-white transition-colors duration-300 hover:bg-red-hot lg:inline-block"
             >
               Prijslijst
             </a>

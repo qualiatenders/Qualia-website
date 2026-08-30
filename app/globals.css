@@ -177,6 +177,39 @@
   }
 }
 
+/* ------------------------------------------------------------------
+   SHAPE LANGUAGE
+   Cut edges and notched plates: the same angles the hull is built from.
+------------------------------------------------------------------ */
+
+/* Primary actions read as a cut tag rather than a rounded pill. */
+@utility cut-tag {
+  clip-path: polygon(0.75rem 0, 100% 0, calc(100% - 0.75rem) 100%, 0 100%);
+}
+
+/* Media plates lose a corner, like a cut sheet of aluminium. */
+@utility notch {
+  clip-path: polygon(0 0, calc(100% - 1.75rem) 0, 100% 1.75rem, 100% 100%, 0 100%);
+}
+
+/* Second line of a display headline, drawn in outline only. */
+@utility type-outline {
+  /* Fill only — `color: transparent` would take the stroke with it, since the
+     stroke reads currentColor. */
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-width: clamp(1.5px, 0.28vw, 4px);
+  -webkit-text-stroke-color: currentColor;
+  paint-order: stroke fill;
+}
+
+/* Short red rule that opens an eyebrow or closes a headline. */
+@utility rule-red {
+  display: block;
+  width: 3.5rem;
+  height: 2px;
+  background: var(--color-red);
+}
+
 /* Hide scrollbars on the drag-gallery rail without losing scrollability. */
 @utility rail-scroll {
   scrollbar-width: none;

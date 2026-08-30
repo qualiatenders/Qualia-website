@@ -16,7 +16,7 @@ export function ProductStats() {
         <motion.div
           key={stat.label}
           data-reveal
-          className={`flex flex-col gap-1 py-5 pr-4 sm:py-7 ${
+          className={`flex flex-col py-6 pr-4 sm:py-8 ${
             i % 2 === 1 ? 'border-l border-white/15 pl-4 sm:pl-6' : 'sm:pl-0'
           } ${i >= 2 ? 'border-t border-white/15 sm:border-t-0' : ''} ${
             i === 2 ? 'sm:border-l sm:pl-6' : ''
@@ -25,13 +25,13 @@ export function ProductStats() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: reduced ? 0 : 0.85 + i * 0.09, ease: [0.16, 1, 0.3, 1] }}
         >
-          <dd className="type-stat text-bone">
+          <dt className="type-label text-mill">{stat.label}</dt>
+          <dd className="type-stat mt-2 text-bone">
             {stat.value}
-            <span className="ml-1.5 align-baseline text-[0.4em] font-semibold tracking-[0.08em] text-mill">
+            <span className="ml-1.5 align-baseline text-[0.34em] font-semibold lowercase tracking-[0.08em] text-mill">
               {stat.unit}
             </span>
           </dd>
-          <dt className="type-label text-mill">{stat.label}</dt>
         </motion.div>
       ))}
     </dl>

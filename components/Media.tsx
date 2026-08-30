@@ -25,7 +25,7 @@ export function Media({ media, className = '', sizes = '100vw', priority = false
   return (
     <div
       /* Cut-out renders float on the section; photography gets a backing plate. */
-      className={`group/media relative overflow-hidden ${
+      className={`group/media relative overflow-hidden ${contain ? '' : 'notch'} ${
         contain ? 'bg-transparent' : media.tone === 'light' ? 'bg-bone' : 'bg-hull-soft'
       } ${className}`}
       style={{ aspectRatio: media.ratio }}
