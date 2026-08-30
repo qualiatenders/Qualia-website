@@ -15,27 +15,27 @@ export function Intro() {
   const drift = useTransform(scrollYProgress, [0, 1], ['6%', '-6%']);
 
   return (
-    <section id="assault-500" className="border-t border-white/10 bg-hull py-24 lg:py-36">
+    <section id="assault-500" className="bg-bone py-24 text-hull lg:py-36">
       <div className="shell grid grid-cols-1 gap-14 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-5 lg:pr-6">
-          <SectionHeader index={INTRO.index} eyebrow={INTRO.eyebrow} title={INTRO.title} />
+          <SectionHeader index={INTRO.index} eyebrow={INTRO.eyebrow} title={INTRO.title} tone="light" />
 
           <div className="mt-8 space-y-4">
             {INTRO.body.map((paragraph, i) => (
-              <Reveal key={paragraph} delay={0.06 + i * 0.06} as="p" className="type-body text-mill">
+              <Reveal key={paragraph} delay={0.06 + i * 0.06} as="p" className="type-body text-deck">
                 {paragraph}
               </Reveal>
             ))}
           </div>
 
-          <ul className="mt-12 border-t border-white/10">
+          <ul className="mt-12 border-t border-black/12">
             {INTRO.points.map((point, i) => (
-              <Reveal key={point.title} as="li" delay={0.08 + i * 0.07} className="border-b border-white/10">
+              <Reveal key={point.title} as="li" delay={0.08 + i * 0.07} className="border-b border-black/12">
                 <div className="flex gap-5 py-6">
                   <span className="type-label mt-1 w-8 shrink-0 text-red">{String(i + 1).padStart(2, '0')}</span>
                   <div>
-                    <h3 className="type-label text-bone">{point.title}</h3>
-                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-mill">{point.body}</p>
+                    <h3 className="type-label text-hull">{point.title}</h3>
+                    <p className="mt-2 text-[0.9375rem] leading-relaxed text-deck">{point.body}</p>
                   </div>
                 </div>
               </Reveal>
@@ -59,10 +59,10 @@ export function Intro() {
             style={reduced ? undefined : { y: drift }}
           >
             <Reveal delay={0.15} y={28}>
-              <div className="border-4 border-hull">
+              <div className="border-4 border-bone">
                 <Media media={INTRO.media.detail} sizes="(max-width: 1024px) 50vw, 25vw" hoverZoom />
               </div>
-              <p className="type-label mt-3 text-deck">Al 5083 · 4 mm · binnen + buiten gelast</p>
+              <p className="type-label mt-3 text-mill">Al 5083 · 4 mm · binnen + buiten gelast</p>
             </Reveal>
           </motion.div>
         </div>

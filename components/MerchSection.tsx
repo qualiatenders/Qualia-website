@@ -15,13 +15,9 @@ export function MerchSection() {
           <p className="type-label text-mill">{MERCH.drop}</p>
         </Reveal>
 
-        <div className="mt-12 grid grid-cols-2 gap-4 lg:mt-16 lg:grid-cols-3 lg:gap-6">
+        <div className="mt-12 grid grid-cols-2 gap-3 lg:mt-16 lg:grid-cols-3 lg:gap-4">
           {MERCH.media.map((item, i) => (
-            <Reveal
-              key={item.slot}
-              delay={i * 0.08}
-              className={i === 2 ? 'col-span-2 lg:col-span-1' : ''}
-            >
+            <Reveal key={item.slot + i} delay={Math.min(i, 3) * 0.07}>
               <Media media={item} sizes="(max-width: 1024px) 50vw, 32vw" hoverZoom />
             </Reveal>
           ))}

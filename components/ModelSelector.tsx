@@ -29,7 +29,7 @@ export function ModelSelector() {
   };
 
   return (
-    <section id="uitvoeringen" className="bg-bone py-24 text-hull lg:py-36">
+    <section id="uitvoeringen" className="border-t border-black/10 bg-bone py-24 text-hull lg:py-36">
       <div className="shell">
         <SectionHeader
           index="02"

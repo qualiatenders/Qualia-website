@@ -9,49 +9,49 @@ import { MaskReveal } from './Reveal';
 import { ProductStats } from './ProductStats';
 
 /**
- * Near-fullscreen opener. The photograph carries it; the overlay stays light
- * enough that the product reads, and the headline masks up on load so the
- * page is navigable immediately — no gated intro sequence.
+ * Near-fullscreen opener.
+ *
+ * Light, because the product does: the renders are cut out but keep their
+ * studio shadow, which only reads as a shadow against a light ground. The
+ * boat floats in the upper two thirds, the headline and the numbers close
+ * the frame at the bottom.
  */
 export function Hero() {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const parallax = useTransform(scrollYProgress, [0, 1], ['0%', '14%']);
-  const veil = useTransform(scrollYProgress, [0, 1], [0, 0.45]);
+  const drift = useTransform(scrollYProgress, [0, 1], ['0%', '10%']);
+  const fade = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
 
   return (
-    <section id="top" ref={ref} className="relative flex min-h-[92svh] flex-col justify-end overflow-hidden pt-24">
-      {/* Media plate */}
+    <section
+      id="top"
+      ref={ref}
+      className="relative flex min-h-[92svh] flex-col overflow-hidden bg-bone pt-20 text-hull lg:pt-24"
+    >
+      {/* The boat, floating. */}
       <motion.div
-        className="absolute inset-0 -z-10"
-        style={reduced ? undefined : { y: parallax }}
-        initial={reduced ? false : { scale: 1.08, opacity: 0 }}
+        /*
+          Narrow screens keep the boat in flow, above the type — overlapping it
+          there buries the headline. From lg it moves to the upper right, where
+          the hull can bleed past the edge and the headline keeps its own space.
+        */
+        className="pointer-events-none relative h-[26svh] w-full shrink-0 sm:h-[32svh] lg:absolute lg:left-[30%] lg:right-[-3%] lg:top-[2%] lg:h-[44%] lg:w-auto"
+        style={reduced ? undefined : { y: drift, opacity: fade }}
+        initial={reduced ? false : { scale: 1.05, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
       >
-        <Media
-          media={HERO.media}
-          priority
-          sizes="100vw"
-          className="!aspect-auto h-[112%] w-full"
-        />
+        <Media media={HERO.media} priority sizes="100vw" className="h-full w-full !aspect-auto !bg-transparent !ring-0" />
       </motion.div>
 
-      {/* Legibility veil — bottom-weighted so the product stays visible. */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(0,0,0,0.9)_0%,rgba(0,0,0,0.45)_34%,rgba(0,0,0,0.04)_64%,rgba(0,0,0,0.38)_100%)]"
-      />
-      <motion.div aria-hidden="true" className="absolute inset-0 -z-10 bg-hull" style={reduced ? undefined : { opacity: veil }} />
-
-      <div className="shell relative w-full pb-0">
+      <div className="shell relative mt-auto w-full">
         <div className="flex flex-col gap-8 pb-10 lg:flex-row lg:items-end lg:justify-between lg:gap-16 lg:pb-14">
           <div>
             <motion.p
-              className="type-label flex items-center gap-3 text-mill"
               data-reveal
+              className="type-label flex items-center gap-3 text-deck"
               initial={reduced ? false : { opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.15 }}
@@ -60,20 +60,20 @@ export function Hero() {
               {HERO.eyebrow}
             </motion.p>
 
-            <h1 className="type-display mt-5 text-bone">
+            <h1 className="type-display mt-5 text-hull">
               <MaskReveal delay={0.28}>{HERO.title}</MaskReveal>
             </h1>
           </div>
 
           <motion.div
-            className="max-w-md lg:pb-3"
             data-reveal
+            className="max-w-md lg:pb-3"
             initial={reduced ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="text-[1.0625rem] font-medium leading-snug text-bone lg:text-xl">{HERO.lead}</p>
-            <p className="type-body mt-3 text-mill">{HERO.body}</p>
+            <p className="text-[1.0625rem] font-medium leading-snug text-hull lg:text-xl">{HERO.lead}</p>
+            <p className="type-body mt-3 text-deck">{HERO.body}</p>
             <ArrowLink href={HERO.cta.href} className="mt-7">
               {HERO.cta.label}
             </ArrowLink>

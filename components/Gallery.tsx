@@ -1,10 +1,9 @@
 'use client';
 
-import { useMemo, useRef, useState } from 'react';
-import { GALLERY, GALLERY_CATEGORIES, type GalleryCategory } from '@/lib/content';
+import { useRef, useState } from 'react';
+import { GALLERY } from '@/lib/content';
 import { Lightbox } from './Lightbox';
 import { Media } from './Media';
-import { Reveal } from './Reveal';
 import { SectionHeader } from './SectionHeader';
 
 /**
@@ -14,18 +13,12 @@ import { SectionHeader } from './SectionHeader';
  * Mixed aspect ratios keep the rhythm editorial rather than grid-like.
  */
 export function Gallery() {
-  const [category, setCategory] = useState<GalleryCategory>('Alles');
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [progress, setProgress] = useState(0);
   const railRef = useRef<HTMLUListElement>(null);
 
   // Drag-to-pan state. `moved` suppresses the click that ends a drag.
   const drag = useRef({ startX: 0, startScroll: 0, moved: false });
-
-  const items = useMemo(
-    () => (category === 'Alles' ? GALLERY : GALLERY.filter((item) => item.category === category)),
-    [category],
-  );
 
   const onScroll = () => {
     const el = railRef.current;
@@ -68,36 +61,7 @@ export function Gallery() {
   return (
     <section id="gallery" className="border-t border-white/10 bg-hull py-24 lg:py-36">
       <div className="shell">
-        <div className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
-          <SectionHeader index="04" eyebrow="Details" title="Take a closer look." className="lg:max-w-md lg:shrink-0" />
-
-          <Reveal delay={0.1}>
-            <ul className="flex flex-wrap gap-2 lg:justify-end">
-              {GALLERY_CATEGORIES.map((label) => {
-                const selected = label === category;
-                return (
-                  <li key={label}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setCategory(label);
-                        railRef.current?.scrollTo({ left: 0 });
-                      }}
-                      aria-pressed={selected}
-                      className={`rounded-[2px] border px-3.5 py-2 type-label transition-colors duration-300 ${
-                        selected
-                          ? 'border-red bg-red text-white'
-                          : 'border-white/18 text-mill hover:border-white/45 hover:text-bone'
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </Reveal>
-        </div>
+        <SectionHeader index="04" eyebrow="Details" title="Take a closer look." className="max-w-xl" />
       </div>
 
       {/* Full-bleed rail — starts at the shell gutter, runs off the right edge. */}
@@ -106,9 +70,9 @@ export function Gallery() {
           ref={railRef}
           onScroll={onScroll}
           onPointerDown={onPointerDown}
-          className="rail-scroll flex snap-x snap-mandatory gap-4 overflow-x-auto px-[clamp(1.25rem,4.5vw,5rem)] pb-2 select-none lg:snap-none lg:cursor-grab lg:gap-6 lg:active:cursor-grabbing"
+          className="rail-scroll flex snap-x snap-mandatory select-none gap-4 overflow-x-auto px-[clamp(1.25rem,4.5vw,5rem)] pb-2 lg:snap-none lg:cursor-grab lg:gap-6 lg:active:cursor-grabbing"
         >
-          {items.map((item, i) => (
+          {GALLERY.map((item, i) => (
             <li
               key={item.slot}
               className="h-[clamp(15rem,50vh,32rem)] flex-none snap-start"
@@ -153,7 +117,7 @@ export function Gallery() {
         </div>
       </div>
 
-      <Lightbox items={items} index={lightboxIndex} onClose={() => setLightboxIndex(null)} onNavigate={setLightboxIndex} />
+      <Lightbox items={GALLERY} index={lightboxIndex} onClose={() => setLightboxIndex(null)} onNavigate={setLightboxIndex} />
     </section>
   );
 }

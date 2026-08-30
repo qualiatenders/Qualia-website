@@ -3,11 +3,18 @@
   "assault logo": "/images/brand/assault logo.jpeg",
   "logo-mark": "/images/brand/logo-mark.webp",
   "logo": "/images/brand/logo.webp",
+  "merch-front-1": "/images/merch/merch-front-1.webp",
+  "merch-front-2": "/images/merch/merch-front-2.webp",
+  "merch-front-3": "/images/merch/merch-front-3.webp",
+  "merch-gone-fishing": "/images/merch/merch-gone-fishing.webp",
+  "merch-group-chat": "/images/merch/merch-group-chat.webp",
+  "merch-your-boat": "/images/merch/merch-your-boat.webp",
   "gal-op-de-trailer": "/images/photography/gal-op-de-trailer.webp",
   "gal-open-dek": "/images/photography/gal-open-dek.webp",
   "gal-voordek": "/images/photography/gal-voordek.webp",
-  "render-aft-quarter": "/images/renders/render-aft-quarter.jpg",
-  "render-bow-quarter": "/images/renders/render-bow-quarter.jpg",
-  "render-stern-on": "/images/renders/render-stern-on.jpg",
-  "render-top-down": "/images/renders/render-top-down.jpg"
+  "render-aft-quarter": "/images/renders/render-aft-quarter.webp",
+  "render-bow-quarter": "/images/renders/render-bow-quarter.webp",
+  "render-stern-on": "/images/renders/render-stern-on.webp",
+  "render-top-down": "/images/renders/render-top-down.webp",
+  "merch-contactsheet": "/images/source/merch-contactsheet.png"
 }

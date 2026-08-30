@@ -24,16 +24,19 @@ export function Header() {
   return (
     <>
       <header
+        /* The hero is light, so the transparent state has to read dark. */
         className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
-          solid ? 'border-b border-white/10 bg-hull/92 backdrop-blur-md' : 'border-b border-transparent bg-transparent'
+          solid
+            ? 'border-b border-white/10 bg-hull/92 text-bone backdrop-blur-md'
+            : 'border-b border-transparent bg-transparent text-hull'
         }`}
       >
-        <div className="shell flex h-16 items-center justify-between gap-8 lg:h-20">
+        <div className="shell flex h-20 items-center justify-between gap-8 lg:h-24">
           <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
             {LOGO?.src ? (
               /* Fixed box keeps the header height stable whatever the logo's ratio;
                  the lockup needs real height before the wordmark reads. */
-              <span className="flex h-8 items-center overflow-hidden lg:h-11">
+              <span className="flex h-11 items-center overflow-hidden lg:h-16">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={LOGO.src} alt="Assault Boats" className="h-full w-auto" />
               </span>
@@ -53,7 +56,7 @@ export function Header() {
             <ul className="flex items-center gap-9">
               {NAV_LINKS.map((link) => (
                 <li key={link.href}>
-                  <a href={link.href} className="group relative block py-2 type-label text-bone/85 transition-colors hover:text-white">
+                  <a href={link.href} className="group relative block py-2 type-label opacity-80 transition-opacity hover:opacity-100">
                     {link.label}
                     <span
                       aria-hidden="true"
@@ -68,7 +71,9 @@ export function Header() {
           <div className="flex items-center gap-3">
             <a
               href="#prijslijst"
-              className="hidden rounded-[2px] border border-white/25 px-5 py-2.5 type-label text-bone transition-colors duration-300 hover:border-red hover:bg-red hover:text-white lg:inline-block"
+              className={`hidden rounded-[2px] border px-5 py-2.5 type-label transition-colors duration-300 hover:border-red hover:bg-red hover:text-white lg:inline-block ${
+                solid ? 'border-white/25' : 'border-black/25'
+              }`}
             >
               Prijslijst
             </a>
@@ -83,12 +88,12 @@ export function Header() {
             >
               <span className="relative block h-3 w-6">
                 <span
-                  className={`absolute left-0 block h-px w-6 bg-bone transition-transform duration-400 ease-[var(--ease-out-a)] ${
+                  className={`absolute left-0 block h-px w-6 bg-current transition-transform duration-400 ease-[var(--ease-out-a)] ${
                     menuOpen ? 'top-1.5 rotate-45' : 'top-0'
                   }`}
                 />
                 <span
-                  className={`absolute left-0 block h-px w-6 bg-bone transition-transform duration-400 ease-[var(--ease-out-a)] ${
+                  className={`absolute left-0 block h-px w-6 bg-current transition-transform duration-400 ease-[var(--ease-out-a)] ${
                     menuOpen ? 'top-1.5 -rotate-45' : 'top-3'
                   }`}
                 />

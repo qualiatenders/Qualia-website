@@ -20,7 +20,7 @@ export function ModelContent({ activeIndex }: Props) {
       {/* Media — both frames stacked so the swap is a true crossfade. */}
       <div className="lg:col-span-7">
         <div
-          className="relative overflow-hidden bg-white ring-1 ring-inset ring-black/10"
+          className="relative overflow-hidden"
           style={{ aspectRatio: model.media.ratio }}
         >
           <AnimatePresence initial={false}>
