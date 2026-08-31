@@ -88,7 +88,7 @@ export function Lightbox({ items, index, onClose, onNavigate }: Props) {
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             >
-              <Media media={item} sizes="90vw" className="max-h-[76svh] w-full" />
+              <Media media={item} plain sizes="90vw" className="max-h-[76svh] w-full" />
             </motion.div>
           </div>
 

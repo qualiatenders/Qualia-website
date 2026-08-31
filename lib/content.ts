@@ -70,10 +70,10 @@ export const HERO = {
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
   body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
   cta: { label: 'Ontdek de Assault 500', href: '#assault-500' },
-  media: media('render-top-down', 'Het dek van de Assault 500 van bovenaf', 'Render · hero', '16 / 9', { tone: 'dark' }),
+  media: media('render-aft-quarter', 'De Assault 500 schuin van achteren', 'Render · hero', '16 / 9', { tone: 'dark' }),
   stats: [
     { value: '5,00', unit: 'M', label: 'Lengte' },
-    { value: '1,96', unit: 'M', label: 'Breedte' },
+    { value: '1,95', unit: 'M', label: 'Breedte' },
     { value: '4', unit: 'MM', label: 'Aluminium' },
     { value: '60', unit: 'PK', label: 'Max. motor' },
   ],
@@ -93,8 +93,10 @@ export const INTRO = {
     { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
-    primary: media('romp-side-profile', 'Zijaanzicht van de aluminium romp van de Assault 500', 'Romp · side profile', '4 / 5'),
-    detail: media('detail-laswerk', 'Detail van het laswerk op de aluminium naad', 'Detail · laswerk', '1 / 1'),
+    // Cover, niet contain: de render is liggend en zou anders als klein
+    // bootje in een groot leeg vlak staan.
+    primary: media('render-stern-on', 'De Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '4 / 5', { fit: 'cover', tone: 'light' }),
+    detail: media('detail-laswerk', 'Lasser aan het werk aan een aluminium naad', 'Detail · laswerk', '4 / 3'),
   },
 };
 
@@ -159,7 +161,7 @@ export const SPECS_PLAN = media(
 
 export const SPECS = [
   { label: 'Lengte', value: '5,00', unit: 'm', span: 'lg:col-span-5' },
-  { label: 'Breedte romp / totaal', value: '1,88 / 1,96', unit: 'm', span: 'lg:col-span-4' },
+  { label: 'Breedte romp / totaal', value: '1,88 / 1,95', unit: 'm', span: 'lg:col-span-4' },
   { label: 'Plaatdikte', value: '4', unit: 'mm', span: 'lg:col-span-3' },
   { label: 'Materiaal', value: 'Al 5083', unit: 'zeewaterbestendig', span: 'lg:col-span-5' },
   { label: 'Gewicht romp', value: '365', unit: 'kg', span: 'lg:col-span-3' },

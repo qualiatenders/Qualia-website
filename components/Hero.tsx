@@ -45,9 +45,10 @@ export function Hero() {
         <Media
           media={HERO.media}
           priority
+          plain
           sizes="100vw"
-          className="h-full w-full !aspect-auto !bg-transparent"
-          imageClassName="scale-[2.6] object-center sm:scale-[2] lg:scale-[1.5]"
+          className="h-full w-full !aspect-auto"
+          imageClassName="scale-[1.7] object-center sm:scale-[1.4] lg:scale-[1.15]"
         />
       </motion.div>
 

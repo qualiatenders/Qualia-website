@@ -10,6 +10,8 @@ type Props = {
   hoverZoom?: boolean;
   /** Extra classes on the image itself — used to crop the hero in close. */
   imageClassName?: string;
+  /** Backgrounds and lightbox frames: no plate, no cut corner. */
+  plain?: boolean;
 };
 
 /**
@@ -21,14 +23,19 @@ type Props = {
  * ratio (no layout shift) and names the shot it is waiting for. Drop a path
  * into `src` in lib/content.ts and the real asset takes over.
  */
-export function Media({ media, className = '', sizes = '100vw', priority = false, hoverZoom = false, imageClassName = '' }: Props) {
+export function Media({ media, className = '', sizes = '100vw', priority = false, hoverZoom = false, imageClassName = '', plain = false }: Props) {
   const contain = media.fit === 'contain';
+  const plate = !plain && (media.tone === 'light' || !contain);
 
   return (
     <div
-      /* Cut-out renders float on the section; photography gets a backing plate. */
-      className={`group/media relative overflow-hidden ${contain ? '' : 'notch'} ${
-        contain ? 'bg-transparent' : media.tone === 'light' ? 'bg-bone' : 'bg-hull-soft'
+      /*
+        A light-toned slot always gets a bone plate, so a cut-out render reads
+        as a drawing sheet even inside a dark section. Only a fully transparent
+        render skips both the plate and the cut corner.
+      */
+      className={`group/media relative overflow-hidden ${plate && !plain ? 'notch' : ''} ${
+        plate ? (media.tone === 'light' ? 'bg-bone' : 'bg-hull-soft') : 'bg-transparent'
       } ${className}`}
       style={{ aspectRatio: media.ratio }}
     >
