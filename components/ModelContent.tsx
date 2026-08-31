@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { MODELS } from '@/lib/content';
-import { ArrowLink } from './ArrowLink';
 import { FeatureList } from './FeatureList';
 import { Media } from './Media';
 
@@ -80,9 +79,6 @@ export function ModelContent({ activeIndex }: Props) {
                 <FeatureList features={entry.features} tone="light" />
               </div>
 
-              <ArrowLink href="#contact" variant="ghost" className="mt-9" tabIndex={active ? undefined : -1}>
-                {entry.cta}
-              </ArrowLink>
             </div>
           );
         })}

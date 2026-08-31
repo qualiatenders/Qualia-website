@@ -55,7 +55,7 @@ export function Intro() {
 
           {/* Offset detail plate — the asymmetry that keeps the grid alive. */}
           <motion.div
-            className="relative z-10 -mt-16 ml-auto w-[58%] sm:w-[44%] lg:-mt-28 lg:ml-0 lg:-translate-x-10"
+            className="relative z-10 -mt-14 ml-auto w-[52%] sm:w-[38%] lg:-mt-24 lg:ml-0 lg:-translate-x-10"
             style={reduced ? undefined : { y: drift }}
           >
             <Reveal delay={0.15} y={28}>

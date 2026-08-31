@@ -93,10 +93,10 @@ export const INTRO = {
     { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
-    // Cover, niet contain: de render is liggend en zou anders als klein
-    // bootje in een groot leeg vlak staan.
-    primary: media('render-stern-on', 'De Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '4 / 5', { fit: 'cover', tone: 'light' }),
-    detail: media('detail-laswerk', 'Lasser aan het werk aan een aluminium naad', 'Detail · laswerk', '4 / 3'),
+    primary: media('detail-laswerk', 'Lasser aan het werk aan een aluminium naad', 'Detail · laswerk', '4 / 3'),
+    // De render staat al in de hero, de uitvoeringen en de specificaties;
+    // hier is hij de kleine plaat over de foto heen.
+    detail: media('render-stern-on', 'De Assault 500 recht van achteren, met de volledige dekindeling in beeld', 'Render · stern on', '4 / 3', { fit: 'cover', tone: 'light' }),
   },
 };
 
@@ -107,7 +107,6 @@ export type Model = {
   title: string;
   body: string;
   features: string[];
-  cta: string;
   media: MediaSlot;
 };
 
@@ -124,10 +123,7 @@ export const MODELS: Model[] = [
       'Zijbanken optioneel',
       'Uitneembaar zonnedek optioneel',
       'Stuurconsole optioneel',
-      'Achterplatform',
-      'Maximaal 60 pk',
     ],
-    cta: 'Bekijk de 500',
     media: media('render-bow-quarter', 'Render van de Assault 500 in de open uitvoering, schuin van voren', 'Render · 500 · bow quarter', '16 / 9', RENDER),
   },
   {
@@ -143,9 +139,7 @@ export const MODELS: Model[] = [
       'Tiller-besturing standaard',
       'Stuurconsole optioneel',
       'Ruim visdek',
-      'Maximaal 60 pk',
     ],
-    cta: 'Bekijk de 500 Fish',
     media: media('render-fish', 'Render van de Assault 500 Fish met verhoogd werpdek', 'Render · 500 Fish', '16 / 9', RENDER),
   },
 ];
