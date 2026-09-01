@@ -43,16 +43,13 @@ function media(
  * Merkassets uit public/images/brand/. Zolang `logo` ontbreekt valt de site
  * terug op het getypte woordmerk, zodat er nooit een gat valt.
  *
- * `logo`      — horizontale lockup, draagt de naam: header en footer.
- * `logo-mark` — rond embleem, ook de bron van de favicon (app/icon.png).
+ * `logo` — horizontale lockup in de header. Het ronde embleem leeft als
+ * favicon in app/icon.png en heeft hier geen slot nodig.
  */
 export const LOGO: MediaSlot | null = FILES['logo']
   ? media('logo', 'Assault Boats', 'Logo', 'auto')
   : null;
 
-export const LOGO_MARK: MediaSlot | null = FILES['logo-mark']
-  ? media('logo-mark', 'Assault Boats embleem', 'Logo · embleem', '1 / 1')
-  : null;
 
 /** De renders zijn vrijstaand gemaakt: nooit bijsnijden, altijd op licht. */
 const RENDER = { fit: 'contain', tone: 'light' } as const;
@@ -213,7 +210,6 @@ export const CONTACT = {
   ],
   primary: { label: 'Kom langs', href: '#contact' },
   whatsapp: { label: 'WhatsApp', href: '#contact' },
-  media: media('werkplaats', 'De Assault 500 in de werkplaats', 'Werkplaats', '3 / 4'),
 };
 
 /**
@@ -226,7 +222,6 @@ export const PRICE_CTA = {
 };
 
 export const FOOTER = {
-  wordmark: 'Assault Boats',
   tagline: 'Built in the Netherlands.',
   links: [
     { label: 'Assault 500', href: '#uitvoeringen' },

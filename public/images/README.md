@@ -36,7 +36,6 @@ en sectie 01 — daar staat nu een placeholder.
 | `hero-action` | Hero, volledig beeldvullend — **nog leeg** |
 | `romp-side-profile` | Sectie 01, groot staand beeld — **nog leeg** |
 | `detail-laswerk` | Sectie 01, klein detailbeeld — **nog leeg** |
-| `werkplaats` | Contactsectie — nog leeg |
 | `gal-op-de-trailer` | Gallery · Exterieur ✓ |
 | `gal-voordek` | Gallery · Exterieur ✓ |
 | `gal-open-dek` | Gallery · Dek ✓ |
