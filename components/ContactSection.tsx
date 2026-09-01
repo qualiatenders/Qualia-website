@@ -38,29 +38,43 @@ export function ContactSection() {
           </Reveal>
 
           <Reveal delay={0.2} className="mt-10 flex flex-wrap gap-3">
-            <ArrowLink href={CONTACT.whatsapp.href} icon={<WhatsAppMark />}>
+            <ArrowLink
+              href={CONTACT.whatsapp.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              icon={<WhatsAppMark />}
+            >
               {CONTACT.whatsapp.label}
             </ArrowLink>
-            <ArrowLink href={CONTACT.primary.href} variant="outline">
+            <ArrowLink href={CONTACT.primary.href} target="_blank" rel="noreferrer noopener" variant="outline">
               {CONTACT.primary.label}
             </ArrowLink>
           </Reveal>
         </div>
 
         <dl className="grid grid-cols-1 content-start gap-x-10 sm:grid-cols-2 lg:col-span-6 lg:col-start-7">
-          {CONTACT.details.map((detail, i) => (
-            <Reveal key={detail.label} delay={0.06 + i * 0.05} className="border-t border-white/12 py-6">
-              <dt className="type-label text-mill">{detail.label}</dt>
-              <dd
-                className={`mt-3 text-[1.125rem] font-medium ${
-                  detail.pending ? 'text-deck underline decoration-dotted underline-offset-4' : 'text-bone'
-                }`}
-                title={detail.pending ? 'Nog in te vullen' : undefined}
-              >
-                {detail.value}
-              </dd>
-            </Reveal>
-          ))}
+          {CONTACT.details.map((detail, i) => {
+            // Only the map link leaves the site; tel: and mailto: hand off to the phone.
+            const external = detail.href?.startsWith('http');
+            return (
+              <Reveal key={detail.label} delay={0.06 + i * 0.05} className="border-t border-white/12 py-6">
+                <dt className="type-label text-mill">{detail.label}</dt>
+                <dd className="mt-3 text-[1.125rem] font-medium text-bone">
+                  {detail.href ? (
+                    <a
+                      href={detail.href}
+                      {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
+                      className="transition-colors hover:text-red"
+                    >
+                      {detail.value}
+                    </a>
+                  ) : (
+                    detail.value
+                  )}
+                </dd>
+              </Reveal>
+            );
+          })}
         </dl>
       </div>
     </section>

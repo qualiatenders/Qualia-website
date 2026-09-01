@@ -171,14 +171,14 @@ export type GalleryItem = MediaSlot & { caption: string };
  * voegt filteren niets toe en kost het alleen een klik.
  */
 export const GALLERY: GalleryItem[] = [
-  { ...media('gal-op-de-trailer', 'De Assault 500 op de trailer, gezien vanaf de spiegel', 'Op de trailer', '4 / 3'), caption: 'Op de trailer' },
-  { ...media('gal-voordek', 'Het verhoogde voordek met opbergluik en antislip', 'Voordek', '3 / 4'), caption: 'Voordek' },
-  { ...media('gal-open-dek', 'Open dekindeling met opbergluiken en antislip vloerdelen', 'Open dek', '4 / 5'), caption: 'Open dek' },
-  { ...media('gal-werpdek', 'Verhoogd werpdek van de Assault 500 Fish', 'Werpdek', '4 / 3'), caption: 'Werpdek' },
-  { ...media('gal-hengelberging', 'Geopende hengelberging onder het werpdek', 'Hengelberging', '3 / 4'), caption: 'Hengelberging' },
-  { ...media('gal-lasdetail', 'Lasnaad tussen twee aluminium platen', 'Lasdetail', '1 / 1'), caption: 'Lasdetail' },
-  { ...media('gal-tiller', 'Tiller-besturing aan boord', 'Tiller', '3 / 4'), caption: 'Tiller' },
-  { ...media('gal-varend', 'Assault 500 varend met hekgolf', 'Varend', '16 / 10'), caption: 'Onderweg' },
+  { ...media('foto-op-de-werf', 'De Assault 500 op de werf, schuin van voren', 'Op de werf', '3 / 4'), caption: 'Op de werf' },
+  { ...media('foto-achterkwartier', 'De Assault 500 schuin van achteren, met spiegel en dek in beeld', 'Achterkwartier', '3 / 4'), caption: 'Achterkwartier' },
+  { ...media('foto-vanaf-de-spiegel', 'Het dek gezien vanaf de spiegel, met antislip en opbergluiken', 'Vanaf de spiegel', '3 / 4'), caption: 'Vanaf de spiegel' },
+  { ...media('foto-dekindeling', 'Close-up van de dekindeling met antislip vloerdelen en luiken', 'Dekindeling', '1 / 1'), caption: 'Dekindeling' },
+  { ...media('foto-volle-lengte', 'De volle lengte van de romp met het open dek', 'Volle lengte', '3 / 4'), caption: 'Volle lengte' },
+  { ...media('foto-boeg', 'De boeg van binnenuit, met greeprails en antislip randen', 'Boeg', '3 / 4'), caption: 'Boeg' },
+  { ...media('foto-spiegel', 'De spiegel met achterplatform, recht van achteren', 'Spiegel', '1 / 1'), caption: 'Spiegel' },
+  { ...media('foto-werkplaats', 'De Assault 500 op bokken voor de werkplaats', 'Bij de werkplaats', '3 / 4'), caption: 'Bij de werkplaats' },
 ];
 
 export const MERCH = {
@@ -194,29 +194,26 @@ export const MERCH = {
   ],
 };
 
-/**
- * TODO — vervang de placeholders hieronder door de definitieve
- * contactgegevens. Ze worden bewust zichtbaar gemarkeerd in de UI.
- */
+/** Google Maps, zodat "kom langs" meteen een route oplevert. */
+const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Dingstede+6+Zwartsluis';
+
+/** wa.me wil het nummer zonder plus en zonder voorloopnul. */
+const WHATSAPP_URL = 'https://wa.me/31655324350';
+
 export const CONTACT = {
   index: '06',
   title: 'See it. Feel it. Drive it.',
-  body: 'Foto’s zijn mooi. Aan boord staan is beter. Kom de Assault 500 in het echt bekijken en ontdek welke uitvoering bij jou past.',
+  body: 'Foto\u2019s zijn mooi. Aan boord staan is beter. Kom de Assault 500 in het echt bekijken en ontdek welke uitvoering bij jou past.',
   details: [
-    { label: 'Telefoon', value: '[telefoonnummer]', href: null, pending: true },
-    { label: 'E-mail', value: '[e-mailadres]', href: null, pending: true },
-    { label: 'Werkplaats', value: '[adres, plaats]', href: null, pending: true },
-    { label: 'Op afspraak', value: 'ma – za', href: null, pending: false },
-  ],
-  primary: { label: 'Kom langs', href: '#contact' },
-  whatsapp: { label: 'WhatsApp', href: '#contact' },
+    { label: 'Telefoon', value: '06 55 32 43 50', href: 'tel:+31655324350' },
+    { label: 'E-mail', value: 'info@assaultboats.nl', href: 'mailto:info@assaultboats.nl' },
+    { label: 'Werkplaats', value: 'Dingstede 6, Zwartsluis', href: MAPS_URL },
+    { label: 'Op afspraak', value: 'ma \u2013 za', href: null },
+  ] as { label: string; value: string; href: string | null }[],
+  primary: { label: 'Kom langs', href: MAPS_URL },
+  whatsapp: { label: 'WhatsApp', href: WHATSAPP_URL },
 };
 
-/**
- * De prijslijst leeft in de meescrollende CTA en in de header.
- * TODO — vervang `href` door de URL van de prijslijst-PDF zodra die er is;
- * tot die tijd landt de bezoeker bij contact.
- */
 export const PRICE_CTA = {
   cta: { label: 'Prijslijst', href: '#contact' },
 };

@@ -62,6 +62,8 @@ export function StickyCTA() {
 
             <a
               href={CONTACT.whatsapp.href}
+              target="_blank"
+              rel="noreferrer noopener"
               className="group flex flex-1 items-center justify-center gap-2.5 rounded-[2px] bg-red px-5 py-3.5 type-label text-white shadow-[0_8px_30px_rgba(192,39,44,0.35)] transition-colors duration-300 hover:bg-red-hot lg:flex-none lg:justify-start"
             >
               <WhatsAppMark />

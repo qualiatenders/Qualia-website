@@ -26,28 +26,23 @@ worden nooit bijgesneden en krijgen een expliciete witte plaat met haarlijn.
 
 ## Fotografie → `public/images/photography/`
 
-De renders dragen de site; de huidige werffoto's staan bewust alleen in de
-gallery-slider tot er betere fotografie is. Zodra `hero-action`,
-`romp-side-profile` en `detail-laswerk` bestaan, vullen die vanzelf de hero
-en sectie 01 — daar staat nu een placeholder.
+De acht werffoto's dragen de gallery. Ze zijn teruggeschaald naar 1800 px op
+de lange zijde en als WebP opgeslagen; de EXIF-rotatie is daarbij vastgelegd,
+anders staan ze in sommige viewers gekanteld. De originelen (5–6 MB per stuk)
+staan bewust niet in `public/` — die worden anders zo uitgeserveerd — maar
+zijn terug te halen uit de git-historie.
 
 | Bestandsnaam | Waar het verschijnt |
 | --- | --- |
-| `hero-action` | Hero, volledig beeldvullend — **nog leeg** |
-| `romp-side-profile` | Sectie 01, groot staand beeld — **nog leeg** |
-| `detail-laswerk` | Sectie 01, klein detailbeeld — **nog leeg** |
-| `gal-op-de-trailer` | Gallery · Exterieur ✓ |
-| `gal-voordek` | Gallery · Exterieur ✓ |
-| `gal-open-dek` | Gallery · Dek ✓ |
-| `gal-antislip` | Gallery · Dek |
-| `gal-werpdek` | Gallery · Fish |
-| `gal-hengelberging` | Gallery · Fish |
-| `gal-lasdetail` | Gallery · Details |
-| `gal-spiegel-motor` | Gallery · Details |
-| `gal-tiller` | Gallery · Details |
-| `gal-varend` | Gallery · On the water |
-| `gal-anker` | Gallery · On the water |
-| `merch-cap`, `merch-tee`, `merch-hoodie` | Merch |
+| `detail-laswerk` | Sectie 01, detailplaat ✓ |
+| `foto-op-de-werf` | Gallery ✓ |
+| `foto-achterkwartier` | Gallery ✓ |
+| `foto-vanaf-de-spiegel` | Gallery ✓ |
+| `foto-dekindeling` | Gallery ✓ |
+| `foto-volle-lengte` | Gallery ✓ |
+| `foto-boeg` | Gallery ✓ |
+| `foto-spiegel` | Gallery ✓ |
+| `foto-werkplaats` | Gallery ✓ |
 
 ## Logo → `public/images/brand/`
 
