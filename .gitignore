@@ -6,3 +6,6 @@ build/
 *.tsbuildinfo
 next-env.d.ts
 .env*.local
+
+# previews van de prijslijst-render
+/pricelist/preview/

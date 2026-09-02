@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Assault 500 — Prijslijst 2026</title>
+<style>/*FONTS*/</style>
+<style>
+/* ------------------------------------------------------------------
+   ASSAULT BOATS — PRIJSLIJST 2026
+   Zelfde ontwerptaal als assaultboats.nl:
+   Hull Black · Assault Red · Mill Aluminium · Deck Grey · Bone
+------------------------------------------------------------------ */
+:root {
+  --hull: #000000;
+  --red: #c0272c;
+  --mill: #999999;
+  --deck: #4a4a4a;
+  --bone: #f2f1ed;
+  --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --sans: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --pad: 16mm;
+}
+
+@page { size: A4; margin: 0; }
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+body {
+  font-family: var(--sans);
+  color: var(--hull);
+  background: var(--bone);
+  font-size: 8.6pt;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  position: relative;
+  width: 210mm;
+  height: 297mm;
+  overflow: hidden;
+  background: var(--bone);
+  display: flex;
+  flex-direction: column;
+  page-break-after: always;
+}
+.page:last-child { page-break-after: auto; }
+
+/* --- type primitives ------------------------------------------- */
+.label {
+  font-family: var(--mono);
+  font-size: 6.6pt;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--mill);
+}
+.label--deck { color: var(--deck); }
+.label--red  { color: var(--red); }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+h1 { font-size: 42pt; font-weight: 800; letter-spacing: -0.045em; }
+h2 { font-size: 21pt; }
+h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
+
+.rule-red { display: block; width: 34px; height: 3px; background: var(--red); }
+
+/* --- kop- en voetband ------------------------------------------- */
+.band {
+  background: var(--hull);
+  color: var(--bone);
+  padding: 8mm var(--pad);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10mm;
+}
+.band--slim { padding: 6mm var(--pad); }
+.band img { height: 11mm; width: auto; display: block; }
+.band .label { color: var(--mill); }
+.band .stamp { text-align: right; }
+.band .stamp strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  text-transform: uppercase;
+}
+
+.foot {
+  margin-top: auto;
+  background: var(--hull);
+  color: var(--mill);
+  padding: 5mm var(--pad);
+  display: flex;
+  justify-content: space-between;
+  gap: 8mm;
+}
+.foot span { white-space: nowrap; }
+
+.body { padding: 0 var(--pad); }
+
+/* --- pagina 1: model -------------------------------------------- */
+.model {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 8mm;
+  align-items: center;
+  padding-top: 16mm;
+}
+.model p.lead {
+  font-size: 9.6pt;
+  line-height: 1.6;
+  color: var(--deck);
+  margin-top: 5mm;
+  max-width: 78mm;
+}
+.render { width: 100%; height: auto; display: block; }
+
+.pricetag {
+  margin-top: 8mm;
+  display: inline-flex;
+  flex-direction: column;
+  gap: 1mm;
+  background: var(--hull);
+  color: var(--bone);
+  padding: 5mm 9mm 5mm 6mm;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 4mm) 100%, 0 100%);
+}
+.pricetag .amount {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 27pt;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.pricetag .amount .cur { color: var(--mill); font-size: 15pt; margin-right: 1.5mm; }
+
+/* --- specs ------------------------------------------------------- */
+.specs {
+  margin-top: 9mm;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  column-gap: 7mm;
+}
+.specs div {
+  border-top: 0.6pt solid rgba(0,0,0,0.18);
+  padding: 3.5mm 0 7mm;
+}
+.specs dt { min-height: 7mm; }
+.specs dd {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 14pt;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  margin-top: 2mm;
+}
+.specs .unit { display: block; margin-top: 1.5mm; }
+
+.sectionhead { margin-top: 11mm; }
+.sectionhead h2 { margin-top: 4mm; }
+.sectionhead p {
+  color: var(--deck);
+  margin-top: 3mm;
+  max-width: 120mm;
+  font-size: 8.6pt;
+}
+
+/* --- opties ------------------------------------------------------ */
+.opts { margin-top: 6mm; }
+.opt {
+  display: grid;
+  grid-template-columns: 1fr 30mm;
+  column-gap: 8mm;
+  align-items: start;
+  border-top: 0.6pt solid rgba(0,0,0,0.18);
+  padding: 3mm 0;
+}
+.opt:last-child { border-bottom: 0.6pt solid rgba(0,0,0,0.18); }
+.opt .idx {
+  font-family: var(--mono);
+  font-size: 6.6pt;
+  letter-spacing: 0.2em;
+  color: var(--red);
+  display: block;
+  margin-bottom: 1.2mm;
+}
+.opt p { color: var(--deck); margin-top: 1.5mm; line-height: 1.45; max-width: 130mm; }
+.opt .price {
+  text-align: right;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15pt;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.opt .price .cur {
+  display: block;
+  font-family: var(--mono);
+  font-size: 6.6pt;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--mill);
+  margin-bottom: 2mm;
+}
+
+/* --- toelichtingsblok -------------------------------------------- */
+.note {
+  margin-top: 8mm;
+  background: var(--hull);
+  color: var(--bone);
+  padding: 8mm;
+}
+.note h3 { color: var(--bone); }
+.note .rule-red { margin-bottom: 4mm; }
+.note p { color: var(--mill); margin-top: 3mm; max-width: 155mm; }
+
+.cols {
+  margin-top: 9mm;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10mm;
+}
+.cols > div { border-top: 0.6pt solid rgba(0,0,0,0.18); padding-top: 4mm; }
+.cols h3 { margin-top: 3mm; }
+.cols ul { list-style: none; margin-top: 3mm; }
+.cols li {
+  color: var(--deck);
+  padding-left: 5mm;
+  position: relative;
+  padding-bottom: 1.5mm;
+}
+.cols li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 1.55mm;
+  width: 2mm;
+  height: 2mm;
+  background: var(--red);
+}
+.cols p { color: var(--deck); margin-top: 3mm; }
+
+/* --- sluitbeeld + afsluiter ---------------------------------------- */
+.closing-render {
+  margin-top: 5mm;
+  display: block;
+  width: 64%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.closer {
+  margin-top: auto;
+  background: var(--hull);
+  color: var(--bone);
+  padding: 8mm var(--pad);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 10mm;
+}
+.closer h2 { max-width: 105mm; color: var(--bone); }
+.closer .contact { text-align: right; }
+.closer .contact div { margin-top: 2.5mm; }
+.closer .contact strong {
+  display: block;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 11pt;
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  text-transform: none;
+}
+.closer .label--deck { color: var(--mill); }
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGINA 1 ============================ -->
+<section class="page">
+  <header class="band">
+    <img src="/images/brand/logo.webp" alt="Assault Boats">
+    <div class="stamp">
+      <span class="label">Prijslijst</span>
+      <strong>2026</strong>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="model">
+      <div>
+        <span class="rule-red"></span>
+        <span class="label label--deck" style="display:block;margin-top:4mm">01 — Het model</span>
+        <h1 style="margin-top:4mm">Assault<br>500</h1>
+        <p class="lead">
+          Aluminium V-jon van 5 meter, gebouwd in Nederland. Zelflozend dek,
+          4 mm romp in zeewaterbestendig aluminium en tiller-besturing als
+          standaard. Eén basisboot, met de opties op deze prijslijst
+          in te richten zoals jij vaart.
+        </p>
+        <div class="pricetag">
+          <span class="label">Vanafprijs — incl. 21% btw</span>
+          <span class="amount"><span class="cur">EUR</span>9.575</span>
+        </div>
+      </div>
+      <div>
+        <img class="render" src="/images/renders/render-bow-quarter.webp" alt="Assault 500">
+      </div>
+    </div>
+
+    <div style="margin-top:18mm">
+      <span class="rule-red"></span>
+      <span class="label label--deck" style="display:block;margin-top:4mm">02 — Standaard uitvoering</span>
+    </div>
+
+    <dl class="specs">
+      <div><dt class="label">Lengte</dt><dd>5,00</dd><span class="label unit">m</span></div>
+      <div><dt class="label">Breedte romp / totaal</dt><dd>1,88 / 1,95</dd><span class="label unit">m</span></div>
+      <div><dt class="label">Plaatdikte</dt><dd>4</dd><span class="label unit">mm</span></div>
+      <div><dt class="label">Materiaal</dt><dd>Al 5083</dd><span class="label unit">zeewaterbestendig</span></div>
+      <div><dt class="label">Gewicht romp</dt><dd>365</dd><span class="label unit">kg</span></div>
+      <div><dt class="label">Spiegelhoogte</dt><dd>508</dd><span class="label unit">mm · langstaart</span></div>
+      <div><dt class="label">Brandstoftank</dt><dd>25</dd><span class="label unit">liter</span></div>
+      <div><dt class="label">Besturing</dt><dd>Tiller</dd><span class="label unit">console optioneel</span></div>
+      <div><dt class="label">Max. belading</dt><dd>4 pers.</dd><span class="label unit">360 kg</span></div>
+      <div><dt class="label">Aanbevolen motor</dt><dd>40</dd><span class="label unit">pk</span></div>
+      <div><dt class="label">Max. motor</dt><dd>60</dd><span class="label unit">pk</span></div>
+      <div><dt class="label">Dek</dt><dd>Zelflozend</dd><span class="label unit">standaard</span></div>
+    </dl>
+  </div>
+
+  <footer class="foot">
+    <span class="label">Assault Boats · Dingstede 6, Zwartsluis</span>
+    <span class="label">Prijslijst 2026 · pagina 1 van 3</span>
+  </footer>
+</section>
+
+<!-- ============================ PAGINA 2 ============================ -->
+<section class="page">
+  <header class="band band--slim">
+    <img src="/images/brand/logo.webp" alt="Assault Boats">
+    <div class="stamp">
+      <span class="label">Assault 500 · Opties</span>
+      <strong>Prijslijst 2026</strong>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="sectionhead">
+      <span class="rule-red"></span>
+      <span class="label label--deck" style="display:block;margin-top:4mm">03 — Opties</span>
+      <h2>Bouw je eigen 500</h2>
+      <p>
+        Consumentenprijzen inclusief 21% btw, bij bestelling van een nieuwe
+        Assault 500. Elke optie is los te kiezen.
+      </p>
+    </div>
+
+    <div class="opts">
+      <div class="opt">
+        <div>
+          <span class="idx">01</span>
+          <h3>Zijbanken</h3>
+          <p>Gelaste aluminium zijbanken langs de kuip, passend op de Assault 500. Geven extra zitruimte zonder dat het dek zijn open indeling verliest.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>395</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">02</span>
+          <h3>Zonnedekpanelen</h3>
+          <p>Uitneembare aluminium panelen die de zitruimte ombouwen tot een vlak zonnedek. In enkele handelingen te plaatsen en weer weg te nemen.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>375</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">03</span>
+          <h3>Aluminium stuurconsole</h3>
+          <p>Gelaste aluminium stuurconsole voor wie liever vanaf een console vaart in plaats van met de tiller. Stuurwiel, stuurinrichting en bedieningskabels zijn niet inbegrepen.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>395</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">04</span>
+          <h3>Zware rubber stootrand</h3>
+          <p>Zware rubber stootrand rondom de gehele boot, die de romp beschermt bij afmeren en aanleggen. Inclusief montage.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>595</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">05</span>
+          <h3>Elektrisch basispakket</h3>
+          <p>Voorbedrade elektrische basis met Carling schakelpaneel, hoofdschakelaar, hoofdzekering, zekeringhouder, plus- en min-busbars, accuvoorbereiding, gelabelde aansluitingen en montagemateriaal. Zelfinstallatie.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>495</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">06</span>
+          <h3>Navigatieverlichting</h3>
+          <p>Voorbedrade set met rood/groene en witte navigatieverlichting, schakelaar, zekering, bekabeling, connectoren en montagemateriaal. Zelfinstallatie.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>225</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">07</span>
+          <h3>Lenspompset</h3>
+          <p>Voorbedrade set met lenspomp, slang, huiddoorvoer, slangklemmen, handmatige schakelaar, zekering, bekabeling en montagemateriaal. Zelfinstallatie.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>195</div>
+      </div>
+
+      <div class="opt">
+        <div>
+          <span class="idx">08</span>
+          <h3>Handrailing</h3>
+          <p>Gelaste aluminium handrailing voor houvast aan boord, passend op de Assault 500.</p>
+        </div>
+        <div class="price"><span class="cur">EUR</span>295</div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="foot">
+    <span class="label">Assault Boats · Dingstede 6, Zwartsluis</span>
+    <span class="label">Prijslijst 2026 · pagina 2 van 3</span>
+  </footer>
+</section>
+
+<!-- ============================ PAGINA 3 ============================ -->
+<section class="page">
+  <header class="band band--slim">
+    <img src="/images/brand/logo.webp" alt="Assault Boats">
+    <div class="stamp">
+      <span class="label">Assault 500 · Toelichting</span>
+      <strong>Prijslijst 2026</strong>
+    </div>
+  </header>
+
+  <div class="body">
+    <div class="sectionhead">
+      <span class="rule-red"></span>
+      <span class="label label--deck" style="display:block;margin-top:4mm">04 — Toelichting</span>
+      <h2>Wat er in zit en wat niet</h2>
+    </div>
+
+    <div class="note">
+      <span class="rule-red"></span>
+      <h3>Modulaire sets — zelfinstallatie</h3>
+      <p>
+        Het elektrisch basispakket, de navigatieverlichting en de lenspompset
+        zijn complete, voorbedrade sets. Alle componenten, bekabeling,
+        connectoren en montagematerialen zitten erin; montage-uren aan boord
+        niet. Deze sets zijn geprijsd als product en niet als installatiewerk:
+        Assault levert ze compleet en voorbereid, je
+        monteert en sluit ze zelf
+        aan volgens de meegeleverde instructies. Fabrieksmontage kan later als
+        aparte service worden aangeboden.
+      </p>
+    </div>
+
+    <div class="cols">
+      <div>
+        <span class="label label--red">Let op</span>
+        <h3>Niet inbegrepen</h3>
+        <ul>
+          <li>Buitenboordmotor</li>
+          <li>Trailer</li>
+          <li>Accu</li>
+          <li>Stuurwiel en stuurinrichting</li>
+          <li>Niet-genoemde accessoires</li>
+        </ul>
+      </div>
+      <div>
+        <span class="label label--red">Voorwaarden</span>
+        <h3>Prijzen</h3>
+        <p>
+          Alle genoemde prijzen zijn consumentenprijzen inclusief 21% btw.
+          Prijzen en productspecificaties onder voorbehoud van wijzigingen.
+          Deze prijslijst vervangt alle voorgaande uitgaven.
+        </p>
+      </div>
+    </div>
+
+    <img class="closing-render" src="/images/renders/render-top-down.webp" alt="Assault 500 van boven">
+  </div>
+
+  <div class="closer">
+    <div>
+      <span class="rule-red"></span>
+      <h2 style="margin-top:4mm">Simpel gebouwd.<br>Altijd uit te breiden.</h2>
+    </div>
+    <div class="contact">
+      <span class="label label--deck">Vraag of afspraak</span>
+      <div><strong>06 55 32 43 50</strong></div>
+      <div><strong>info@assaultboats.nl</strong></div>
+      <div><span class="label label--deck">Dingstede 6, Zwartsluis · op afspraak</span></div>
+    </div>
+  </div>
+
+  <footer class="foot">
+    <span class="label">assaultboats.nl · info@assaultboats.nl · 06 55 32 43 50</span>
+    <span class="label">Prijslijst 2026 · pagina 3 van 3</span>
+  </footer>
+</section>
+
+</body>
+</html>

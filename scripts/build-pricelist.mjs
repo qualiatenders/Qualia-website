@@ -1,0 +1,49 @@
+/**
+ * Rendert pricelist/prijslijst.html naar public/prijslijst-assault-500-2026.pdf.
+ *
+ * Fonts en afbeeldingen worden als data-URI ingesloten, zodat de PDF
+ * offline en identiek reproduceerbaar is.
+ *
+ *   node scripts/build-pricelist.mjs [--png]
+ *
+ * Vereist playwright + een Chromium; zet zo nodig CHROME_PATH.
+ */
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { chromium } from 'playwright';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const SRC = path.join(ROOT, 'pricelist', 'prijslijst.html');
+const FONTS = path.join(ROOT, 'pricelist', 'fonts-inline.css');
+const OUT = path.join(ROOT, 'public', 'prijslijst-assault-500-2026.pdf');
+
+const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml' };
+
+let html = fs.readFileSync(SRC, 'utf8');
+
+html = html.replace('/*FONTS*/', () => fs.readFileSync(FONTS, 'utf8'));
+
+html = html.replace(/src="(\/images\/[^"]+)"/g, (_m, p) => {
+  const file = path.join(ROOT, 'public', p);
+  const b64 = fs.readFileSync(file).toString('base64');
+  return `src="data:${MIME[path.extname(file).toLowerCase()]};base64,${b64}"`;
+});
+
+const browser = await chromium.launch({ executablePath: process.env.CHROME_PATH || undefined });
+const page = await browser.newPage();
+await page.setContent(html, { waitUntil: 'load' });
+await page.evaluate(() => document.fonts.ready);
+
+await page.pdf({ path: OUT, format: 'A4', printBackground: true, preferCSSPageSize: true });
+
+if (process.argv.includes('--png')) {
+  await page.setViewportSize({ width: 794, height: 1123 });
+  const pages = await page.$$('.page');
+  for (let i = 0; i < pages.length; i++) {
+    await pages[i].screenshot({ path: path.join(ROOT, 'pricelist', 'preview', `p${i + 1}.png`) });
+  }
+}
+
+await browser.close();
+console.log('PDF geschreven:', path.relative(ROOT, OUT), `${(fs.statSync(OUT).size / 1024).toFixed(0)} KB`);
