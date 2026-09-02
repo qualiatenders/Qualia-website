@@ -13,3 +13,6 @@ next-env.d.ts
 
 # schermafdrukken van de site
 /preview/
+
+# statische export voor TransIP
+/out/
