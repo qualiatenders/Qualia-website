@@ -14,5 +14,5 @@ next-env.d.ts
 # schermafdrukken van de site
 /preview/
 
-# statische export voor TransIP
-/out/
+# out/ (de statische export) staat bewust WEL in git: zo is de map die naar
+# TransIP moet altijd te downloaden zonder eerst lokaal te hoeven bouwen.
