@@ -62,7 +62,7 @@ export const NAV_LINKS = [
 ] as const;
 
 export const HERO = {
-  eyebrow: 'Model 2026 · Built in the Netherlands',
+  eyebrow: 'Model 2026 · Gebouwd in Nederland',
   title: 'Assault 500',
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
   body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
@@ -79,7 +79,7 @@ export const HERO = {
 export const INTRO = {
   index: '01',
   eyebrow: 'Assault 500',
-  title: 'Clean design. Sterke basis.',
+  title: 'Strak ontwerp. Sterke basis.',
   body: [
     'De Assault 500 is gebouwd met één idee: goed moet gewoon goed zijn.',
     'Een strakke romp, slimme indeling en geen onnodige poespas. De constructie wordt aan de binnen- én buitenzijde gelast en iedere Assault bouwen we zelf in Nederland.',
@@ -87,7 +87,7 @@ export const INTRO = {
   points: [
     { title: 'Aluminium V-jon', body: 'Sterk, stabiel en lekker ruim.' },
     { title: 'Binnen + buiten gelast', body: 'Omdat goed bouwen verder gaat dan wat je ziet.' },
-    { title: 'Max. 80 pk', body: 'Voor als het wat harder mag.' },
+    { title: 'Later uit te breiden', body: 'Vandaag niet nodig? Dan hoeft het er ook nog niet op.' },
   ],
   media: {
     primary: media('detail-laswerk', 'Lasser aan het werk aan een aluminium naad', 'Detail · laswerk', '4 / 3'),
@@ -120,6 +120,7 @@ export const MODELS: Model[] = [
       'Zijbanken optioneel',
       'Uitneembaar zonnedek optioneel',
       'Stuurconsole optioneel',
+      'Elektrische basis optioneel',
     ],
     media: media('render-bow-quarter', 'Render van de Assault 500 in de open uitvoering, schuin van voren', 'Render · 500 · bow quarter', '16 / 9', RENDER),
   },
@@ -135,6 +136,7 @@ export const MODELS: Model[] = [
       'Aparte hengelberging',
       'Tiller-besturing standaard',
       'Stuurconsole optioneel',
+      'Elektrische basis optioneel',
       'Ruim visdek',
     ],
     media: media('render-fish', 'Render van de Assault 500 Fish met verhoogd werpdek', 'Render · 500 Fish', '16 / 9', RENDER),
@@ -198,17 +200,50 @@ export const CONTACT = {
   whatsapp: { label: 'WhatsApp', href: WHATSAPP_URL },
 };
 
+/**
+ * De prijslijst is de enige route naar prijzen en opties: er komt geen
+ * configurator, dus elke prijs-CTA op de site wijst naar dit bestand.
+ */
+export const PRICE_LIST_HREF = '/prijslijst-assault-500-2026.pdf';
+
 export const PRICE_CTA = {
-  cta: { label: 'Prijslijst', href: '#contact' },
+  cta: { label: 'Prijslijst', href: PRICE_LIST_HREF },
+};
+
+/**
+ * Sluit sectie 02 af: je kiest nu een uitvoering, en wat je vandaag niet
+ * nodig hebt kun je later alsnog bestellen. Het verhaal staat bewust op
+ * één plek — herhaald in elke sectie wordt het een marketingriedel.
+ */
+export const EXPAND = {
+  eyebrow: 'Stap voor stap',
+  title: 'Begin met wat je nodig hebt.',
+  body: 'Je hoeft je Assault niet in één keer vol te bouwen. Kies nu de uitvoering en de opties die je echt gebruikt — de rest kun je later alsnog bestellen.',
+  steps: [
+    {
+      title: 'Nu kiezen',
+      body: 'Vandaag niet nodig? Dan betaal je er vandaag ook niet voor.',
+    },
+    {
+      title: 'Later aanvullen',
+      body: 'Onze uitbreidingen zijn gestandaardiseerd. Wat je later bestelt, past gewoon.',
+    },
+    {
+      title: 'Zelf of door ons',
+      body: 'Waar het kan monteer je een uitbreiding zelf. Liever niet? Dan doen wij het.',
+    },
+  ],
+  note: 'Het elektrisch basispakket is de vaste 12V-basis, door ons gemonteerd, aangesloten en getest. Latere elektrische uitbreidingen sluiten daar direct op aan.',
+  cta: { label: 'Bekijk uitvoeringen en opties', href: PRICE_LIST_HREF },
 };
 
 export const FOOTER = {
-  tagline: 'Built in the Netherlands.',
+  tagline: 'Gebouwd in Nederland.',
   links: [
     { label: 'Assault 500', href: '#uitvoeringen' },
     { label: 'Assault 500 Fish', href: '#uitvoeringen' },
     { label: 'Instagram', href: 'https://instagram.com' },
     { label: 'Contact', href: '#contact' },
-    { label: 'Prijslijst', href: '#contact' },
+    { label: 'Prijslijst', href: PRICE_LIST_HREF },
   ],
 };

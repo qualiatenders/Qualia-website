@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { useEffect, useRef } from 'react';
-import { NAV_LINKS } from '@/lib/content';
+import { NAV_LINKS, PRICE_CTA } from '@/lib/content';
 
 type Props = {
   open: boolean;
@@ -75,7 +75,9 @@ export function MobileNavigation({ open, onClose }: Props) {
 
             <div className="flex flex-col gap-5">
               <a
-                href="#contact"
+                href={PRICE_CTA.cta.href}
+                target="_blank"
+                rel="noreferrer"
                 onClick={onClose}
                 className="flex items-center justify-between rounded-[2px] bg-red px-6 py-5 type-label text-white"
               >
@@ -84,7 +86,7 @@ export function MobileNavigation({ open, onClose }: Props) {
                   <path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5" />
                 </svg>
               </a>
-              <p className="type-label text-deck">Built in the Netherlands</p>
+              <p className="type-label text-deck">Gebouwd in Nederland</p>
             </div>
           </div>
         </motion.div>

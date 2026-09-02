@@ -52,6 +52,8 @@ export function StickyCTA() {
           <div className="flex w-full gap-2 lg:w-auto lg:flex-col lg:items-end lg:gap-2.5">
             <a
               href={PRICE_CTA.cta.href}
+              target="_blank"
+              rel="noreferrer"
               className="group flex flex-1 items-center justify-center gap-2.5 rounded-[2px] border border-white/20 bg-hull/92 px-5 py-3.5 type-label text-bone shadow-[0_8px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition-colors duration-300 hover:border-white/45 lg:flex-none lg:justify-start"
             >
               <svg viewBox="0 0 14 16" className="h-4 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">

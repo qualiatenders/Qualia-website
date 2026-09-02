@@ -69,6 +69,8 @@ export function Header() {
                 on every screen — with a shorter label where space is tight. */}
             <a
               href={PRICE_CTA.cta.href}
+              target="_blank"
+              rel="noreferrer"
               className="cut-tag bg-red px-4 py-2.5 type-label text-white transition-colors duration-300 hover:bg-red-hot xs:px-5 lg:px-7 lg:py-3.5"
             >
               <span className="xs:hidden">Prijslijst</span>

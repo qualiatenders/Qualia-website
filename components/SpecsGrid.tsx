@@ -17,7 +17,7 @@ export function SpecsGrid() {
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:items-end">
           <SectionHeader
             index="03"
-            eyebrow="The numbers"
+            eyebrow="De cijfers"
             title="De Assault in cijfers."
             tone="light"
             className="lg:col-span-5"

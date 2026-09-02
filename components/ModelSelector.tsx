@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { MODELS } from '@/lib/content';
+import { Expandable } from './Expandable';
 import { ModelContent } from './ModelContent';
 import { Reveal } from './Reveal';
 import { SectionHeader } from './SectionHeader';
@@ -33,7 +34,7 @@ export function ModelSelector() {
       <div className="shell">
         <SectionHeader
           index="02"
-          eyebrow="Two setups"
+          eyebrow="Twee uitvoeringen"
           title="Kies je opstelling."
           subcopy="Dezelfde Assault 500. Jij bepaalt wat je ermee gaat doen."
           tone="light"
@@ -99,6 +100,8 @@ export function ModelSelector() {
         >
           <ModelContent activeIndex={active} />
         </div>
+
+        <Expandable />
       </div>
     </section>
   );
