@@ -4,12 +4,6 @@
   "logo assaultboats": "/images/brand/logo assaultboats.png",
   "logo-mark": "/images/brand/logo-mark.webp",
   "logo": "/images/brand/logo.webp",
-  "merch-front-1": "/images/merch/merch-front-1.webp",
-  "merch-front-2": "/images/merch/merch-front-2.webp",
-  "merch-front-3": "/images/merch/merch-front-3.webp",
-  "merch-gone-fishing": "/images/merch/merch-gone-fishing.webp",
-  "merch-group-chat": "/images/merch/merch-group-chat.webp",
-  "merch-your-boat": "/images/merch/merch-your-boat.webp",
   "detail-laswerk": "/images/photography/detail-laswerk.webp",
   "foto-achterkwartier": "/images/photography/foto-achterkwartier.webp",
   "foto-boeg": "/images/photography/foto-boeg.webp",
@@ -22,6 +16,5 @@
   "render-aft-quarter": "/images/renders/render-aft-quarter.webp",
   "render-bow-quarter": "/images/renders/render-bow-quarter.webp",
   "render-stern-on": "/images/renders/render-stern-on.webp",
-  "render-top-down": "/images/renders/render-top-down.webp",
-  "merch-contactsheet": "/images/source/merch-contactsheet.png"
+  "render-top-down": "/images/renders/render-top-down.webp"
 }
