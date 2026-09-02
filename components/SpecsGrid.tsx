@@ -6,9 +6,9 @@ import { SectionHeader } from './SectionHeader';
 /**
  * 03 — the numbers.
  *
- * One strict grid, two columns on a phone and four on a desktop, so every
- * hairline lines up across the block. The values sit on a scale that keeps
- * the longest of them — 1,88 / 1,95 — on a single line at 390px.
+ * One strict grid: two columns on a phone, four from the small breakpoint
+ * up. Eight specs divide evenly into both, so no row is ever left ragged
+ * and every hairline lines up across the block.
  */
 export function SpecsGrid() {
   return (
@@ -42,7 +42,7 @@ export function SpecsGrid() {
           </Reveal>
         </div>
 
-        <dl className="mt-16 grid grid-cols-2 gap-x-5 sm:grid-cols-3 lg:mt-24 lg:grid-cols-4 lg:gap-x-10">
+        <dl className="mt-16 grid grid-cols-2 gap-x-5 sm:grid-cols-4 lg:mt-24 lg:gap-x-10">
           {SPECS.map((spec, i) => (
             <Reveal
               key={spec.label}
@@ -58,7 +58,7 @@ export function SpecsGrid() {
                   {String(i + 1).padStart(2, '0')}
                 </span>
               </div>
-              <dd className="mt-4 font-[family-name:var(--font-display)] text-[clamp(1.375rem,3.4vw,2.75rem)] font-bold leading-[0.95] tracking-[-0.03em] text-hull [font-variant-numeric:tabular-nums]">
+              <dd className="mt-4 font-[family-name:var(--font-display)] text-[clamp(1.5rem,3.4vw,2.75rem)] font-bold leading-[0.95] tracking-[-0.03em] text-hull [font-variant-numeric:tabular-nums]">
                 {spec.value}
               </dd>
               <span className="type-label mt-2 text-mill">{spec.unit}</span>

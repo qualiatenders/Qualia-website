@@ -72,7 +72,7 @@ export const HERO = {
     { value: '5,00', unit: 'M', label: 'Lengte' },
     { value: '1,95', unit: 'M', label: 'Breedte' },
     { value: '4', unit: 'MM', label: 'Aluminium' },
-    { value: '60', unit: 'PK', label: 'Max. motor' },
+    { value: '80', unit: 'PK', label: 'Max. motor' },
   ],
 };
 
@@ -87,7 +87,7 @@ export const INTRO = {
   points: [
     { title: 'Aluminium V-jon', body: 'Sterk, stabiel en lekker ruim.' },
     { title: 'Binnen + buiten gelast', body: 'Omdat goed bouwen verder gaat dan wat je ziet.' },
-    { title: 'Max. 60 pk', body: 'Voor als het wat harder mag.' },
+    { title: 'Max. 80 pk', body: 'Voor als het wat harder mag.' },
   ],
   media: {
     primary: media('detail-laswerk', 'Lasser aan het werk aan een aluminium naad', 'Detail · laswerk', '4 / 3'),
@@ -152,16 +152,13 @@ export const SPECS_PLAN = media(
 
 export const SPECS = [
   { label: 'Lengte', value: '5,00', unit: 'm' },
-  { label: 'Breedte romp / totaal', value: '1,88 / 1,95', unit: 'm' },
+  { label: 'Breedte', value: '1,95', unit: 'm' },
   { label: 'Plaatdikte', value: '4', unit: 'mm' },
   { label: 'Materiaal', value: 'Al 5083', unit: 'zeewaterbestendig' },
-  { label: 'Gewicht romp', value: '365', unit: 'kg' },
-  { label: 'Spiegelhoogte', value: '508', unit: 'mm · langstaart' },
-  { label: 'Brandstoftank', value: '25', unit: 'liter' },
+  { label: 'Gewicht romp', value: '320', unit: 'kg' },
   { label: 'Besturing', value: 'Tiller', unit: 'standaard · console optioneel' },
   { label: 'Max. belading', value: '4 pers.', unit: '360 kg' },
-  { label: 'Aanbevolen motor', value: '40', unit: 'pk' },
-  { label: 'Max. motor', value: '60', unit: 'pk' },
+  { label: 'Max. motor', value: '80', unit: 'pk' },
 ];
 
 export type GalleryItem = MediaSlot & { caption: string };

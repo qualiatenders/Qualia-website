@@ -69,7 +69,7 @@ h1, h2, h3 {
   line-height: 0.9;
   text-transform: uppercase;
 }
-h1 { font-size: 42pt; font-weight: 800; letter-spacing: -0.045em; }
+h1 { font-size: 46pt; font-weight: 800; letter-spacing: -0.045em; }
 h2 { font-size: 21pt; }
 h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
 
@@ -118,7 +118,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
   grid-template-columns: 1fr 1.05fr;
   gap: 8mm;
   align-items: center;
-  padding-top: 16mm;
+  padding-top: 20mm;
 }
 .model p.lead {
   font-size: 9.6pt;
@@ -151,20 +151,20 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
 
 /* --- specs ------------------------------------------------------- */
 .specs {
-  margin-top: 9mm;
+  margin-top: 11mm;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   column-gap: 7mm;
 }
 .specs div {
   border-top: 0.6pt solid rgba(0,0,0,0.18);
-  padding: 3.5mm 0 7mm;
+  padding: 4mm 0 10mm;
 }
 .specs dt { min-height: 7mm; }
 .specs dd {
   font-family: var(--display);
   font-weight: 700;
-  font-size: 14pt;
+  font-size: 16pt;
   line-height: 1;
   letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
@@ -172,7 +172,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
 }
 .specs .unit { display: block; margin-top: 1.5mm; }
 
-.sectionhead { margin-top: 11mm; }
+.sectionhead { margin-top: 9mm; }
 .sectionhead h2 { margin-top: 4mm; }
 .sectionhead p {
   color: var(--deck);
@@ -182,14 +182,14 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
 }
 
 /* --- opties ------------------------------------------------------ */
-.opts { margin-top: 6mm; }
+.opts { margin-top: 4mm; }
 .opt {
   display: grid;
   grid-template-columns: 1fr 30mm;
   column-gap: 8mm;
   align-items: start;
   border-top: 0.6pt solid rgba(0,0,0,0.18);
-  padding: 3mm 0;
+  padding: 2.7mm 0;
 }
 .opt:last-child { border-bottom: 0.6pt solid rgba(0,0,0,0.18); }
 .opt .idx {
@@ -220,6 +220,71 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
   color: var(--mill);
   margin-bottom: 2mm;
 }
+
+/* --- motorisering ------------------------------------------------- */
+.motors { margin-top: 6mm; }
+.motorhead,
+.motor {
+  display: grid;
+  grid-template-columns: 1fr 26mm 30mm;
+  column-gap: 6mm;
+  align-items: start;
+}
+.motorhead {
+  border-bottom: 0.6pt solid rgba(0,0,0,0.18);
+  padding-bottom: 2mm;
+}
+.motorhead span:not(:first-child) { text-align: right; }
+.motor {
+  border-top: 0.6pt solid rgba(0,0,0,0.18);
+  padding: 3mm 0;
+}
+.motor:first-of-type { border-top: none; }
+.motor:last-child { border-bottom: 0.6pt solid rgba(0,0,0,0.18); }
+.motor .pk {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--red);
+  display: block;
+}
+.motor .pk small {
+  font-family: var(--mono);
+  font-size: 6.6pt;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin-left: 1.5mm;
+}
+.motor h3 { margin-top: 2mm; }
+.motor p { color: var(--deck); margin-top: 1mm; }
+.motor .amt,
+.motor .extra {
+  text-align: right;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 13pt;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  padding-top: 1mm;
+}
+.motor .extra { color: var(--deck); }
+.motor .extra.std {
+  font-family: var(--mono);
+  font-size: 6.6pt;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--mill);
+  padding-top: 2.5mm;
+}
+.fineprint { color: var(--mill); margin-top: 3.5mm; font-size: 7.4pt; line-height: 1.5; }
+
+.terms { margin-top: 10mm; border-top: 0.6pt solid rgba(0,0,0,0.18); padding-top: 4mm; }
+.terms p { color: var(--deck); margin-top: 2.5mm; max-width: 155mm; }
 
 /* --- toelichtingsblok -------------------------------------------- */
 .note {
@@ -258,15 +323,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
 }
 .cols p { color: var(--deck); margin-top: 3mm; }
 
-/* --- sluitbeeld + afsluiter ---------------------------------------- */
-.closing-render {
-  margin-top: 5mm;
-  display: block;
-  width: 64%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
+/* --- afsluiter ----------------------------------------------------- */
 .closer {
   margin-top: auto;
   background: var(--hull);
@@ -290,6 +347,8 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
   text-transform: none;
 }
 .closer .label--deck { color: var(--mill); }
+/* De afsluitband duwt zichzelf naar beneden; de voetband sluit er strak op aan. */
+.closer + .foot { margin-top: 0; }
 </style>
 </head>
 <body>
@@ -326,24 +385,20 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
       </div>
     </div>
 
-    <div style="margin-top:18mm">
+    <div style="margin-top:24mm">
       <span class="rule-red"></span>
       <span class="label label--deck" style="display:block;margin-top:4mm">02 — Standaard uitvoering</span>
     </div>
 
     <dl class="specs">
       <div><dt class="label">Lengte</dt><dd>5,00</dd><span class="label unit">m</span></div>
-      <div><dt class="label">Breedte romp / totaal</dt><dd>1,88 / 1,95</dd><span class="label unit">m</span></div>
+      <div><dt class="label">Breedte</dt><dd>1,95</dd><span class="label unit">m</span></div>
       <div><dt class="label">Plaatdikte</dt><dd>4</dd><span class="label unit">mm</span></div>
       <div><dt class="label">Materiaal</dt><dd>Al 5083</dd><span class="label unit">zeewaterbestendig</span></div>
-      <div><dt class="label">Gewicht romp</dt><dd>365</dd><span class="label unit">kg</span></div>
-      <div><dt class="label">Spiegelhoogte</dt><dd>508</dd><span class="label unit">mm · langstaart</span></div>
-      <div><dt class="label">Brandstoftank</dt><dd>25</dd><span class="label unit">liter</span></div>
+      <div><dt class="label">Gewicht romp</dt><dd>320</dd><span class="label unit">kg</span></div>
       <div><dt class="label">Besturing</dt><dd>Tiller</dd><span class="label unit">console optioneel</span></div>
       <div><dt class="label">Max. belading</dt><dd>4 pers.</dd><span class="label unit">360 kg</span></div>
-      <div><dt class="label">Aanbevolen motor</dt><dd>40</dd><span class="label unit">pk</span></div>
-      <div><dt class="label">Max. motor</dt><dd>60</dd><span class="label unit">pk</span></div>
-      <div><dt class="label">Dek</dt><dd>Zelflozend</dd><span class="label unit">standaard</span></div>
+      <div><dt class="label">Max. motor</dt><dd>80</dd><span class="label unit">pk</span></div>
     </dl>
   </div>
 
@@ -370,7 +425,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
       <h2>Bouw je eigen 500</h2>
       <p>
         Consumentenprijzen inclusief 21% btw, bij bestelling van een nieuwe
-        Assault 500. Elke optie is los te kiezen.
+        Assault 500. Elke optie is los te kiezen, ook achteraf.
       </p>
     </div>
 
@@ -379,7 +434,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         <div>
           <span class="idx">01</span>
           <h3>Zijbanken</h3>
-          <p>Gelaste aluminium zijbanken langs de kuip, passend op de Assault 500. Geven extra zitruimte zonder dat het dek zijn open indeling verliest.</p>
+          <p>Gelaste aluminium zijbanken langs de kuip. Extra zitruimte, terwijl het dek zijn open indeling houdt.</p>
         </div>
         <div class="price"><span class="cur">EUR</span>395</div>
       </div>
@@ -397,7 +452,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         <div>
           <span class="idx">03</span>
           <h3>Aluminium stuurconsole</h3>
-          <p>Gelaste aluminium stuurconsole voor wie liever vanaf een console vaart in plaats van met de tiller. Stuurwiel, stuurinrichting en bedieningskabels zijn niet inbegrepen.</p>
+          <p>Gelaste aluminium stuurconsole voor wie liever vanaf een console vaart. Stuurwiel, stuurinrichting en bedieningskabels niet inbegrepen.</p>
         </div>
         <div class="price"><span class="cur">EUR</span>395</div>
       </div>
@@ -415,7 +470,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         <div>
           <span class="idx">05</span>
           <h3>Elektrisch basispakket</h3>
-          <p>Voorbedrade elektrische basis met Carling schakelpaneel, hoofdschakelaar, hoofdzekering, zekeringhouder, plus- en min-busbars, accuvoorbereiding, gelabelde aansluitingen en montagemateriaal. Zelfinstallatie.</p>
+          <p>Voorbedrade basis met Carling schakelpaneel, hoofdschakelaar, hoofdzekering, zekeringhouder, plus- en min-busbars, accuvoorbereiding, gelabelde aansluitingen en montagemateriaal. Zelfinstallatie.</p>
         </div>
         <div class="price"><span class="cur">EUR</span>495</div>
       </div>
@@ -424,7 +479,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         <div>
           <span class="idx">06</span>
           <h3>Navigatieverlichting</h3>
-          <p>Voorbedrade set met rood/groene en witte navigatieverlichting, schakelaar, zekering, bekabeling, connectoren en montagemateriaal. Zelfinstallatie.</p>
+          <p>Voorbedrade set met rood/groene en witte navigatieverlichting, schakelaar, zekering, bekabeling en montagemateriaal. Zelfinstallatie.</p>
         </div>
         <div class="price"><span class="cur">EUR</span>225</div>
       </div>
@@ -433,7 +488,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         <div>
           <span class="idx">07</span>
           <h3>Lenspompset</h3>
-          <p>Voorbedrade set met lenspomp, slang, huiddoorvoer, slangklemmen, handmatige schakelaar, zekering, bekabeling en montagemateriaal. Zelfinstallatie.</p>
+          <p>Voorbedrade set met lenspomp, slang, huiddoorvoer, slangklemmen, schakelaar, zekering, bekabeling en montagemateriaal. Zelfinstallatie.</p>
         </div>
         <div class="price"><span class="cur">EUR</span>195</div>
       </div>
@@ -446,6 +501,14 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
         </div>
         <div class="price"><span class="cur">EUR</span>295</div>
       </div>
+      <p class="fineprint">
+        Het elektrisch basispakket, de navigatieverlichting en de lenspompset
+        zijn complete, voorbedrade sets: componenten, bekabeling en
+        montagemateriaal zitten erin, montage-uren aan boord niet. Ze zijn
+        geprijsd als product en niet als installatiewerk — je monteert en sluit
+        ze zelf aan volgens de meegeleverde instructies. Fabrieksmontage kan
+        later als aparte service worden aangeboden.
+      </p>
     </div>
 
   </div>
@@ -461,7 +524,7 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
   <header class="band band--slim">
     <img src="/images/brand/logo.webp" alt="Assault Boats">
     <div class="stamp">
-      <span class="label">Assault 500 · Toelichting</span>
+      <span class="label">Assault 500 · Motorisering</span>
       <strong>Prijslijst 2026</strong>
     </div>
   </header>
@@ -469,49 +532,81 @@ h3 { font-size: 10.5pt; letter-spacing: -0.02em; line-height: 1.05; }
   <div class="body">
     <div class="sectionhead">
       <span class="rule-red"></span>
-      <span class="label label--deck" style="display:block;margin-top:4mm">04 — Toelichting</span>
-      <h2>Wat er in zit en wat niet</h2>
-    </div>
-
-    <div class="note">
-      <span class="rule-red"></span>
-      <h3>Modulaire sets — zelfinstallatie</h3>
+      <span class="label label--deck" style="display:block;margin-top:4mm">04 — Motorisering</span>
+      <h2>Kies je vermogen</h2>
       <p>
-        Het elektrisch basispakket, de navigatieverlichting en de lenspompset
-        zijn complete, voorbedrade sets. Alle componenten, bekabeling,
-        connectoren en montagematerialen zitten erin; montage-uren aan boord
-        niet. Deze sets zijn geprijsd als product en niet als installatiewerk:
-        Assault levert ze compleet en voorbereid, je
-        monteert en sluit ze zelf
-        aan volgens de meegeleverde instructies. Fabrieksmontage kan later als
-        aparte service worden aangeboden.
+        De Assault 500 wordt geleverd met een Honda-buitenboordmotor in vier
+        vermogens. Adviesprijzen Honda Marine 2026, inclusief 21% btw.
       </p>
     </div>
 
-    <div class="cols">
-      <div>
-        <span class="label label--red">Let op</span>
-        <h3>Niet inbegrepen</h3>
-        <ul>
-          <li>Buitenboordmotor</li>
-          <li>Trailer</li>
-          <li>Accu</li>
-          <li>Stuurwiel en stuurinrichting</li>
-          <li>Niet-genoemde accessoires</li>
-        </ul>
+    <div class="motors">
+      <div class="motorhead">
+        <span class="label label--deck">Motor</span>
+        <span class="label label--deck">Adviesprijs</span>
+        <span class="label label--deck">Stuurhendel</span>
       </div>
-      <div>
-        <span class="label label--red">Voorwaarden</span>
-        <h3>Prijzen</h3>
-        <p>
-          Alle genoemde prijzen zijn consumentenprijzen inclusief 21% btw.
-          Prijzen en productspecificaties onder voorbehoud van wijzigingen.
-          Deze prijslijst vervangt alle voorgaande uitgaven.
-        </p>
+
+      <div class="motor">
+        <div>
+          <span class="pk">20<small>PK</small></span>
+          <h3>Honda BF20 D LHSU</h3>
+          <p>Langstaart · elektrische start · 12 A dynamo · 49 kg</p>
+        </div>
+        <div class="amt">4.529</div>
+        <div class="extra std">Standaard</div>
       </div>
+
+      <div class="motor">
+        <div>
+          <span class="pk">40<small>PK</small></span>
+          <h3>Honda BF40 D LRTZ</h3>
+          <p>Langstaart · elektrische start · power trim · 102 kg</p>
+        </div>
+        <div class="amt">7.879</div>
+        <div class="extra">+ 319</div>
+      </div>
+
+      <div class="motor">
+        <div>
+          <span class="pk">60<small>PK</small></span>
+          <h3>Honda BF60 A LRTU</h3>
+          <p>Langstaart · elektrische start · power trim · 110 kg</p>
+        </div>
+        <div class="amt">9.949</div>
+        <div class="extra">+ 419</div>
+      </div>
+
+      <div class="motor">
+        <div>
+          <span class="pk">80<small>PK</small></span>
+          <h3>Honda BF80 A LRTU</h3>
+          <p>Langstaart · elektrische start · power trim · 165 kg</p>
+        </div>
+        <div class="amt">13.299</div>
+        <div class="extra">+ 619</div>
+      </div>
+
+      <p class="fineprint">
+        Alle motoren in langstaartuitvoering, passend op de spiegel van de
+        Assault 500. Bij de BF20 zit de stuurhendel standaard op de motor; bij
+        de BF40, BF60 en BF80 is het een meerprijs. De stuurhendel van de BF60
+        en BF80 heeft een trolling-functie, bij de BF80 zonder instrumenten.
+        Levering en montage in overleg.
+      </p>
     </div>
 
-    <img class="closing-render" src="/images/renders/render-top-down.webp" alt="Assault 500 van boven">
+
+
+    <div class="terms">
+      <span class="label label--red">Voorwaarden</span>
+      <p>
+        Alle genoemde prijzen zijn consumentenprijzen inclusief 21% btw.
+        Prijzen en productspecificaties onder voorbehoud van wijzigingen.
+        Deze prijslijst vervangt alle voorgaande uitgaven.
+      </p>
+    </div>
+
   </div>
 
   <div class="closer">
