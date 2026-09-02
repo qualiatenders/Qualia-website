@@ -18,6 +18,22 @@ const SRC = path.join(ROOT, 'pricelist', 'prijslijst.html');
 const FONTS = path.join(ROOT, 'pricelist', 'fonts-inline.css');
 const OUT = path.join(ROOT, 'public', 'prijslijst-assault-500-2026.pdf');
 
+/**
+ * Zoekt een beeld op basisnaam, zodat een nieuw logo in elk formaat werkt:
+ * één bestand in public/images/brand/ vervangt het overal.
+ */
+const EXT_ORDER = ['.svg', '.avif', '.webp', '.jpg', '.jpeg', '.png'];
+function resolveImage(file) {
+  if (fs.existsSync(file)) return file;
+  const dir = path.dirname(file);
+  const base = path.basename(file, path.extname(file));
+  for (const ext of EXT_ORDER) {
+    const candidate = path.join(dir, base + ext);
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  throw new Error(`Geen beeld gevonden voor ${file}`);
+}
+
 const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.svg': 'image/svg+xml' };
 
 let html = fs.readFileSync(SRC, 'utf8');
@@ -25,7 +41,7 @@ let html = fs.readFileSync(SRC, 'utf8');
 html = html.replace('/*FONTS*/', () => fs.readFileSync(FONTS, 'utf8'));
 
 html = html.replace(/src="(\/images\/[^"]+)"/g, (_m, p) => {
-  const file = path.join(ROOT, 'public', p);
+  const file = resolveImage(path.join(ROOT, 'public', p));
   const b64 = fs.readFileSync(file).toString('base64');
   return `src="data:${MIME[path.extname(file).toLowerCase()]};base64,${b64}"`;
 });

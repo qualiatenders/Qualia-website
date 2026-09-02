@@ -9,9 +9,25 @@ import { chromium } from 'playwright';
 
 const SP = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'artifact');
 const PUB = path.resolve(SP, '..', 'public', 'images');
+/**
+ * Zoekt een beeld op basisnaam, zodat een nieuw logo in elk formaat werkt:
+ * één bestand in public/images/brand/ vervangt het overal.
+ */
+const EXT_ORDER = ['.svg', '.avif', '.webp', '.jpg', '.jpeg', '.png'];
+function resolveImage(file) {
+  if (fs.existsSync(file)) return file;
+  const dir = path.dirname(file);
+  const base = path.basename(file, path.extname(file));
+  for (const ext of EXT_ORDER) {
+    const candidate = path.join(dir, base + ext);
+    if (fs.existsSync(candidate)) return candidate;
+  }
+  throw new Error(`Geen beeld gevonden voor ${file}`);
+}
+
 const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg' };
 
-const uri = (f) => `data:${MIME[path.extname(f).toLowerCase()]};base64,${fs.readFileSync(f).toString('base64')}`;
+const uri = (f0) => { const f = resolveImage(f0); return `data:${MIME[path.extname(f).toLowerCase()]};base64,${fs.readFileSync(f).toString('base64')}`; };
 
 /* Ingesloten beeld hoeft niet groter te zijn dan het op scherm wordt getoond;
    dit houdt het ene bestand hanteerbaar. Alpha blijft behouden (WebP). */
@@ -40,7 +56,7 @@ for (const dir of ['renders', 'photography']) {
   }
 }
 
-const markSrc = await shrink(path.join(PUB, 'brand', 'logo.webp'), 900);
+const markSrc = await shrink(path.join(PUB, 'brand', 'logo.webp'), 900) /* elke extensie werkt */;
 
 let html = fs.readFileSync(path.join(SP, 'assault-500.src.html'), 'utf8');
 html = html.replace('__IMAGES__', () => JSON.stringify(images));
