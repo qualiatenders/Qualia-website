@@ -4,7 +4,6 @@ import { Gallery } from '@/components/Gallery';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
 import { Intro } from '@/components/Intro';
-import { MerchSection } from '@/components/MerchSection';
 import { ModelSelector } from '@/components/ModelSelector';
 import { SpecsGrid } from '@/components/SpecsGrid';
 import { StickyCTA } from '@/components/StickyCTA';
@@ -19,7 +18,6 @@ export default function HomePage() {
         <ModelSelector />
         <SpecsGrid />
         <Gallery />
-        <MerchSection />
         <ContactSection />
       </main>
       <Footer />

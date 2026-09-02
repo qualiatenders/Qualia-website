@@ -40,15 +40,22 @@ export function ModelContent({ activeIndex }: Props) {
           </AnimatePresence>
         </div>
 
-        {/* Besturing indicator — tiller is the standard setup, console is an option. */}
-        <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-          <span className="type-label text-mill">Besturing</span>
-          <span className="flex items-center gap-2 rounded-[2px] border border-red/40 bg-red/8 px-3 py-1.5 type-label text-red">
-            <span className="h-1.5 w-1.5 bg-red" aria-hidden="true" />
-            Tiller · standaard
+        {/*
+          Besturing: one black strip split in two, so what is standard and what
+          is an option read as a single fact instead of two loose chips.
+        */}
+        <div className="cut-tag mt-5 flex w-full items-stretch bg-hull text-bone sm:w-fit">
+          <span className="hidden items-center px-5 type-label text-mill sm:flex">Besturing</span>
+          <span className="flex flex-1 flex-col gap-1 border-l border-white/12 px-5 py-3.5 sm:flex-none sm:px-7">
+            <span className="flex items-center gap-2 type-label">
+              <span className="h-1.5 w-1.5 shrink-0 bg-red" aria-hidden="true" />
+              Tiller
+            </span>
+            <span className="type-label text-mill">Standaard</span>
           </span>
-          <span className="rounded-[2px] border border-black/15 px-3 py-1.5 type-label text-deck">
-            Console · optioneel
+          <span className="flex flex-1 flex-col gap-1 border-l border-white/12 px-5 py-3.5 sm:flex-none sm:px-7">
+            <span className="type-label text-bone/70">Console</span>
+            <span className="type-label text-mill">Optioneel</span>
           </span>
         </div>
       </div>

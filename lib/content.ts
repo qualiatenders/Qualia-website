@@ -151,17 +151,17 @@ export const SPECS_PLAN = media(
 );
 
 export const SPECS = [
-  { label: 'Lengte', value: '5,00', unit: 'm', span: 'lg:col-span-5' },
-  { label: 'Breedte romp / totaal', value: '1,88 / 1,95', unit: 'm', span: 'lg:col-span-4' },
-  { label: 'Plaatdikte', value: '4', unit: 'mm', span: 'lg:col-span-3' },
-  { label: 'Materiaal', value: 'Al 5083', unit: 'zeewaterbestendig', span: 'lg:col-span-5' },
-  { label: 'Gewicht romp', value: '365', unit: 'kg', span: 'lg:col-span-3' },
-  { label: 'Spiegelhoogte', value: '508', unit: 'mm · langstaart', span: 'lg:col-span-4' },
-  { label: 'Brandstoftank', value: '25', unit: 'liter', span: 'lg:col-span-3' },
-  { label: 'Besturing', value: 'Tiller', unit: 'standaard · console optioneel', span: 'lg:col-span-5' },
-  { label: 'Max. belading', value: '4 pers.', unit: '360 kg', span: 'lg:col-span-4' },
-  { label: 'Aanbevolen motor', value: '40', unit: 'pk', span: 'lg:col-span-4' },
-  { label: 'Max. motor', value: '60', unit: 'pk', span: 'lg:col-span-4' },
+  { label: 'Lengte', value: '5,00', unit: 'm' },
+  { label: 'Breedte romp / totaal', value: '1,88 / 1,95', unit: 'm' },
+  { label: 'Plaatdikte', value: '4', unit: 'mm' },
+  { label: 'Materiaal', value: 'Al 5083', unit: 'zeewaterbestendig' },
+  { label: 'Gewicht romp', value: '365', unit: 'kg' },
+  { label: 'Spiegelhoogte', value: '508', unit: 'mm · langstaart' },
+  { label: 'Brandstoftank', value: '25', unit: 'liter' },
+  { label: 'Besturing', value: 'Tiller', unit: 'standaard · console optioneel' },
+  { label: 'Max. belading', value: '4 pers.', unit: '360 kg' },
+  { label: 'Aanbevolen motor', value: '40', unit: 'pk' },
+  { label: 'Max. motor', value: '60', unit: 'pk' },
 ];
 
 export type GalleryItem = MediaSlot & { caption: string };
@@ -181,19 +181,6 @@ export const GALLERY: GalleryItem[] = [
   { ...media('foto-werkplaats', 'De Assault 500 op bokken voor de werkplaats', 'Bij de werkplaats', '3 / 4'), caption: 'Bij de werkplaats' },
 ];
 
-export const MERCH = {
-  index: '05',
-  drop: 'Drop 01.',
-  media: [
-    media('merch-group-chat', 'Tee met de tekst: the best days don’t make the group chat', 'Merch · tee', '1 / 1'),
-    media('merch-your-boat', 'Tee met de tekst: your boat can’t go where I’m going', 'Merch · tee', '1 / 1'),
-    media('merch-gone-fishing', 'Tee met de tekst: gone fishing', 'Merch · tee', '1 / 1'),
-    media('merch-front-1', 'Tee met het Assault Boat logo op de borst', 'Merch · voorkant', '1 / 1'),
-    media('merch-front-2', 'Tee met het Assault Boat logo op de borst', 'Merch · voorkant', '1 / 1'),
-    media('merch-front-3', 'Tee met het Assault Boat logo op de borst', 'Merch · voorkant', '1 / 1'),
-  ],
-};
-
 /** Google Maps, zodat "kom langs" meteen een route oplevert. */
 const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Dingstede+6+Zwartsluis';
 
@@ -201,7 +188,7 @@ const MAPS_URL = 'https://www.google.com/maps/search/?api=1&query=Dingstede+6+Zw
 const WHATSAPP_URL = 'https://wa.me/31655324350';
 
 export const CONTACT = {
-  index: '06',
+  index: '05',
   title: 'See it. Feel it. Drive it.',
   body: 'Foto\u2019s zijn mooi. Aan boord staan is beter. Kom de Assault 500 in het echt bekijken en ontdek welke uitvoering bij jou past.',
   details: [
