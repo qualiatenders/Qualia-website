@@ -1,0 +1,865 @@
+<title>Assault 500</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* ===================================================================
+   ASSAULT BOATS — Assault 500
+   Eén visuele wereld: een lichte studio-akte bovenaan, hard naar
+   hull black bij de gallery. Bewust geen light/dark toggle.
+   =================================================================== */
+:root{
+  --hull:#000000; --hull-soft:#0a0a0a;
+  --red:#c0272c; --red-hot:#d93036;
+  --mill:#999999; --deck:#4a4a4a;
+  --bone:#f2f1ed;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --sans:"Inter","Helvetica Neue",Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --gutter:clamp(1.25rem,4.5vw,5rem);
+}
+*,*::before,*::after{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--hull);color:var(--bone);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:clip}
+img{max-width:100%}
+::selection{background:var(--red);color:#fff}
+:focus-visible{outline:2px solid var(--red-hot);outline-offset:3px;border-radius:1px}
+[id]{scroll-margin-top:104px}
+h1,h2,h3{font-family:var(--display);font-weight:700;letter-spacing:-.03em;line-height:.92;margin:0;text-wrap:balance}
+p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
+
+.display{font-family:var(--display);font-weight:800;font-size:clamp(3.75rem,13vw,11rem);line-height:.84;letter-spacing:-.045em;text-transform:uppercase}
+.h2{font-family:var(--display);font-weight:700;font-size:clamp(2.25rem,5.4vw,4.75rem);line-height:.92;letter-spacing:-.035em}
+.h3{font-family:var(--display);font-weight:700;font-size:clamp(1.625rem,3vw,2.5rem);line-height:1;letter-spacing:-.03em}
+.stat{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4.2vw,3.5rem);line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.label{font-family:var(--mono);font-size:.6875rem;font-weight:500;line-height:1.2;letter-spacing:.18em;text-transform:uppercase}
+.body{font-size:clamp(.9375rem,1.05vw,1.0625rem);line-height:1.65;max-width:46ch}
+.mill{color:var(--mill)} .deck{color:var(--deck)} .red{color:var(--red)}
+
+.shell{width:100%;max-width:1680px;margin-inline:auto;padding-inline:var(--gutter)}
+.section{padding-block:clamp(5rem,10vw,9rem)}
+.light{background:var(--bone);color:var(--hull)}
+.rule-t{border-top:1px solid rgba(255,255,255,.1)}
+.light.rule-t{border-top-color:rgba(0,0,0,.1)}
+
+/* --- beeld ------------------------------------------------------- */
+.plate{position:relative;overflow:hidden;margin:0;aspect-ratio:var(--ar,16/9);display:grid;place-items:center;
+  background:linear-gradient(128deg,#131313 0%,#1d1d1d 38%,#101010 72%,#171717 100%)}
+.plate[data-tone="light"]{background:linear-gradient(128deg,#eceae5 0%,#f6f5f2 40%,#e4e2dc 100%)}
+.plate::before{content:"";position:absolute;inset:0;
+  background:repeating-linear-gradient(96deg,rgba(255,255,255,.045) 0 1px,transparent 1px 5px),
+    linear-gradient(to right,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/64px 64px,
+    linear-gradient(to bottom,rgba(255,255,255,.035) 1px,transparent 1px) 0 0/64px 64px}
+.plate[data-tone="light"]::before{background:repeating-linear-gradient(96deg,rgba(0,0,0,.04) 0 1px,transparent 1px 5px),
+    linear-gradient(to right,rgba(0,0,0,.04) 1px,transparent 1px) 0 0/64px 64px,
+    linear-gradient(to bottom,rgba(0,0,0,.04) 1px,transparent 1px) 0 0/64px 64px}
+.plate::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.plate[data-tone="light"]::after{box-shadow:inset 0 0 0 1px rgba(0,0,0,.1)}
+.ticks{position:absolute;inset:12px;pointer-events:none;--c:rgba(153,153,153,.45);
+  background:linear-gradient(var(--c),var(--c)) left top/12px 1px no-repeat,linear-gradient(var(--c),var(--c)) left top/1px 12px no-repeat,
+    linear-gradient(var(--c),var(--c)) right top/12px 1px no-repeat,linear-gradient(var(--c),var(--c)) right top/1px 12px no-repeat,
+    linear-gradient(var(--c),var(--c)) left bottom/12px 1px no-repeat,linear-gradient(var(--c),var(--c)) left bottom/1px 12px no-repeat,
+    linear-gradient(var(--c),var(--c)) right bottom/12px 1px no-repeat,linear-gradient(var(--c),var(--c)) right bottom/1px 12px no-repeat}
+.plate[data-tone="light"] .ticks{--c:rgba(74,74,74,.45)}
+.plate-cap{position:relative;display:flex;flex-direction:column;align-items:center;gap:.5rem;padding:0 1.5rem;text-align:center}
+.plate-cap i{display:block;width:2rem;height:1px;background:var(--red)}
+.plate-cap b{font-weight:500;color:var(--mill)} .plate-cap s{text-decoration:none;color:var(--deck)}
+.plate[data-tone="light"] .plate-cap b{color:var(--deck)} .plate[data-tone="light"] .plate-cap s{color:var(--mill)}
+.plate img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.plate[data-filled]::before,.plate[data-filled] .ticks,.plate[data-filled] .plate-cap{display:none}
+.plate[data-filled]::after{display:none}
+/* Renders zijn vrijgesneden: ze zweven, met hun eigen studioschaduw. */
+.plate[data-render]{background:transparent;clip-path:none}
+.plate{clip-path:polygon(0 0,calc(100% - 1.75rem) 0,100% 1.75rem,100% 100%,0 100%)}
+.hero-media .plate,.lb-body .plate{clip-path:none}
+.plate[data-render] img{object-fit:contain}
+/* Moet [data-render] verslaan, dat achtergrond en clip weghaalt. */
+.plate[data-render].plate--cover,.plate.plate--cover{background:var(--bone);
+  clip-path:polygon(0 0,calc(100% - 1.75rem) 0,100% 1.75rem,100% 100%,0 100%)}
+/* Moet [data-render] verslaan, dat door hydratePlates wordt gezet. */
+.plate[data-render].plate--cover img,.plate.plate--cover img{object-fit:cover}
+.lb-body .plate img{object-fit:contain;background:var(--hull-soft)}
+.lb-body .plate[data-render] img{background:transparent}
+
+/* --- vormtaal ----------------------------------------------------- */
+/* Dezelfde hoeken waaruit de romp is opgebouwd. */
+.cut{clip-path:polygon(.75rem 0,100% 0,calc(100% - .75rem) 100%,0 100%)}
+.notch{clip-path:polygon(0 0,calc(100% - 1.75rem) 0,100% 1.75rem,100% 100%,0 100%)}
+.rule-red{display:block;width:2rem;height:2px;background:var(--red)}
+@media(min-width:640px){.rule-red{width:3.5rem}}
+/* Alleen de vulling weghalen: color:transparent zou de streek meenemen. */
+.outline-type{-webkit-text-fill-color:transparent;-webkit-text-stroke-width:clamp(1.5px,.28vw,4px);-webkit-text-stroke-color:currentColor;paint-order:stroke fill}
+
+/* --- knoppen ------------------------------------------------------ */
+.btn{display:inline-flex;align-items:center;gap:.75rem;padding:1rem 1.75rem;text-decoration:none;
+  background:var(--red);color:#fff;transition:background .3s;clip-path:polygon(.75rem 0,100% 0,calc(100% - .75rem) 100%,0 100%)}
+.btn:hover{background:var(--red-hot)}
+.btn svg{width:.875rem;height:.625rem;flex:none;transition:transform .3s var(--ease)}
+.btn:hover svg{transform:translateX(4px)}
+/* Secundair: rechthoek met een tweede, verschoven omlijning erachter. */
+.btn--outline,.btn--ghost{position:relative;clip-path:none;background:none;border:1px solid rgba(255,255,255,.3);color:var(--bone)}
+.btn--outline::before,.btn--ghost::before{content:"";position:absolute;left:.375rem;top:.375rem;width:100%;height:100%;border:1px solid rgba(255,255,255,.15);pointer-events:none}
+.btn--outline:hover,.btn--ghost:hover{background:none;border-color:var(--red)}
+.btn--ghost{border-color:rgba(0,0,0,.25);color:var(--hull)}
+.btn--ghost::before{border-color:rgba(0,0,0,.15)}
+
+/* --- header ------------------------------------------------------- */
+.hdr{position:fixed;inset:0 0 auto;z-index:50;border-bottom:1px solid transparent;color:var(--bone);
+  transition:background .5s,border-color .5s,backdrop-filter .5s}
+.hdr[data-solid="true"]{background:rgba(0,0,0,.92);backdrop-filter:blur(12px);border-bottom-color:rgba(255,255,255,.1)}
+.hdr-in{display:flex;align-items:center;justify-content:space-between;gap:.5rem;height:64px}
+@media(min-width:640px){.hdr-in{gap:1rem}}
+@media(min-width:1024px){.hdr-in{gap:2rem;height:6rem}}
+.mark{display:flex;align-items:center;text-decoration:none;color:inherit}
+.mark img{display:block;height:28px;width:auto}
+@media(min-width:380px){.mark img{height:32px}}
+@media(min-width:1024px){.mark img{height:48px}}
+.mark b{font-family:var(--display);font-size:1.25rem;font-weight:800;text-transform:uppercase;letter-spacing:-.02em}
+.nav{display:none} @media(min-width:1024px){.nav{display:block}}
+.nav ul{display:flex;align-items:center;gap:2.25rem}
+.nav a{position:relative;display:block;padding:.5rem 0;text-decoration:none;color:inherit;opacity:.8;transition:opacity .3s}
+.nav a:hover{opacity:1}
+.nav a::after{content:"";position:absolute;inset:auto 0 -2px;height:1px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .4s var(--ease)}
+.nav a:hover::after{transform:scaleX(1)}
+.hdr-cta{display:inline-block;flex:none;padding:.625rem 1rem;text-decoration:none;background:var(--red);color:#fff;transition:background .3s;white-space:nowrap;
+  clip-path:polygon(.75rem 0,100% 0,calc(100% - .75rem) 100%,0 100%)}
+@media(min-width:380px){.hdr-cta{padding:.625rem 1.25rem}}
+@media(min-width:1024px){.hdr-cta{padding:.875rem 1.75rem}}
+.cta-lang{display:none}
+.cta-kort{display:inline}
+@media(min-width:380px){.cta-lang{display:inline}.cta-kort{display:none}}
+.hdr-cta:hover{background:var(--red-hot)}
+.burger{position:relative;z-index:60;display:flex;flex:none;align-items:center;justify-content:center;width:36px;height:44px;margin-right:-.5rem;background:none;border:0;cursor:pointer;color:inherit}
+@media(min-width:1024px){.burger{display:none}}
+.burger span{position:relative;display:block;width:24px;height:12px}
+.burger span i{position:absolute;left:0;display:block;width:24px;height:1px;background:currentColor;transition:transform .4s var(--ease),top .4s var(--ease)}
+.burger span i:nth-child(1){top:0} .burger span i:nth-child(2){top:12px}
+.burger[aria-expanded="true"] span i:nth-child(1){top:6px;transform:rotate(45deg)}
+.burger[aria-expanded="true"] span i:nth-child(2){top:6px;transform:rotate(-45deg)}
+
+.sheet{position:fixed;inset:0;z-index:40;display:flex;flex-direction:column;background:var(--hull);color:var(--bone);opacity:0;visibility:hidden;transform:translateY(-12px);
+  transition:opacity .4s var(--ease),transform .4s var(--ease),visibility .4s}
+.sheet[data-open="true"]{opacity:1;visibility:visible;transform:none}
+.sheet-in{display:flex;flex:1;flex-direction:column;justify-content:space-between;padding-block:8rem 2.5rem}
+.sheet a.big{display:flex;align-items:baseline;gap:1rem;padding:1.25rem 0;text-decoration:none;color:var(--bone);border-bottom:1px solid rgba(255,255,255,.1);transition:color .3s}
+.sheet a.big:hover{color:var(--red)}
+.sheet-cta{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 1.5rem;border-radius:2px;background:var(--red);color:#fff;text-decoration:none}
+
+/* --- hero --------------------------------------------------------- */
+.hero{position:relative;display:flex;min-height:88svh;flex-direction:column;justify-content:flex-end;overflow:hidden;background:var(--hull);padding-top:88px}
+@media(min-width:1024px){.hero{min-height:92svh;padding-top:120px}}
+/* De render zit op lage dekking en is op beide assen gemaskeerd, zodat hij
+   in het zwart oplost in plaats van op een rechthoek te eindigen. */
+.hero-media{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.hero-media .plate{height:100%;aspect-ratio:auto;background:transparent}
+.hero-media .plate[data-render] img,.hero-media img{object-fit:cover;transform:scale(1.7);transform-origin:center}
+@media(min-width:640px){.hero-media img{transform:scale(1.4)}}
+@media(min-width:1024px){.hero-media img{transform:scale(1.15)}}
+/* Leesbaarheidssluier, zwaarder onderaan waar de tekst staat. */
+.hero-veil{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(0,0,0,.95) 0%,rgba(0,0,0,.82) 34%,rgba(0,0,0,.55) 66%,rgba(0,0,0,.75) 100%)}
+.hero-in{position:relative;z-index:2;width:100%}
+.hero-grid{display:flex;flex-direction:column;gap:2rem;padding-bottom:2.5rem}
+@media(min-width:1024px){.hero-grid{flex-direction:row;align-items:flex-end;justify-content:space-between;gap:4rem;padding-bottom:3.5rem}}
+.hero-lead{max-width:28rem}
+.hero-lead .say{font-size:1.0625rem;font-weight:500;line-height:1.3}
+.hero-actions{display:flex;flex-direction:column;gap:.75rem;margin-top:1.75rem}
+.hero-actions .btn{justify-content:center}
+@media(min-width:640px){.hero-actions{flex-direction:row;flex-wrap:wrap;align-items:center;margin-top:2rem}.hero-actions .btn{justify-content:flex-start}}
+@media(min-width:1024px){.hero-lead .say{font-size:1.25rem}}
+.eyebrow{display:flex;align-items:center;gap:.75rem;color:var(--red);letter-spacing:.11em}
+.eyebrow i{display:block;width:2rem;height:2px;flex:none;background:var(--red)}
+@media(min-width:640px){.eyebrow{gap:1rem;letter-spacing:.18em}.eyebrow i{width:3.5rem}}
+.mask{display:block;overflow:hidden;padding-bottom:.08em}
+.mask>span{display:block;transform:translateY(105%);opacity:0}
+.js .mask>span{animation:maskup 1.05s var(--ease) .28s forwards}
+.js .mask:nth-of-type(2)>span{animation-delay:.4s}
+@keyframes maskup{to{transform:none;opacity:1}}
+
+.stats{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid rgba(255,255,255,.15)}
+@media(min-width:640px){.stats{grid-template-columns:repeat(4,1fr)}}
+.stats>div{display:flex;flex-direction:column;padding:1.5rem 1rem 1.5rem 0}
+@media(min-width:640px){.stats>div{padding-block:1.75rem}}
+.stats>div:nth-child(2n){border-left:1px solid rgba(255,255,255,.15);padding-left:1rem}
+.stats>div:nth-child(n+3){border-top:1px solid rgba(255,255,255,.15)}
+@media(min-width:640px){.stats>div:nth-child(n+3){border-top:0}
+  .stats>div:nth-child(3){border-left:1px solid rgba(255,255,255,.15)}
+  .stats>div:nth-child(2n),.stats>div:nth-child(3){padding-left:1.5rem}}
+.stats dd{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4.2vw,3.5rem);line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.stats dd{margin-top:.5rem}
+.stats dd em{font-style:normal;font-size:.34em;font-weight:600;text-transform:lowercase;letter-spacing:.08em;color:var(--mill);margin-left:.35em}
+
+.sh-eyebrow{display:flex;align-items:center;gap:1rem}
+.sh-eyebrow i{display:block;width:2rem;height:1px;background:rgba(255,255,255,.15)}
+.light .sh-eyebrow i{background:rgba(0,0,0,.15)}
+
+.grid12{display:grid;grid-template-columns:1fr;gap:3.5rem}
+@media(min-width:1024px){.grid12{grid-template-columns:repeat(12,1fr);gap:4rem}
+  .col5{grid-column:span 5} .col7{grid-column:span 7}}
+
+.points{display:grid;gap:2.5rem;border-top:1px solid rgba(255,255,255,.12)}
+@media(min-width:640px){.points{grid-template-columns:repeat(3,1fr);gap:0}}
+.points li{padding-top:2rem}
+@media(min-width:640px){.points li{padding-inline:2rem}
+  .points li:first-child{padding-left:0}
+  .points li+li{border-left:1px solid rgba(255,255,255,.12)}}
+@media(min-width:1024px){.points li{padding-top:2.5rem}}
+.points h3{margin-top:1.5rem;font-family:var(--display);font-size:1.5rem;font-weight:700;line-height:1.05;
+  letter-spacing:-.025em;text-transform:uppercase;color:var(--bone)}
+@media(min-width:1024px){.points h3{font-size:1.75rem}}
+.points p{margin-top:.75rem;font-size:.9375rem;line-height:1.6;color:var(--mill)}
+.detail-plate{position:relative;z-index:1;width:52%;margin:-3.5rem 0 0 auto}
+@media(min-width:640px){.detail-plate{width:38%}}
+@media(min-width:1024px){.detail-plate{margin:-7rem auto 0 0;transform:translateX(-2.5rem)}}
+.detail-plate>div{border:4px solid var(--hull)}
+
+/* --- uitvoeringen -------------------------------------------------- */
+.tabs{display:flex;width:100%;max-width:32rem;border-bottom:1px solid rgba(0,0,0,.15)}
+.tab{position:relative;flex:1;display:flex;align-items:center;gap:.625rem;padding:.5rem .25rem 1rem;background:none;border:0;text-align:left;cursor:pointer}
+.tab i{flex:none;width:6px;height:6px;background:rgba(0,0,0,.2);transition:background .3s}
+.tab span{color:var(--mill);transition:color .3s}
+.tab:hover i{background:rgba(0,0,0,.4)} .tab:hover span{color:var(--deck)}
+.tab[aria-selected="true"] i{background:var(--red)} .tab[aria-selected="true"] span{color:var(--hull)}
+.tab::after{content:"";position:absolute;inset:auto 0 -1px;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .45s var(--ease)}
+.tab[aria-selected="true"]::after{transform:scaleX(1)}
+.panel-media{position:relative;overflow:hidden;aspect-ratio:16/9}
+.panel-media .plate{position:absolute;inset:0;aspect-ratio:auto;opacity:0;transition:opacity .55s var(--ease)}
+.panel-media .plate[data-active="true"]{opacity:1}
+/* Eén zwarte strip in plaats van losse chips: tiller is standaard,
+   de console is de optie ernaast. */
+.steer{display:flex;align-items:stretch;width:100%;margin-top:1.25rem;background:var(--hull);color:var(--bone);
+  clip-path:polygon(0 0,100% 0,calc(100% - .75rem) 100%,0 100%)}
+@media(min-width:640px){.steer{width:-moz-fit-content;width:fit-content}}
+.steer>span{display:flex;flex:1 1 0;flex-direction:column;gap:.25rem;padding:.875rem 1.25rem;border-left:1px solid rgba(255,255,255,.12)}
+@media(min-width:640px){.steer>span{flex:none;padding-inline:1.75rem}}
+.steer>.steer-key{display:none;flex-direction:row;align-items:center;padding-block:0;border-left:0;color:var(--mill)}
+@media(min-width:640px){.steer>.steer-key{display:flex}}
+.steer b{display:flex;align-items:center;gap:.5rem;font-weight:400}
+.steer b i{display:block;flex:none;width:6px;height:6px;background:var(--red)}
+.steer s{text-decoration:none;color:var(--mill)}
+.steer .off b{color:rgba(242,241,237,.7)}
+.feat{border-top:1px solid rgba(0,0,0,.12)}
+.feat li{display:flex;align-items:baseline;gap:1.25rem;padding-block:.875rem;border-bottom:1px solid rgba(0,0,0,.12)}
+.feat li>span:first-child{flex:none;width:1.5rem;color:var(--mill)}
+.feat li>span:last-child{font-size:.9375rem;font-weight:500;line-height:1.3}
+/* Beide uitvoeringen delen één cel, zodat wisselen niets verschuift. */
+.copy-stack{display:grid}
+.copy-stack>div{grid-column:1;grid-row:1;transition:opacity .4s var(--ease)}
+.copy-stack>div[data-active="false"]{opacity:0;pointer-events:none}
+
+/* --- specs --------------------------------------------------------- */
+.ruler{position:relative;display:flex;align-items:center;gap:.75rem;margin-top:1rem}
+.ruler .bar{position:relative;flex:1;height:12px;border-top:1px solid rgba(0,0,0,.2)}
+.ruler .bar i{position:absolute;top:0;width:1px;height:6px;background:rgba(0,0,0,.2)}
+.ruler .bar i:nth-child(5n+1){height:12px}
+.specs{display:grid;grid-template-columns:repeat(2,1fr);column-gap:1.5rem;margin-top:4rem}
+@media(min-width:640px){.specs{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1024px){.specs{column-gap:2.5rem;margin-top:6rem}}
+.specs>div{border-top:1px solid rgba(0,0,0,.15);padding:1rem 0 1.75rem}
+/* Twee labelregels zijn gereserveerd, zodat een omslaand label zijn waarde
+   nooit uit de lijn van de rest van de rij duwt. */
+.specs .top{display:flex;align-items:baseline;justify-content:space-between;gap:.75rem;min-height:2.25rem}
+.specs .top dt{color:var(--deck)} .specs .top span{color:rgba(153,153,153,.7)}
+.specs dd{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-top:1rem;font-family:var(--display);font-weight:700;
+  font-size:clamp(2rem,4.2vw,3.5rem);line-height:.9;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.specs dd em{font-style:normal;font-size:.32em;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--mill)}
+
+/* --- gallery -------------------------------------------------------- */
+.rail{display:flex;gap:1rem;overflow-x:auto;padding:0 var(--gutter) .5rem;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none;user-select:none}
+.rail::-webkit-scrollbar{display:none}
+@media(min-width:1024px){.rail{gap:1.5rem;scroll-snap-type:none;cursor:grab}.rail:active{cursor:grabbing}}
+.rail li{flex:none;height:clamp(15rem,50vh,32rem);scroll-snap-align:start;aspect-ratio:var(--ar,4/3)}
+.rail button{position:relative;display:block;width:100%;height:100%;padding:0;background:none;border:0;text-align:left;cursor:pointer}
+.rail .plate{width:100%;height:100%;aspect-ratio:auto}
+.rail .over{position:absolute;inset:auto 0 0;display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:1rem;
+  background:linear-gradient(to top,rgba(0,0,0,.75),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
+.rail button:hover .over,.rail button:focus-visible .over{opacity:1}
+.progress{display:flex;align-items:center;gap:1.25rem;margin-top:2rem}
+.progress .track{flex:1;height:1px;background:rgba(255,255,255,.12)}
+.progress .track i{display:block;height:1px;background:var(--red);width:8%}
+
+.lb{position:fixed;inset:0;z-index:60;display:flex;flex-direction:column;background:rgba(0,0,0,.97);backdrop-filter:blur(4px);
+  opacity:0;visibility:hidden;transition:opacity .28s,visibility .28s}
+.lb[data-open="true"]{opacity:1;visibility:visible}
+.lb-top{display:flex;align-items:center;justify-content:space-between;padding:1rem var(--gutter)}
+.lb-body{display:flex;flex:1;align-items:center;justify-content:center;padding:0 1rem 1rem}
+.lb-body .plate{width:min(100%,72rem);max-height:76svh}
+.lb-nav{display:flex;justify-content:center;gap:.75rem;padding-bottom:2rem}
+.iconbtn{display:flex;align-items:center;justify-content:center;width:48px;height:48px;background:none;border:1px solid rgba(255,255,255,.2);color:var(--bone);cursor:pointer;transition:border-color .3s,color .3s}
+.iconbtn:hover{border-color:var(--red);color:var(--red)}
+
+
+/* --- contact -------------------------------------------------------- */
+.contact{display:grid;grid-template-columns:1fr}
+@media(min-width:1024px){.contact{grid-template-columns:1fr 1fr}.contact-media{position:relative}
+  .contact-media .plate{position:absolute;inset:0;aspect-ratio:auto}}
+.contact-media .plate{height:100%;aspect-ratio:3/4}
+.contact-body{padding:clamp(5rem,10vw,9rem) var(--gutter)}
+@media(min-width:1024px){.contact-body{padding-left:4rem}}
+.details{display:grid;grid-template-columns:1fr;align-content:start;column-gap:2.5rem}
+@media(min-width:640px){.details{grid-template-columns:repeat(2,1fr)}}
+.details>div{border-top:1px solid rgba(255,255,255,.12);padding-block:1.5rem}
+.details dd{margin-top:.75rem;font-size:1.125rem;font-weight:500;color:var(--bone)}
+.details dd a{color:inherit;text-decoration:none;transition:color .3s}
+.details dd a:hover{color:var(--red)}
+
+.price{position:relative;overflow:hidden;border-top:1px solid rgba(192,39,44,.4)}
+.price::before{content:"";position:absolute;inset:0 0 auto;height:16rem;background:radial-gradient(60% 100% at 50% 0%,rgba(192,39,44,.22),transparent 70%);pointer-events:none}
+.price-in{position:relative;display:flex;flex-direction:column;gap:2.5rem}
+@media(min-width:1024px){.price-in{flex-direction:row;align-items:flex-end;justify-content:space-between}}
+
+.foot{border-top:1px solid rgba(255,255,255,.1)}
+.foot-in{display:flex;flex-direction:column;gap:2rem;padding-block:2.5rem}
+@media(min-width:1024px){.foot-in{flex-direction:row;align-items:center;justify-content:space-between;gap:3rem}}
+.foot-links{display:flex;flex-wrap:wrap;gap:.75rem 2rem}
+.foot-links a{text-decoration:none;color:var(--mill);transition:color .3s}
+.foot-links a:hover{color:var(--bone)}
+.foot-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 2rem}
+
+/* --- reveals (JS-gated, dus zonder JS blijft alles zichtbaar) -------- */
+.js .reveal{opacity:0;transform:translateY(22px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
+.js .reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+  .js .reveal,.js .mask>span{opacity:1!important;transform:none!important;animation:none!important}
+}
+/* Twee acties die de hele pagina binnen bereik blijven; ze stappen opzij
+   boven de hero en bij de prijslijst, zodat dezelfde CTA nooit dubbel staat. */
+.sticky-cta{position:fixed;inset:auto 0 0;z-index:40;display:flex;gap:.5rem;padding:1.25rem var(--gutter);
+  opacity:0;visibility:hidden;transform:translateY(16px);transition:opacity .45s var(--ease),transform .45s var(--ease),visibility .45s}
+.sticky-cta[data-show="true"]{opacity:1;visibility:visible;transform:none}
+@media(min-width:1024px){.sticky-cta{inset:auto 0 2rem auto;flex-direction:column;align-items:flex-end;padding-bottom:0}}
+.sticky-btn{display:flex;flex:1;align-items:center;justify-content:center;gap:.625rem;padding:.875rem 1.25rem;border-radius:2px;text-decoration:none;transition:background .3s,border-color .3s}
+@media(min-width:1024px){.sticky-btn{flex:none;justify-content:flex-start;min-width:11rem}}
+.sticky-btn svg{width:1rem;height:1rem;flex:none}
+.sticky-btn--ghost{border:1px solid rgba(255,255,255,.2);background:rgba(0,0,0,.92);color:var(--bone);backdrop-filter:blur(12px);box-shadow:0 8px 30px rgba(0,0,0,.45)}
+.sticky-btn--ghost:hover{border-color:rgba(255,255,255,.45)}
+.sticky-btn--wa{background:var(--red);color:#fff;box-shadow:0 8px 30px rgba(192,39,44,.35)}
+.sticky-btn--wa:hover{background:var(--red-hot)}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:1rem;top:1rem;z-index:70;padding:.75rem 1rem;background:var(--red);color:#fff;text-decoration:none}
+</style>
+
+<a class="skip label" href="#assault-500">Naar de inhoud</a>
+
+<header class="hdr" id="hdr" data-solid="false">
+  <div class="shell hdr-in">
+    <a class="mark" href="#top" aria-label="Assault Boats — naar boven"><img src="__IMG_mark__" alt="Assault Boats"></a>
+    <nav class="nav" aria-label="Hoofdnavigatie">
+      <ul>
+        <li><a class="label" href="#assault-500">Assault 500</a></li>
+        <li><a class="label" href="#uitvoeringen">Uitvoeringen</a></li>
+        <li><a class="label" href="#specs">Specs</a></li>
+        <li><a class="label" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div style="display:flex;align-items:center;gap:.75rem">
+      <a class="hdr-cta label" href="#contact"><span class="cta-kort">Prijslijst</span><span class="cta-lang">Download prijslijst</span></a>
+      <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="sheet" aria-label="Menu openen">
+        <span aria-hidden="true"><i></i><i></i></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" data-open="false" role="dialog" aria-modal="true" aria-label="Hoofdmenu">
+  <div class="shell sheet-in">
+    <nav aria-label="Hoofdmenu">
+      <ul>
+        <li><a class="big h3" href="#assault-500"><span class="label deck">01</span>Assault 500</a></li>
+        <li><a class="big h3" href="#uitvoeringen"><span class="label deck">02</span>Uitvoeringen</a></li>
+        <li><a class="big h3" href="#specs"><span class="label deck">03</span>Specs</a></li>
+        <li><a class="big h3" href="#contact"><span class="label deck">04</span>Contact</a></li>
+      </ul>
+    </nav>
+    <div style="display:flex;flex-direction:column;gap:1.25rem">
+      <a class="sheet-cta label" href="#contact">Prijslijst
+        <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="width:.875rem;height:.625rem"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
+      <p class="label deck">Built in the Netherlands</p>
+    </div>
+  </div>
+</div>
+
+<main>
+  <section class="hero" id="top">
+    <div class="hero-veil" aria-hidden="true" style="z-index:1"></div>
+    <div class="hero-media" aria-hidden="true">
+      <figure class="plate" data-img="render-aft-quarter" data-alt=""><span class="ticks"></span>
+        <figcaption class="plate-cap label"><i></i><b>Render &middot; hero</b><s>Beeld volgt &middot; 16/9</s></figcaption>
+      </figure>
+    </div>
+
+    <div class="shell hero-in">
+      <div class="hero-grid">
+        <div>
+          <p class="eyebrow label"><i aria-hidden="true"></i>Model 2026 &middot; Built in the Netherlands</p>
+          <h1 class="display" style="margin-top:1.5rem"><span class="mask"><span>Assault</span></span><span class="mask outline-type"><span>500</span></span></h1>
+        </div>
+        <div class="hero-lead reveal">
+          <p class="say">E&eacute;n boot. Twee manieren om het water op te gaan.</p>
+          <p class="body" style="margin-top:.75rem;color:rgba(242,241,237,.75)">Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.</p>
+          <div class="hero-actions">
+            <a class="btn label" href="#assault-500">Ontdek de Assault 500
+              <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
+            <a class="btn btn--outline label" href="#specs">Bekijk specificaties
+              <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <dl class="stats">
+        <div class="reveal"><dt class="label mill">Lengte</dt><dd>5,00<em>M</em></dd></div>
+        <div class="reveal"><dt class="label mill">Breedte</dt><dd>1,95<em>M</em></dd></div>
+        <div class="reveal"><dt class="label mill">Aluminium</dt><dd>4<em>MM</em></dd></div>
+        <div class="reveal"><dt class="label mill">Max. motor</dt><dd>80<em>PK</em></dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="section rule-t" id="assault-500">
+    <div class="shell grid12">
+      <div class="col5">
+        <div class="reveal">
+          <p class="sh-eyebrow"><span class="label mill">01</span><i aria-hidden="true"></i><span class="label mill">Assault 500</span></p>
+          <h2 class="h2" style="margin-top:1.75rem">Clean design. Sterke basis.</h2>
+          <span class="rule-red" style="margin-top:1.75rem" aria-hidden="true"></span>
+        </div>
+        <div class="reveal" style="margin-top:2rem;display:flex;flex-direction:column;gap:1rem">
+          <p class="body mill">De Assault 500 is gebouwd met &eacute;&eacute;n idee: goed moet gewoon goed zijn.</p>
+          <p class="body mill">Een strakke romp, slimme indeling en geen onnodige poespas. De constructie wordt aan de binnen- &eacute;n buitenzijde gelast en iedere Assault bouwen we zelf in Nederland.</p>
+        </div>
+      </div>
+      <div class="col7">
+        <div class="reveal">
+          <figure class="plate" data-img="detail-laswerk" data-alt="Lasser aan het werk aan een aluminium naad" style="--ar:4/3"><span class="ticks"></span>
+            <figcaption class="plate-cap label"><i></i><b>Detail &middot; laswerk</b><s>Beeld volgt &middot; 4/3</s></figcaption>
+          </figure>
+        </div>
+        <div class="detail-plate reveal">
+          <div>
+            <figure class="plate plate--cover" data-tone="light" data-img="render-stern-on" data-alt="De Assault 500 recht van achteren, met de volledige dekindeling in beeld" style="--ar:4/3"><span class="ticks"></span>
+              <figcaption class="plate-cap label"><i></i><b>Render &middot; stern on</b><s>Beeld volgt &middot; 4/3</s></figcaption>
+            </figure>
+          </div>
+          <p class="label deck" style="margin-top:.75rem">Al 5083 &middot; 4 mm &middot; binnen + buiten gelast</p>
+        </div>
+      </div>
+    </div>
+    <div class="shell">
+      <ul class="points" style="margin-top:5rem">
+        <li class="reveal"><span class="rule-red" aria-hidden="true"></span><h3>Aluminium V-jon</h3><p>Sterk, stabiel en lekker ruim.</p></li>
+        <li class="reveal"><span class="rule-red" aria-hidden="true"></span><h3>Binnen + buiten gelast</h3><p>Omdat goed bouwen verder gaat dan wat je ziet.</p></li>
+        <li class="reveal"><span class="rule-red" aria-hidden="true"></span><h3>Max. 80 pk</h3><p>Voor als het wat harder mag.</p></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section light" id="uitvoeringen">
+    <div class="shell">
+      <div class="reveal" style="max-width:42rem">
+        <p class="sh-eyebrow"><span class="label mill">02</span><i aria-hidden="true"></i><span class="label deck">Two setups</span></p>
+        <h2 class="h2" style="margin-top:1.75rem">Kies je opstelling.</h2>
+          <span class="rule-red" style="margin-top:1.75rem" aria-hidden="true"></span>
+        <p class="body deck" style="margin-top:1.25rem">Dezelfde Assault 500. Jij bepaalt wat je ermee gaat doen.</p>
+      </div>
+      <div class="reveal" style="margin-top:4rem">
+        <div class="tabs" role="tablist" aria-label="Kies een uitvoering">
+          <button class="tab" role="tab" type="button" id="tab-open" aria-selected="true" aria-controls="panel" tabindex="0"><i aria-hidden="true"></i><span class="label">Assault 500</span></button>
+          <button class="tab" role="tab" type="button" id="tab-fish" aria-selected="false" aria-controls="panel" tabindex="-1"><i aria-hidden="true"></i><span class="label">Assault 500 Fish</span></button>
+        </div>
+      </div>
+      <div class="grid12" id="panel" role="tabpanel" aria-labelledby="tab-open" style="margin-top:4rem">
+        <div class="col7">
+          <div class="panel-media">
+            <figure class="plate" data-tone="light" data-model="open" data-active="true" data-img="render-bow-quarter" data-alt="Render van de Assault 500 in de open uitvoering, schuin van voren"><span class="ticks"></span>
+              <figcaption class="plate-cap label"><i></i><b>Render &middot; 500</b><s>Beeld volgt &middot; 16/9</s></figcaption></figure>
+            <figure class="plate" data-tone="light" data-model="fish" data-active="false"><span class="ticks"></span>
+              <figcaption class="plate-cap label"><i></i><b>Render &middot; 500 Fish</b><s>Beeld volgt &middot; 16/9</s></figcaption></figure>
+          </div>
+          <div class="steer">
+            <span class="steer-key label">Besturing</span>
+            <span class="label"><b><i aria-hidden="true"></i>Tiller</b><s>Standaard</s></span>
+            <span class="label off"><b>Console</b><s>Optioneel</s></span>
+          </div>
+        </div>
+        <div class="col5"><div class="copy-stack" id="copy-stack"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section light rule-t" id="specs">
+    <div class="shell">
+      <div class="grid12" style="align-items:flex-end">
+        <div class="col5 reveal">
+          <p class="sh-eyebrow"><span class="label mill">03</span><i aria-hidden="true"></i><span class="label deck">The numbers</span></p>
+          <h2 class="h2" style="margin-top:1.75rem">De Assault in cijfers.</h2>
+          <span class="rule-red" style="margin-top:1.75rem" aria-hidden="true"></span>
+        </div>
+        <div class="col7 reveal">
+          <figure class="plate" data-tone="light" data-img="render-top-down" data-alt="Bovenaanzicht van de Assault 500 met de volledige dekindeling" style="--ar:16/9"><span class="ticks"></span>
+            <figcaption class="plate-cap label"><i></i><b>Render &middot; top down plan</b><s>Beeld volgt &middot; 16/9</s></figcaption></figure>
+          <div class="ruler" aria-hidden="true"><span class="label mill">0</span><span class="bar" id="ruler"></span><span class="label mill">5,00 m</span></div>
+        </div>
+      </div>
+      <dl class="specs" id="specs-grid"></dl>
+    </div>
+  </section>
+
+  <section class="section rule-t" id="gallery">
+    <div class="shell">
+      <div class="reveal" style="max-width:36rem">
+        <p class="sh-eyebrow"><span class="label mill">04</span><i aria-hidden="true"></i><span class="label mill">Details</span></p>
+        <h2 class="h2" style="margin-top:1.75rem">Van dichtbij.</h2>
+          <span class="rule-red" style="margin-top:1.75rem" aria-hidden="true"></span>
+      </div>
+    </div>
+    <div style="margin-top:3rem">
+      <ul class="rail" id="rail"></ul>
+      <div class="shell progress">
+        <span class="track" aria-hidden="true"><i id="bar"></i></span>
+        <span class="label deck" id="railhint">Sleep of scroll</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section rule-t" id="contact">
+    <div class="shell grid12">
+      <div class="col5">
+        <div class="reveal">
+          <p class="sh-eyebrow"><span class="label mill">05</span><i aria-hidden="true"></i><span class="label mill">Contact</span></p>
+          <h2 class="h2" style="margin-top:1.75rem">See it. Feel it. Drive it.</h2>
+          <span class="rule-red" style="margin-top:1.75rem" aria-hidden="true"></span>
+          <p class="body mill" style="margin-top:1.75rem">Foto&rsquo;s zijn mooi. Aan boord staan is beter. Kom de Assault 500 in het echt bekijken en ontdek welke uitvoering bij jou past.</p>
+        </div>
+        <div class="reveal" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-top:2.5rem">
+          <a class="btn label" href="https://wa.me/31655324350" target="_blank" rel="noreferrer noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:1rem;height:1rem;flex:none"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.74.46 3.44 1.32 4.94L2 22l5.36-1.4a9.86 9.86 0 0 0 4.68 1.2h.01c5.43 0 9.84-4.4 9.84-9.84C21.89 6.4 17.48 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.17-1.14l-.3-.18-3.1.81.83-3.02-.2-.31a8.15 8.15 0 0 1-1.25-4.34c0-4.52 3.68-8.19 8.2-8.19a8.15 8.15 0 0 1 8.19 8.2c0 4.51-3.68 8.17-8.19 8.17Zm4.5-6.12c-.25-.13-1.46-.72-1.68-.8-.23-.08-.39-.13-.56.12-.16.25-.63.8-.78.96-.14.17-.28.19-.53.06-.24-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.09-.17.05-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.66 4.2 3.73.59.25 1.05.4 1.4.52.6.18 1.14.16 1.56.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
+            WhatsApp
+            <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
+          <a class="btn btn--outline label" href="https://www.google.com/maps/search/?api=1&amp;query=Dingstede+6+Zwartsluis" target="_blank" rel="noreferrer noopener">Kom langs
+            <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
+        </div>
+      </div>
+      <dl class="details col7">
+        <div class="reveal"><dt class="label mill">Telefoon</dt><dd><a href="tel:+31655324350">06 55 32 43 50</a></dd></div>
+        <div class="reveal"><dt class="label mill">E-mail</dt><dd><a href="mailto:info@assaultboats.nl">info@assaultboats.nl</a></dd></div>
+        <div class="reveal"><dt class="label mill">Werkplaats</dt><dd><a href="https://www.google.com/maps/search/?api=1&amp;query=Dingstede+6+Zwartsluis" target="_blank" rel="noreferrer noopener">Dingstede 6, Zwartsluis</a></dd></div>
+        <div class="reveal"><dt class="label mill">Op afspraak</dt><dd>ma &ndash; za</dd></div>
+      </dl>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="shell foot-in">
+    <nav aria-label="Footer">
+      <ul class="foot-links" id="foot-links"></ul>
+    </nav>
+    <div class="foot-meta">
+      <p class="label deck">Built in the Netherlands.</p>
+      <p class="label deck">&copy; 2026 Assault Boats</p>
+    </div>
+  </div>
+</footer>
+
+<div class="sticky-cta" id="sticky-cta" data-show="false">
+  <a class="sticky-btn sticky-btn--ghost label" href="#contact">
+    <svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 0v11M2.5 7 7 11.5 11.5 7M0 15h14"/></svg>
+    Prijslijst</a>
+  <a class="sticky-btn sticky-btn--wa label" href="https://wa.me/31655324350" target="_blank" rel="noreferrer noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.74.46 3.44 1.32 4.94L2 22l5.36-1.4a9.86 9.86 0 0 0 4.68 1.2h.01c5.43 0 9.84-4.4 9.84-9.84C21.89 6.4 17.48 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.17-1.14l-.3-.18-3.1.81.83-3.02-.2-.31a8.15 8.15 0 0 1-1.25-4.34c0-4.52 3.68-8.19 8.2-8.19a8.15 8.15 0 0 1 8.19 8.2c0 4.51-3.68 8.17-8.19 8.17Zm4.5-6.12c-.25-.13-1.46-.72-1.68-.8-.23-.08-.39-.13-.56.12-.16.25-.63.8-.78.96-.14.17-.28.19-.53.06-.24-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.09-.17.05-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.66 4.2 3.73.59.25 1.05.4 1.4.52.6.18 1.14.16 1.56.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
+    WhatsApp</a>
+</div>
+
+<div class="lb" id="lb" data-open="false" role="dialog" aria-modal="true" aria-label="Afbeelding vergroot">
+  <div class="lb-top">
+    <span class="label mill" id="lb-cap"></span>
+    <button class="iconbtn" id="lb-close" type="button" aria-label="Sluiten" style="border:0">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" style="width:1.25rem;height:1.25rem"><path d="M4 4l12 12M16 4L4 16"/></svg></button>
+  </div>
+  <div class="lb-body" id="lb-body"></div>
+  <div class="lb-nav">
+    <button class="iconbtn" id="lb-prev" type="button" aria-label="Vorige afbeelding"><svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="width:1rem;height:.75rem;transform:rotate(180deg)"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></button>
+    <button class="iconbtn" id="lb-next" type="button" aria-label="Volgende afbeelding"><svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="width:1rem;height:.75rem"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></button>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var root = document.documentElement;
+  root.classList.add('js');
+
+  var ARROW = '<svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg>';
+
+  /* Aangeleverd beeld, ingesloten zodat de pagina één bestand blijft.
+     Een plek zonder sleutel houdt zijn technische placeholder. */
+  var IMAGES = __IMAGES__;
+
+  function pad(n){ return n < 10 ? '0' + n : String(n); }
+
+  /* Vult elke plaat met data-img; laat de rest ongemoeid. */
+  function hydratePlates(scope){
+    var plates = (scope || document).querySelectorAll('.plate[data-img]:not([data-filled])');
+    Array.prototype.forEach.call(plates, function(fig){
+      var key = fig.getAttribute('data-img');
+      var src = IMAGES[key];
+      if (!src) return;
+      var img = document.createElement('img');
+      img.src = src;
+      img.alt = fig.getAttribute('data-alt') || '';
+      img.decoding = 'async';
+      fig.insertBefore(img, fig.firstChild);
+      fig.setAttribute('data-filled', 'true');
+      if (key.indexOf('render-') === 0) fig.setAttribute('data-render', 'true');
+    });
+  }
+
+  /* ---------------- content ---------------- */
+  var MODELS = {
+    open: {
+      name:'Assault 500', title:'Hou het open.',
+      body:'Veel ruimte, een open dek en alle vrijheid om de boot te gebruiken zoals jij wilt. Met de optionele zijbanken creëer je extra zitruimte. Zonnige dag? Plaats het uitneembare zonnedek. Meer ruimte nodig? Dan haal je het er net zo makkelijk weer uit.',
+      features:['Open dekindeling','Tiller-besturing standaard','Zijbanken optioneel','Uitneembaar zonnedek optioneel','Stuurconsole optioneel']
+    },
+    fish: {
+      name:'Assault 500 Fish', title:'Gebouwd om te vissen.',
+      body:'De Fish krijgt voorin een verhoogd werpdek met daaronder drie afsluitbare opbergruimtes. Eén daarvan is speciaal voor je hengels. Zo blijft je dek vrij en zit alles wat je nodig hebt netjes opgeborgen en binnen handbereik.',
+      features:['Verhoogd werpdek','Drie afsluitbare opbergruimtes','Aparte hengelberging','Tiller-besturing standaard','Stuurconsole optioneel','Ruim visdek']
+    }
+  };
+
+  /* Acht specs: deelt gelijk door twee kolommen op een telefoon en vier
+     daarboven, dus geen enkele rij blijft rafelig achter. */
+  var SPECS = [
+    ['Lengte','5,00','m'],['Breedte','1,95','m'],['Plaatdikte','4','mm'],
+    ['Materiaal','Al 5083','zeewaterbestendig'],['Gewicht romp','320','kg'],
+    ['Besturing','Tiller','standaard · console optioneel'],
+    ['Max. belading','4 pers.','360 kg'],['Max. motor','80','pk']
+  ];
+
+  /* Alleen fotografie van de boot. Geen categoriefilter: met één reeks
+     beelden voegt filteren niets toe en kost het alleen een klik. */
+  var GALLERY = [
+    ['Op de werf','3/4','foto-op-de-werf'],
+    ['Achterkwartier','3/4','foto-achterkwartier'],
+    ['Vanaf de spiegel','3/4','foto-vanaf-de-spiegel'],
+    ['Dekindeling','1/1','foto-dekindeling'],
+    ['Volle lengte','3/4','foto-volle-lengte'],
+    ['Boeg','3/4','foto-boeg'],
+    ['Spiegel','1/1','foto-spiegel'],
+    ['Bij de werkplaats','3/4','foto-werkplaats']
+  ];
+
+  var FOOTER_LINKS = [['Assault 500','#uitvoeringen'],['Assault 500 Fish','#uitvoeringen'],['Instagram','#contact'],['Contact','#contact'],['Prijslijst','#contact']];
+
+  /* ---------------- header ---------------- */
+  var hdr = document.getElementById('hdr');
+  var sheet = document.getElementById('sheet');
+  function onScroll(){ hdr.setAttribute('data-solid', String(window.scrollY > 24 || sheet.getAttribute('data-open') === 'true')); }
+  window.addEventListener('scroll', onScroll, { passive:true });
+
+  var burger = document.getElementById('burger');
+  function setSheet(open){
+    sheet.setAttribute('data-open', String(open));
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Menu sluiten' : 'Menu openen');
+    document.body.style.overflow = open ? 'hidden' : '';
+    onScroll();
+    if (open) { var a = sheet.querySelector('a'); if (a) a.focus(); }
+  }
+  burger.addEventListener('click', function(){ setSheet(sheet.getAttribute('data-open') !== 'true'); });
+  sheet.addEventListener('click', function(e){ if (e.target.closest('a')) setSheet(false); });
+  onScroll();
+
+  /* ---------------- reveals ----------------
+     watchReveals() moet ook ná het genereren van secties draaien: elementen
+     die later in de DOM komen worden anders nooit geobserveerd en blijven
+     op opacity 0 staan. */
+  var io = 'IntersectionObserver' in window
+    ? new IntersectionObserver(function(entries){
+        entries.forEach(function(en, i){
+          if (!en.isIntersecting) return;
+          en.target.style.transitionDelay = Math.min(i, 5) * 60 + 'ms';
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        });
+      }, { rootMargin: '-8% 0px -6% 0px' })
+    : null;
+
+  function watchReveals(scope){
+    var els = (scope || document).querySelectorAll('.reveal:not(.in)');
+    Array.prototype.forEach.call(els, function(el){
+      if (io) io.observe(el); else el.classList.add('in');
+    });
+  }
+
+  /* ---------------- uitvoeringen ---------------- */
+  var stack = document.getElementById('copy-stack');
+  var tabs = [document.getElementById('tab-open'), document.getElementById('tab-fish')];
+  var current = 'open';
+
+  stack.innerHTML = Object.keys(MODELS).map(function(key){
+    var m = MODELS[key];
+    return '<div data-model="' + key + '" data-active="' + (key === 'open') + '"' + (key === 'open' ? '' : ' aria-hidden="true" inert') + '>' +
+      '<p class="label mill">' + m.name + '</p>' +
+      '<h3 class="h3" style="margin-top:1rem">' + m.title + '</h3>' +
+      '<p class="body deck" style="margin-top:1.25rem">' + m.body + '</p>' +
+      '<ul class="feat" style="margin-top:2.25rem">' + m.features.map(function(f, i){
+        return '<li><span class="label">' + pad(i + 1) + '</span><span>' + f + '</span></li>';
+      }).join('') + '</ul>' +
+      '</div>';
+  }).join('');
+
+  function selectModel(key, focus){
+    if (key === current) return;
+    current = key;
+    tabs.forEach(function(t){
+      var on = t.id === 'tab-' + key;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (on && focus) t.focus();
+    });
+    Array.prototype.forEach.call(stack.children, function(bl){
+      var on = bl.getAttribute('data-model') === key;
+      bl.setAttribute('data-active', String(on));
+      if (on) { bl.removeAttribute('aria-hidden'); bl.removeAttribute('inert'); }
+      else { bl.setAttribute('aria-hidden', 'true'); bl.setAttribute('inert', ''); }
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.panel-media .plate'), function(p){
+      p.setAttribute('data-active', String(p.getAttribute('data-model') === key));
+    });
+    document.getElementById('panel').setAttribute('aria-labelledby', 'tab-' + key);
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ selectModel(t.id === 'tab-fish' ? 'fish' : 'open', false); });
+    t.addEventListener('keydown', function(e){
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      selectModel(current === 'open' ? 'fish' : 'open', true);
+    });
+  });
+
+  /* ---------------- specs ---------------- */
+  document.getElementById('specs-grid').innerHTML = SPECS.map(function(s, i){
+    return '<div>' +
+      '<div class="top"><dt class="label">' + s[0] + '</dt><span class="label" aria-hidden="true">' + pad(i + 1) + '</span></div>' +
+      '<dd><span>' + s[1] + '</span><em>' + s[2] + '</em></dd></div>';
+  }).join('');
+  var rulerHTML = '';
+  for (var r = 0; r <= 10; r++) rulerHTML += '<i style="left:' + (r * 10) + '%"></i>';
+  document.getElementById('ruler').innerHTML = rulerHTML;
+
+  /* ---------------- footer ---------------- */
+  document.getElementById('foot-links').innerHTML = FOOTER_LINKS.map(function(l){
+    return '<li><a class="label" href="' + l[1] + '">' + l[0] + '</a></li>';
+  }).join('');
+
+  /* ---------------- gallery ---------------- */
+  var rail = document.getElementById('rail');
+  var bar = document.getElementById('bar');
+
+  rail.innerHTML = GALLERY.map(function(g, i){
+    return '<li style="--ar:' + g[1] + '">' +
+      '<button type="button" data-i="' + i + '" aria-label="Vergroot: ' + g[0] + '">' +
+      '<figure class="plate"' + (g[2] ? ' data-img="' + g[2] + '" data-alt="' + g[0] + '"' : '') + '><span class="ticks"></span>' +
+      '<figcaption class="plate-cap label"><i></i><b>' + g[0] + '</b><s>Beeld volgt · ' + g[1] + '</s></figcaption></figure>' +
+      '<span class="over"><span class="label">' + g[0] + '</span><span class="label red">' + pad(i + 1) + '</span></span>' +
+      '</button></li>';
+  }).join('');
+
+  function updateBar(){
+    var max = rail.scrollWidth - rail.clientWidth;
+    bar.style.width = Math.max(8, (max > 0 ? rail.scrollLeft / max : 0) * 100) + '%';
+  }
+  rail.addEventListener('scroll', updateBar, { passive:true });
+  window.addEventListener('resize', updateBar);
+
+  /* Drag-to-pan op pointer-apparaten. Het volgen gebeurt op window en niet
+     met setPointerCapture, dat de afsluitende klik zou omleiden. */
+  var drag = { x:0, left:0, moved:false };
+  rail.addEventListener('pointerdown', function(e){
+    if (e.pointerType === 'touch') return;
+    drag = { x:e.clientX, left:rail.scrollLeft, moved:false };
+    function move(ev){
+      var d = ev.clientX - drag.x;
+      if (Math.abs(d) > 4) { drag.moved = true; ev.preventDefault(); }
+      rail.scrollLeft = drag.left - d;
+    }
+    function up(){
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+      window.removeEventListener('pointercancel', up);
+    }
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+    window.addEventListener('pointercancel', up);
+  });
+
+  /* ---------------- lightbox ---------------- */
+  var lb = document.getElementById('lb');
+  var lbBody = document.getElementById('lb-body');
+  var lbCap = document.getElementById('lb-cap');
+  var lbIndex = -1, lastFocus = null;
+
+  function paintLightbox(){
+    var g = GALLERY[lbIndex];
+    if (!g) return;
+    lbCap.textContent = pad(lbIndex + 1) + ' / ' + pad(GALLERY.length) + ' · ' + g[0];
+    lbBody.innerHTML = '<figure class="plate"' + (g[2] ? ' data-img="' + g[2] + '" data-alt="' + g[0] + '"' : '') +
+      ' style="--ar:' + g[1] + '"><span class="ticks"></span>' +
+      '<figcaption class="plate-cap label"><i></i><b>' + g[0] + '</b><s>Beeld volgt · ' + g[1] + '</s></figcaption></figure>';
+    hydratePlates(lbBody);
+  }
+  function openLightbox(i){
+    lbIndex = i; lastFocus = document.activeElement;
+    paintLightbox();
+    lb.setAttribute('data-open','true');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lb-close').focus();
+  }
+  function closeLightbox(){
+    lb.setAttribute('data-open','false');
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  function stepLightbox(d){ lbIndex = (lbIndex + d + GALLERY.length) % GALLERY.length; paintLightbox(); }
+
+  rail.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-i]');
+    if (!b || drag.moved) return;
+    openLightbox(Number(b.getAttribute('data-i')));
+  });
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev').addEventListener('click', function(){ stepLightbox(-1); });
+  document.getElementById('lb-next').addEventListener('click', function(){ stepLightbox(1); });
+  document.addEventListener('keydown', function(e){
+    if (lb.getAttribute('data-open') === 'true'){
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowRight') stepLightbox(1);
+      if (e.key === 'ArrowLeft') stepLightbox(-1);
+      return;
+    }
+    if (e.key === 'Escape' && sheet.getAttribute('data-open') === 'true') setSheet(false);
+  });
+
+  /* ---------------- meescrollende CTA ---------------- */
+  var sticky = document.getElementById('sticky-cta');
+  function updateSticky(){
+    var voorbijHero = window.scrollY > window.innerHeight * 0.7;
+    var bijFooter = document.querySelector('footer').getBoundingClientRect().top < window.innerHeight;
+    sticky.setAttribute('data-show', String(voorbijHero && !bijFooter));
+  }
+  window.addEventListener('scroll', updateSticky, { passive:true });
+  window.addEventListener('resize', updateSticky);
+  updateSticky();
+
+  /* Nieuw gegenereerde platen meenemen, daarna de rest. */
+  watchReveals();
+  hydratePlates();
+  updateBar();
+  if (window.matchMedia('(hover: none)').matches) document.getElementById('railhint').textContent = 'Swipe';
+})();
+</script>
