@@ -10,3 +10,6 @@ next-env.d.ts
 # previews van de prijslijst-render
 /pricelist/preview/
 /artifact/assault-500.html
+
+# schermafdrukken van de site
+/preview/
