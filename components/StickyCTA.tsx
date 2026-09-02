@@ -56,8 +56,8 @@ export function StickyCTA() {
               rel="noreferrer"
               className="group flex flex-1 items-center justify-center gap-2.5 rounded-[2px] border border-white/20 bg-hull/92 px-5 py-3.5 type-label text-bone shadow-[0_8px_30px_rgba(0,0,0,0.45)] backdrop-blur-md transition-colors duration-300 hover:border-white/45 lg:flex-none lg:justify-start"
             >
-              <svg viewBox="0 0 14 16" className="h-4 w-3.5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true">
-                <path d="M7 0v11M2.5 7 7 11.5 11.5 7M0 15h14" />
+              <svg viewBox="0 0 16 12" className="h-3 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true">
+                <path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5" />
               </svg>
               Prijslijst
             </a>

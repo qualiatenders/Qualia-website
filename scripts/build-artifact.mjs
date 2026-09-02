@@ -58,11 +58,20 @@ for (const dir of ['renders', 'photography']) {
 
 const markSrc = await shrink(path.join(PUB, 'brand', 'logo.webp'), 900) /* elke extensie werkt */;
 
+/* De prijslijst gaat als beeld mee: één bestand kan geen PDF openen.
+   Hogere kwaliteit dan de foto's, want dit is tekst. */
+const PAGES = path.resolve(SP, '..', 'pricelist', 'pages');
+const pricelist = [];
+for (const f of fs.readdirSync(PAGES).sort()) {
+  if (/\.(jpe?g|png|webp)$/i.test(f)) pricelist.push(await shrink(path.join(PAGES, f), 1400, 0.9));
+}
+
 let html = fs.readFileSync(path.join(SP, 'assault-500.src.html'), 'utf8');
 html = html.replace('__IMAGES__', () => JSON.stringify(images));
+html = html.replace('__PRICELIST__', () => JSON.stringify(pricelist));
 html = html.replace('__IMG_mark__', () => markSrc);
 await browser.close();
 
 const out = path.join(SP, 'assault-500.html');
 fs.writeFileSync(out, html);
-console.log('geschreven:', out, `${(fs.statSync(out).size / 1024 / 1024).toFixed(2)} MB`, '| beelden:', Object.keys(images).length);
+console.log('geschreven:', out, `${(fs.statSync(out).size / 1024 / 1024).toFixed(2)} MB`, '| beelden:', Object.keys(images).length, '| prijslijst:', pricelist.length + " pagina's");

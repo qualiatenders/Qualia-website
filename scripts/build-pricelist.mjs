@@ -53,6 +53,24 @@ await page.evaluate(() => document.fonts.ready);
 
 await page.pdf({ path: OUT, format: 'A4', printBackground: true, preferCSSPageSize: true });
 
+/*
+ * De artifact is één bestand en kan geen PDF openen, dus de prijslijst gaat
+ * daar als beeld mee. Deze paginabeelden zijn de bron daarvoor.
+ */
+if (process.argv.includes('--pages')) {
+  fs.mkdirSync(path.join(ROOT, 'pricelist', 'pages'), { recursive: true });
+  const hi = await browser.newPage({ deviceScaleFactor: 2 });
+  await hi.setContent(html, { waitUntil: 'load' });
+  await hi.evaluate(() => document.fonts.ready);
+  const sheets = await hi.$$('.page');
+  for (let i = 0; i < sheets.length; i++) {
+    const shot = await sheets[i].screenshot({ type: 'jpeg', quality: 92 });
+    fs.writeFileSync(path.join(ROOT, 'pricelist', 'pages', `p${i + 1}.jpg`), shot);
+    console.log(`pagina ${i + 1}: ${(shot.length / 1024).toFixed(0)} KB`);
+  }
+  await hi.close();
+}
+
 if (process.argv.includes('--png')) {
   await page.setViewportSize({ width: 794, height: 1123 });
   const pages = await page.$$('.page');

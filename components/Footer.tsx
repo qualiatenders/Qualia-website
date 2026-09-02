@@ -10,7 +10,9 @@ export function Footer() {
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-8 gap-y-3">
             {FOOTER.links.map((link) => {
-              const external = link.href.startsWith('http');
+              // De prijslijst is een PDF: net als een externe link in een
+              // nieuw tabblad, zodat de bezoeker de site niet kwijtraakt.
+              const external = link.href.startsWith('http') || link.href.endsWith('.pdf');
               return (
                 <li key={link.label}>
                   <a

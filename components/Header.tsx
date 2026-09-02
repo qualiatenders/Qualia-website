@@ -74,7 +74,7 @@ export function Header() {
               className="cut-tag bg-red px-4 py-2.5 type-label text-white transition-colors duration-300 hover:bg-red-hot xs:px-5 lg:px-7 lg:py-3.5"
             >
               <span className="xs:hidden">Prijslijst</span>
-              <span className="hidden xs:inline">Download prijslijst</span>
+              <span className="hidden xs:inline">Bekijk prijslijst</span>
             </a>
 
             <button

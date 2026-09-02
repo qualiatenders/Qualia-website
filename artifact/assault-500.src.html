@@ -355,6 +355,20 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
 .sticky-btn--ghost:hover{border-color:rgba(255,255,255,.45)}
 .sticky-btn--wa{background:var(--red);color:#fff;box-shadow:0 8px 30px rgba(192,39,44,.35)}
 .sticky-btn--wa:hover{background:var(--red-hot)}
+/* --- prijslijst in beeld ---------------------------------------------
+   De artifact is één bestand en kan geen PDF openen, dus de prijslijst
+   staat er als beeld in, in een eigen overlay. */
+.pl{position:fixed;inset:0;z-index:65;display:flex;flex-direction:column;background:rgba(0,0,0,.97);
+  backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s linear .3s}
+/* visibility schakelt bij openen meteen om, anders neemt de sluitknop nog
+   geen focus aan; bij sluiten pas na de fade. */
+.pl[data-open="true"]{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s}
+.pl-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;
+  padding:1rem var(--gutter);border-bottom:1px solid rgba(255,255,255,.12)}
+.pl-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:1.5rem var(--gutter) 3rem;-webkit-overflow-scrolling:touch}
+.pl-body img{display:block;width:min(100%,48rem);margin:0 auto 1.5rem;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.pl-body img:last-child{margin-bottom:0}
+
 .skip{position:absolute;left:-9999px}
 .skip:focus{left:1rem;top:1rem;z-index:70;padding:.75rem 1rem;background:var(--red);color:#fff;text-decoration:none}
 </style>
@@ -373,7 +387,7 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
       </ul>
     </nav>
     <div style="display:flex;align-items:center;gap:.75rem">
-      <a class="hdr-cta label" href="#contact"><span class="cta-kort">Prijslijst</span><span class="cta-lang">Download prijslijst</span></a>
+      <a class="hdr-cta label" href="#prijslijst" data-prijslijst><span class="cta-kort">Prijslijst</span><span class="cta-lang">Bekijk prijslijst</span></a>
       <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="sheet" aria-label="Menu openen">
         <span aria-hidden="true"><i></i><i></i></span>
       </button>
@@ -392,7 +406,7 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
       </ul>
     </nav>
     <div style="display:flex;flex-direction:column;gap:1.25rem">
-      <a class="sheet-cta label" href="#contact">Prijslijst
+      <a class="sheet-cta label" href="#prijslijst" data-prijslijst>Bekijk prijslijst
         <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true" style="width:.875rem;height:.625rem"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
       <p class="label deck">Gebouwd in Nederland</p>
     </div>
@@ -519,7 +533,7 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
         </div>
         <div class="expand-foot reveal">
           <p>Het elektrisch basispakket is de vaste 12V-basis, door ons gemonteerd, aangesloten en getest. Latere elektrische uitbreidingen sluiten daar direct op aan.</p>
-          <a class="btn label" href="#contact">Bekijk uitvoeringen en opties
+          <a class="btn label" href="#prijslijst" data-prijslijst>Bekijk uitvoeringen en opties
             <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg></a>
         </div>
       </div>
@@ -602,12 +616,21 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
 </footer>
 
 <div class="sticky-cta" id="sticky-cta" data-show="false">
-  <a class="sticky-btn sticky-btn--ghost label" href="#contact">
-    <svg viewBox="0 0 14 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M7 0v11M2.5 7 7 11.5 11.5 7M0 15h14"/></svg>
+  <a class="sticky-btn sticky-btn--ghost label" href="#prijslijst" data-prijslijst>
+    <svg viewBox="0 0 16 12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5"/></svg>
     Prijslijst</a>
   <a class="sticky-btn sticky-btn--wa label" href="https://wa.me/31655324350" target="_blank" rel="noreferrer noopener">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.74.46 3.44 1.32 4.94L2 22l5.36-1.4a9.86 9.86 0 0 0 4.68 1.2h.01c5.43 0 9.84-4.4 9.84-9.84C21.89 6.4 17.48 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.17-1.14l-.3-.18-3.1.81.83-3.02-.2-.31a8.15 8.15 0 0 1-1.25-4.34c0-4.52 3.68-8.19 8.2-8.19a8.15 8.15 0 0 1 8.19 8.2c0 4.51-3.68 8.17-8.19 8.17Zm4.5-6.12c-.25-.13-1.46-.72-1.68-.8-.23-.08-.39-.13-.56.12-.16.25-.63.8-.78.96-.14.17-.28.19-.53.06-.24-.12-1.04-.38-1.98-1.22-.73-.65-1.23-1.46-1.37-1.7-.14-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.14.17-.25.25-.41.09-.17.05-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.66 4.2 3.73.59.25 1.05.4 1.4.52.6.18 1.14.16 1.56.1.48-.07 1.46-.6 1.67-1.18.2-.58.2-1.07.14-1.18-.06-.1-.22-.16-.47-.29Z"/></svg>
     WhatsApp</a>
+</div>
+
+<div class="pl" id="pl" data-open="false" role="dialog" aria-modal="true" aria-label="Prijslijst 2026">
+  <div class="pl-top">
+    <span class="label mill">Assault 500 &middot; Prijslijst 2026</span>
+    <button class="iconbtn" id="pl-close" type="button" aria-label="Prijslijst sluiten" style="border:0">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" style="width:1.25rem;height:1.25rem"><path d="M4 4l12 12M16 4L4 16"/></svg></button>
+  </div>
+  <div class="pl-body" id="pl-body"></div>
 </div>
 
 <div class="lb" id="lb" data-open="false" role="dialog" aria-modal="true" aria-label="Afbeelding vergroot">
@@ -634,6 +657,9 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
   /* Aangeleverd beeld, ingesloten zodat de pagina één bestand blijft.
      Een plek zonder sleutel houdt zijn technische placeholder. */
   var IMAGES = __IMAGES__;
+
+  /* De prijslijstpagina’s als beeld, zodat de knop ook hier iets doet. */
+  var PRICELIST = __PRICELIST__;
 
   function pad(n){ return n < 10 ? '0' + n : String(n); }
 
@@ -690,7 +716,7 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
     ['Bij de werkplaats','3/4','foto-werkplaats']
   ];
 
-  var FOOTER_LINKS = [['Assault 500','#uitvoeringen'],['Assault 500 Fish','#uitvoeringen'],['Instagram','#contact'],['Contact','#contact'],['Prijslijst','#contact']];
+  var FOOTER_LINKS = [['Assault 500','#uitvoeringen'],['Assault 500 Fish','#uitvoeringen'],['Instagram','#contact'],['Contact','#contact'],['Prijslijst','#prijslijst']];
 
   /* ---------------- header ---------------- */
   var hdr = document.getElementById('hdr');
@@ -865,6 +891,38 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
   }
   function stepLightbox(d){ lbIndex = (lbIndex + d + GALLERY.length) % GALLERY.length; paintLightbox(); }
 
+  /* ---------------- prijslijst ---------------- */
+  var pl = document.getElementById('pl');
+  var plBody = document.getElementById('pl-body');
+  var plLast = null;
+  function openPricelist(){
+    if (!plBody.childElementCount){
+      plBody.innerHTML = PRICELIST.map(function(src, i){
+        return '<img src="' + src + '" alt="Prijslijst 2026, pagina ' + (i + 1) + ' van ' + PRICELIST.length + '">';
+      }).join('');
+    }
+    plLast = document.activeElement;
+    pl.setAttribute('data-open','true');
+    document.body.style.overflow = 'hidden';
+    plBody.scrollTop = 0;
+    // De overlay staat tot de volgende frame nog op visibility:hidden en
+    // neemt dan geen focus aan.
+    requestAnimationFrame(function(){ document.getElementById('pl-close').focus(); });
+  }
+  function closePricelist(){
+    pl.setAttribute('data-open','false');
+    document.body.style.overflow = '';
+    if (plLast) plLast.focus();
+  }
+  document.getElementById('pl-close').addEventListener('click', closePricelist);
+  document.addEventListener('click', function(e){
+    var t = e.target.closest('[data-prijslijst]');
+    if (!t) return;
+    e.preventDefault();
+    if (sheet.getAttribute('data-open') === 'true') setSheet(false);
+    openPricelist();
+  });
+
   rail.addEventListener('click', function(e){
     var b = e.target.closest('button[data-i]');
     if (!b || drag.moved) return;
@@ -874,6 +932,10 @@ p{margin:0} ul,ol,dl{margin:0;padding:0;list-style:none} dd{margin:0}
   document.getElementById('lb-prev').addEventListener('click', function(){ stepLightbox(-1); });
   document.getElementById('lb-next').addEventListener('click', function(){ stepLightbox(1); });
   document.addEventListener('keydown', function(e){
+    if (pl.getAttribute('data-open') === 'true'){
+      if (e.key === 'Escape') closePricelist();
+      return;
+    }
     if (lb.getAttribute('data-open') === 'true'){
       if (e.key === 'Escape') closeLightbox();
       if (e.key === 'ArrowRight') stepLightbox(1);

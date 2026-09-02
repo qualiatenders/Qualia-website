@@ -81,7 +81,7 @@ export function MobileNavigation({ open, onClose }: Props) {
                 onClick={onClose}
                 className="flex items-center justify-between rounded-[2px] bg-red px-6 py-5 type-label text-white"
               >
-                Prijslijst
+                Bekijk prijslijst
                 <svg aria-hidden="true" viewBox="0 0 16 12" className="h-2.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M0 6h14M9.5 1.5 14.5 6l-5 4.5" />
                 </svg>

@@ -244,6 +244,6 @@ export const FOOTER = {
     { label: 'Assault 500 Fish', href: '#uitvoeringen' },
     { label: 'Instagram', href: 'https://instagram.com' },
     { label: 'Contact', href: '#contact' },
-    { label: 'Prijslijst', href: PRICE_LIST_HREF },
+    { label: 'Bekijk prijslijst', href: PRICE_LIST_HREF },
   ],
 };
