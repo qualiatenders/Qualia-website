@@ -43,7 +43,7 @@ export function StickyCTA() {
     <AnimatePresence>
       {visible ? (
         <motion.div
-          className="fixed inset-x-0 bottom-0 z-40 flex justify-end px-[clamp(1.25rem,4.5vw,5rem)] pb-5 lg:bottom-8 lg:pb-0"
+          className="fixed inset-x-0 bottom-0 z-40 flex justify-end px-[clamp(1.25rem,4.5vw,5rem)] pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:bottom-8 lg:pb-0"
           initial={reduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           exit={reduced ? { opacity: 0 } : { opacity: 0, y: 16 }}

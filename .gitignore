@@ -19,3 +19,7 @@ next-env.d.ts
 
 # het ZIP-bestand is alleen een kopie van out/, dat al in git staat
 /assaultboats-website.zip
+
+# lokale omgevingsvariabelen
+.env.local
+.env*.local

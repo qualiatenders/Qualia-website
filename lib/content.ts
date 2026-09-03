@@ -54,11 +54,15 @@ export const LOGO: MediaSlot | null = FILES['logo']
 /** De renders zijn vrijstaand gemaakt: nooit bijsnijden, altijd op licht. */
 const RENDER = { fit: 'contain', tone: 'light' } as const;
 
+/**
+ * Navigatie wijst naar echte routes, niet naar ankers: een anker werkt
+ * alleen op de homepage en zou op elke andere pagina doodlopen.
+ */
 export const NAV_LINKS = [
-  { label: 'Assault 500', href: '#assault-500' },
-  { label: 'Uitvoeringen', href: '#uitvoeringen' },
-  { label: 'Specs', href: '#specs' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Assault 500', href: '/assault-500/' },
+  { label: 'Fish', href: '/assault-500-fish/' },
+  { label: 'Over Assault', href: '/over-assault/' },
+  { label: 'Contact', href: '/contact/' },
 ] as const;
 
 export const HERO = {
@@ -240,10 +244,108 @@ export const EXPAND = {
 export const FOOTER = {
   tagline: 'Gebouwd in Nederland.',
   links: [
-    { label: 'Assault 500', href: '#uitvoeringen' },
-    { label: 'Assault 500 Fish', href: '#uitvoeringen' },
-    { label: 'Instagram', href: 'https://instagram.com' },
-    { label: 'Contact', href: '#contact' },
+    { label: 'Assault 500', href: '/assault-500/' },
+    { label: 'Assault 500 Fish', href: '/assault-500-fish/' },
+    { label: 'Aluminium visboot', href: '/aluminium-visboot/' },
+    { label: 'Aluminium V-jon', href: '/aluminium-v-jon/' },
+    { label: 'Over Assault', href: '/over-assault/' },
+    { label: 'Contact', href: '/contact/' },
     { label: 'Bekijk prijslijst', href: PRICE_LIST_HREF },
   ],
+  legal: [
+    { label: 'Privacy', href: '/privacy/' },
+    { label: 'Algemene voorwaarden', href: '/algemene-voorwaarden/' },
+  ],
 };
+
+/* ------------------------------------------------------------------
+   PRIJZEN EN OPTIES
+   Bron: pricelist/prijslijst.html. Verandert daar een prijs, dan hoort
+   hij hier mee te veranderen — het productschema leest deze bedragen.
+------------------------------------------------------------------ */
+
+export const MODEL_PRICES = {
+  open: 9575,
+  fish: 10375,
+  /** Wat de Fish meer kost dan de Open. */
+  fishSurcharge: 800,
+} as const;
+
+export type Option = {
+  name: string;
+  price: number;
+  /** Op welke uitvoeringen de optie past. */
+  open: boolean;
+  fish: boolean;
+  description: string;
+};
+
+export const OPTIONS: Option[] = [
+  {
+    name: 'Zijbanken',
+    price: 395,
+    open: true,
+    fish: false,
+    description: 'Gelaste aluminium zijbanken langs de kuip. Extra zitruimte, terwijl het dek zijn open indeling houdt.',
+  },
+  {
+    name: 'Zonnedekpanelen',
+    price: 375,
+    open: true,
+    fish: false,
+    description: 'Uitneembare aluminium panelen die de zitruimte ombouwen tot een vlak zonnedek.',
+  },
+  {
+    name: 'Aluminium stuurstand',
+    price: 395,
+    open: true,
+    fish: true,
+    description: 'Gelaste aluminium stuurconsole. Zonder stuurwiel, stuurinrichting en bedieningskabels.',
+  },
+  {
+    name: 'Zware rubber stootrand',
+    price: 595,
+    open: true,
+    fish: true,
+    description: 'Zware rubber stootrand rondom de boot. Prijs inclusief montage.',
+  },
+  {
+    name: 'Elektrisch basispakket',
+    price: 595,
+    open: true,
+    fish: true,
+    description: 'De vaste 12V-basis voor alle elektrische uitbreidingen. Af fabriek gemonteerd, aangesloten en getest. Accu niet inbegrepen.',
+  },
+  {
+    name: 'Navigatieverlichting',
+    price: 225,
+    open: true,
+    fish: true,
+    description: 'Complete voorbedrade navigatieverlichting. Zelf te installeren of door ons te laten monteren.',
+  },
+  {
+    name: 'Bilgepompset',
+    price: 195,
+    open: true,
+    fish: true,
+    description: 'Complete voorbedrade bilgepompset. Zelf te installeren of door ons te laten monteren.',
+  },
+  {
+    name: 'Handrailing',
+    price: 325,
+    open: true,
+    fish: true,
+    description: 'Gelaste aluminium handrailing voor houvast aan boord.',
+  },
+];
+
+/** Honda-buitenboordmotoren, adviesprijzen Honda Marine 2026 incl. btw. */
+export const MOTORS = [
+  { pk: 20, model: 'Honda BF20 D LHSU', spec: 'Langstaart · elektrische start · 12 A dynamo · 49 kg', price: 4529, tiller: 'Standaard' },
+  { pk: 40, model: 'Honda BF40 D LRTZ', spec: 'Langstaart · elektrische start · power trim · 102 kg', price: 7879, tiller: '+ 319' },
+  { pk: 60, model: 'Honda BF60 A LRTU', spec: 'Langstaart · elektrische start · power trim · 110 kg', price: 9949, tiller: '+ 419' },
+  { pk: 80, model: 'Honda BF80 A LRTU', spec: 'Langstaart · elektrische start · power trim · 165 kg', price: 13299, tiller: '+ 619' },
+];
+
+/** "9.575" — Nederlandse notatie, zonder decimalen want dat zijn hele euro's. */
+export const euro = (n: number) => n.toLocaleString('nl-NL');

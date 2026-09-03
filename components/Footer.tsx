@@ -18,7 +18,7 @@ export function Footer() {
                   <a
                     href={link.href}
                     {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-                    className="type-label text-mill transition-colors hover:text-bone"
+                    className="-my-1.5 inline-block py-1.5 type-label text-mill transition-colors hover:text-bone"
                   >
                     {link.label}
                   </a>
@@ -29,6 +29,11 @@ export function Footer() {
         </nav>
 
         <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
+          {FOOTER.legal.map((link) => (
+            <a key={link.href} href={link.href} className="-my-1.5 inline-block py-1.5 type-label text-deck transition-colors hover:text-mill">
+              {link.label}
+            </a>
+          ))}
           <p className="type-label text-deck">{FOOTER.tagline}</p>
           <p className="type-label text-deck">&copy; {year} Assault Boats</p>
         </div>

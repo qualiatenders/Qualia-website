@@ -64,7 +64,7 @@ export function ContactSection() {
                     <a
                       href={detail.href}
                       {...(external ? { target: '_blank', rel: 'noreferrer noopener' } : {})}
-                      className="transition-colors hover:text-red"
+                      className="inline-block py-0.5 transition-colors hover:text-red"
                     >
                       {detail.value}
                     </a>

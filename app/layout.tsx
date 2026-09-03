@@ -1,5 +1,11 @@
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Inter, JetBrains_Mono } from 'next/font/google';
+import { Analytics } from '@/components/Analytics';
+import { Footer } from '@/components/Footer';
+import { Header } from '@/components/Header';
+import { StickyCTA } from '@/components/StickyCTA';
+import { jsonLd, organizationSchema } from '@/lib/seo';
+import { SITE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
 /* Self-hosted via next/font: no render-blocking request, no layout shift. */
@@ -24,18 +30,33 @@ const mono = JetBrains_Mono({
   display: 'swap',
 });
 
+/**
+ * Site-brede standaarden. Elke pagina zet zijn eigen title, omschrijving,
+ * canonical en Open Graph via pageMetadata() in lib/seo.ts.
+ */
 export const metadata: Metadata = {
-  metadataBase: new URL('https://assaultboats.nl'),
-  title: 'Assault 500 — Assault Boats',
-  description:
-    'De Assault 500 is een moderne aluminium V-jon van 5 meter, gebouwd in Nederland. Verkrijgbaar als open uitvoering en als Fish met verhoogd werpdek.',
-  keywords: ['Assault Boats', 'Assault 500', 'aluminium boot', 'V-jon', 'visboot', 'Nederland'],
-  openGraph: {
-    title: 'Assault 500 — Assault Boats',
-    description: 'Eén boot. Twee manieren om het water op te gaan.',
-    locale: 'nl_NL',
-    type: 'website',
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: 'Aluminium visboot & V-jon uit Nederland | Assault Boats',
+    // Paginatitels vullen alleen hun eigen deel in.
+    template: '%s | Assault Boats',
   },
+  description:
+    'Assault Boats bouwt aluminium V-jons in Nederland. De Assault 500 is 5 meter lang, 4 mm dik en leverbaar als open uitvoering of als Fish met vast werpdek.',
+  applicationName: SITE.name,
+  authors: [{ name: SITE.name, url: SITE_URL }],
+  creator: SITE.name,
+  publisher: SITE.name,
+  formatDetection: { telephone: true, address: false, email: true },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '16x16 32x32 48x48' },
+      { url: '/icons/icon-192.png', type: 'image/png', sizes: '192x192' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
+  manifest: '/manifest.webmanifest',
+  alternates: { canonical: '/' },
 };
 
 export const viewport: Viewport = {
@@ -45,18 +66,35 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="nl" className={`${archivo.variable} ${inter.variable} ${mono.variable}`}>
+    <html lang={SITE.lang} className={`${archivo.variable} ${inter.variable} ${mono.variable}`}>
+      <head>
+        {/*
+          Organization staat in de root, dus op elke pagina. De @id maakt hem
+          herbruikbaar: het productschema verwijst ernaar in plaats van de
+          gegevens te herhalen.
+        */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationSchema())} />
+      </head>
       <body>
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
         <a
-          href="#assault-500"
+          href="#inhoud"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[70] focus:bg-red focus:px-4 focus:py-3 focus:type-label focus:text-white"
         >
           Naar de inhoud
         </a>
-        {children}
+        {/*
+          Header, footer en de meescrollende CTA staan in de root: elke
+          route krijgt ze zo automatisch, en ze hoeven niet per pagina
+          herhaald te worden.
+        */}
+        <Header />
+        <main id="inhoud">{children}</main>
+        <Footer />
+        <StickyCTA />
+        <Analytics />
       </body>
     </html>
   );
