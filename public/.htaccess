@@ -9,6 +9,29 @@ DirectoryIndex index.html
 # Next.js schrijft een eigen 404-pagina; laat Apache die gebruiken.
 ErrorDocument 404 /404.html
 
+# ------------------------------------------------------------------
+# WWW NAAR NON-WWW
+#
+# Staat bewust UIT. Zet dit pas aan als aan twee dingen is voldaan:
+#
+#  1. Het SSL-certificaat dekt zowel assaultboats.nl als
+#     www.assaultboats.nl. Zonder dat helpt deze regel niets: de browser
+#     controleert het certificaat voordat hij ook maar iets van de server
+#     leest, dus de waarschuwing komt hoe dan ook eerst.
+#  2. De hosting serveert de site op assaultboats.nl en verwijst niet
+#     zelf al van assaultboats.nl naar www. Doet hij dat wel, dan maken
+#     deze regels samen een oneindige lus.
+#
+# Zonder deze regel is de site op twee adressen bereikbaar met dezelfde
+# inhoud. De canonical-tags in de HTML wijzen al naar de versie zonder
+# www, dus Google kiest de goede — maar één adres is netter.
+#
+# <IfModule mod_rewrite.c>
+#   RewriteEngine On
+#   RewriteCond %{HTTP_HOST} ^www\.assaultboats\.nl$ [NC]
+#   RewriteRule ^(.*)$ https://assaultboats.nl/$1 [R=301,L]
+# </IfModule>
+
 <IfModule mod_headers.c>
   # Bestanden onder /_next/static/ hebben een hash in hun naam en veranderen
   # nooit meer; die mogen een jaar in de cache van de bezoeker blijven.
