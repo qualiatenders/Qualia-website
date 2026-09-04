@@ -29,7 +29,7 @@ export function Header() {
         }`}
       >
         <div className="shell flex h-16 items-center justify-between gap-2 sm:gap-4 lg:h-24 lg:gap-8">
-          <a href="#top" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar boven">
+          <a href="/" className="flex items-baseline gap-1.5" aria-label="Assault Boats — naar de homepage">
             {LOGO?.src ? (
               /* Fixed box keeps the header height stable whatever the logo's ratio. */
               <span className="flex h-7 items-center overflow-hidden xs:h-8 lg:h-12">

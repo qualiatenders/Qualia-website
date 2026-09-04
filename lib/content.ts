@@ -55,14 +55,18 @@ export const LOGO: MediaSlot | null = FILES['logo']
 const RENDER = { fit: 'contain', tone: 'light' } as const;
 
 /**
- * Navigatie wijst naar echte routes, niet naar ankers: een anker werkt
- * alleen op de homepage en zou op elke andere pagina doodlopen.
+ * De site is voor de bezoeker één pagina. Het menu springt dus naar de
+ * secties op de homepage, niet naar losse pagina's.
+ *
+ * De ankers staan met een schuine streep ervoor (/#specs in plaats van
+ * #specs): zo werken ze ook vanaf een onderliggende pagina — die springt
+ * dan eerst terug naar de homepage en scrollt daarna naar de sectie.
  */
 export const NAV_LINKS = [
-  { label: 'Assault 500', href: '/assault-500/' },
-  { label: 'Fish', href: '/assault-500-fish/' },
-  { label: 'Over Assault', href: '/over-assault/' },
-  { label: 'Contact', href: '/contact/' },
+  { label: 'Assault 500', href: '/#assault-500' },
+  { label: 'Uitvoeringen', href: '/#uitvoeringen' },
+  { label: 'Specs', href: '/#specs' },
+  { label: 'Contact', href: '/#contact' },
 ] as const;
 
 export const HERO = {
@@ -241,20 +245,27 @@ export const EXPAND = {
   cta: { label: 'Bekijk uitvoeringen en opties', href: PRICE_LIST_HREF },
 };
 
+/**
+ * De voettekst is de enige plek waar de losse pagina's nog vandaan te
+ * bereiken zijn. Bewust klein en onderaan: de bezoeker merkt er nauwelijks
+ * iets van, maar Google volgt ze wel — en zonder één link ergens vandaan
+ * zijn die pagina's voor de zoekmachine een stuk minder waard.
+ */
 export const FOOTER = {
   tagline: 'Gebouwd in Nederland.',
   links: [
-    { label: 'Assault 500', href: '/assault-500/' },
-    { label: 'Assault 500 Fish', href: '/assault-500-fish/' },
+    { label: 'Assault 500', href: '/#assault-500' },
+    { label: 'Specs', href: '/#specs' },
+    { label: 'Contact', href: '/#contact' },
+    { label: 'Prijslijst', href: PRICE_LIST_HREF },
+  ],
+  /** Kleiner en grijzer dan de rest; hier hangen de SEO- en juridische pagina's. */
+  legal: [
     { label: 'Aluminium visboot', href: '/aluminium-visboot/' },
     { label: 'Aluminium V-jon', href: '/aluminium-v-jon/' },
     { label: 'Over Assault', href: '/over-assault/' },
-    { label: 'Contact', href: '/contact/' },
-    { label: 'Bekijk prijslijst', href: PRICE_LIST_HREF },
-  ],
-  legal: [
     { label: 'Privacy', href: '/privacy/' },
-    { label: 'Algemene voorwaarden', href: '/algemene-voorwaarden/' },
+    { label: 'Voorwaarden', href: '/algemene-voorwaarden/' },
   ],
 };
 
