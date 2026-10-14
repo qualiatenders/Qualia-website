@@ -60,12 +60,26 @@ export function Header() {
     return () => document.removeEventListener('pointerdown', onDown);
   }, [megaOpen]);
 
+  // Geopend via hover: de eerstvolgende klik mag het menu dan niet direct weer sluiten.
+  const openedByHover = useRef(false);
   const openMega = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
+    if (!megaOpen) openedByHover.current = true;
     setMegaOpen(true);
   };
+  const toggleMega = () => {
+    if (openedByHover.current) {
+      openedByHover.current = false;
+      setMegaOpen(true);
+      return;
+    }
+    setMegaOpen((v) => !v);
+  };
   const scheduleClose = () => {
-    closeTimer.current = setTimeout(() => setMegaOpen(false), 140);
+    closeTimer.current = setTimeout(() => {
+      openedByHover.current = false;
+      setMegaOpen(false);
+    }, 140);
   };
 
   const isActive = (h: string) => (h === '/' ? pathname === '/' : pathname === h || pathname.startsWith(`${h}/`));
@@ -74,7 +88,13 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-500 ${
-        solid ? 'border-b border-line bg-black/85 backdrop-blur-xl backdrop-saturate-150' : 'border-b border-transparent bg-transparent'
+        // Geen backdrop-filter als het mobiele menu open is: dat maakt van de header het
+        // containing block voor het fixed menu, waardoor het menu onzichtbaar wordt.
+        menuOpen
+          ? 'border-b border-line bg-black'
+          : solid
+            ? 'border-b border-line bg-black/85 backdrop-blur-xl backdrop-saturate-150'
+            : 'border-b border-transparent bg-transparent'
       }`}
     >
       <div className="h-[3px] w-full bg-red" aria-hidden="true" />
@@ -89,7 +109,7 @@ export function Header() {
               type="button"
               aria-expanded={megaOpen}
               aria-controls="mega-services"
-              onClick={() => setMegaOpen((v) => !v)}
+              onClick={toggleMega}
               className={`flex items-center gap-1.5 rounded-sm px-3.5 py-2 text-[0.9375rem] font-bold transition-colors ${isActive(href('services')) || megaOpen ? 'text-offwhite' : 'text-mist hover:text-offwhite'}`}
             >
               Productietechnieken

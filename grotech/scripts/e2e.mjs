@@ -183,6 +183,25 @@ await test('homepage-dropzone geeft bestanden door aan de offerteflow', async ()
   await ctx.close();
 });
 
+await test('menu: megamenu opent met muis (hover + klik) en mobiel menu is zichtbaar en werkt', async () => {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+  const page = await ctx.newPage();
+  await page.goto(BASE);
+  await page.getByRole('button', { name: 'Productietechnieken' }).click();
+  await page.locator('#mega-services').waitFor({ state: 'visible' });
+  await page.waitForTimeout(400);
+  assert(await page.locator('#mega-services').isVisible(), 'megamenu sloot direct na hover + klik');
+  await ctx.close();
+  const m = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();
+  await m.goto(BASE);
+  await m.getByRole('button', { name: 'Menu openen' }).click();
+  const dialog = m.getByRole('dialog', { name: 'Menu' });
+  const box = await dialog.boundingBox();
+  assert(box && box.height > 400, `mobiel menu is niet zichtbaar (hoogte ${box?.height})`);
+  await dialog.getByRole('link', { name: 'Contact', exact: true }).click();
+  await m.waitForURL(/\/contact/);
+});
+
 console.log('\nAPI-beveiliging');
 await test('verzoek zonder Origin wordt geweigerd (CSRF)', async () => {
   const r = await fetch(`${BASE}/api/offerte`, { method: 'POST', body: form(validPayload, 'x') });
