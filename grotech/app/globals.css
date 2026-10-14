@@ -1,0 +1,323 @@
+@import 'tailwindcss';
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   GROTECH design tokens — bron: GROTECH Brand Book 2026, p. 08–10.
+   Richtlijn kleurverdeling: ±65% donker / 25% grijs en wit / 10% rood.
+   Rood is een accent: lijnen, indexnummers, indicatoren. Nooit als vlak voor
+   kleine tekst (wit op rood haalt geen 4.5:1).
+   ───────────────────────────────────────────────────────────────────────────── */
+@theme {
+  --color-red: #f10a1d;
+  /* Lichtere tint uitsluitend voor kleine rode tekst op charcoal-vlakken (WCAG AA ≥ 4.5:1).
+     Vlakken, lijnen en grote cijfers blijven GROTECH Red. */
+  --color-red-ink: #ff4655;
+  --color-black: #090b0e;
+  --color-charcoal: #14181d;
+  --color-graphite: #1b2027;
+  --color-steel: #333a43;
+  --color-offwhite: #f6f7f8;
+  --color-mist: #b4bac2;
+  --color-muted: #9aa1aa;
+  --color-line: rgb(246 247 248 / 0.09);
+  --color-line-strong: rgb(246 247 248 / 0.16);
+
+  --font-sans: 'Lato', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'JetBrains Mono', Menlo, Consolas, monospace;
+
+  --text-display: clamp(2.75rem, 1.2rem + 6.2vw, 7.25rem);
+  --text-h1: clamp(2.25rem, 1.3rem + 3.6vw, 4.5rem);
+  --text-h2: clamp(1.875rem, 1.25rem + 2.3vw, 3.25rem);
+  --text-h3: clamp(1.25rem, 1.05rem + 0.6vw, 1.625rem);
+  --text-lead: clamp(1.0625rem, 0.98rem + 0.35vw, 1.3125rem);
+
+  --ease-precise: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+
+  --breakpoint-xs: 26rem;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --header-h: 4.5rem;
+  }
+
+  html {
+    background: var(--color-black);
+    color: var(--color-offwhite);
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-padding-top: calc(var(--header-h) + 1rem);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    min-height: 100dvh;
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    background: var(--color-black);
+    font-feature-settings: 'kern', 'liga', 'tnum' 0;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-weight: 900;
+    line-height: 1.04;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: var(--color-black);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-offwhite);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+
+  /* Date-picker icoon leesbaar op donker */
+  input[type='date']::-webkit-calendar-picker-indicator {
+    filter: invert(0.9);
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 90rem;
+    margin-inline: auto;
+    padding-inline: 1rem;
+  }
+  @media (min-width: 40rem) {
+    .container-x {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 80rem) {
+    .container-x {
+      padding-inline: 3.5rem;
+    }
+  }
+
+  /* Uppercase label met rood streepje — brandbook "horizontale belijning" */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-mist);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-red);
+    flex: none;
+  }
+
+  .label-caps {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .tech-grid {
+    background-image:
+      linear-gradient(to right, rgb(246 247 248 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(246 247 248 / 0.045) 1px, transparent 1px);
+    background-size: 5rem 5rem;
+  }
+
+  .hairline {
+    height: 1px;
+    background: var(--color-line);
+  }
+
+  .prose-grotech {
+    color: var(--color-mist);
+    max-width: 68ch;
+  }
+  .prose-grotech h2 {
+    color: var(--color-offwhite);
+    font-size: var(--text-h3);
+    margin-top: 2.75rem;
+    margin-bottom: 0.875rem;
+  }
+  .prose-grotech h3 {
+    color: var(--color-offwhite);
+    font-size: 1.125rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    margin-top: 1.75rem;
+    margin-bottom: 0.5rem;
+  }
+  .prose-grotech p,
+  .prose-grotech ul {
+    margin-bottom: 1rem;
+  }
+  .prose-grotech ul {
+    list-style: none;
+    padding: 0;
+  }
+  .prose-grotech li {
+    position: relative;
+    padding-left: 1.25rem;
+    margin-bottom: 0.375rem;
+  }
+  .prose-grotech li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75em;
+    width: 0.5rem;
+    height: 2px;
+    background: var(--color-red);
+  }
+  .prose-grotech a {
+    color: var(--color-offwhite);
+    text-decoration: underline;
+    text-decoration-color: var(--color-red);
+    text-underline-offset: 3px;
+  }
+  .prose-grotech strong {
+    color: var(--color-offwhite);
+  }
+}
+
+/* ── Reveal on scroll ─────────────────────────────────────────────────────────
+   Content is altijd zichtbaar zonder JavaScript. Alleen wanneer JS draait en
+   de gebruiker geen reduced motion wil, starten elementen verborgen. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 1.5rem, 0);
+    transition:
+      opacity 0.9s var(--ease-precise),
+      transform 0.9s var(--ease-precise);
+    transition-delay: calc(var(--reveal-delay, 0) * 1ms);
+  }
+  .js [data-reveal='fade'] {
+    transform: none;
+  }
+  .js [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .js [data-reveal='line'] {
+    opacity: 1;
+    transform: scaleX(0);
+    transition: transform 2.4s var(--ease-precise);
+  }
+
+  .js [data-draw] .dr {
+    stroke-dasharray: var(--len, 1200);
+    stroke-dashoffset: var(--len, 1200);
+    transition: stroke-dashoffset 2.4s var(--ease-precise);
+    transition-delay: calc(var(--d, 0) * 1ms);
+  }
+  .js [data-draw].is-visible .dr {
+    stroke-dashoffset: 0;
+  }
+  .js [data-draw] .fi {
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    transition-delay: calc(var(--d, 1400) * 1ms);
+  }
+  .js [data-draw].is-visible .fi {
+    opacity: 1;
+  }
+
+  /* Paginaovergang: korte, rustige fade bij elke route */
+  .page-enter {
+    animation: page-enter 0.6s var(--ease-precise) both;
+  }
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.5rem, 0);
+    }
+  }
+
+  .scan-line {
+    animation: scan 7s var(--ease-precise) infinite;
+  }
+  @keyframes scan {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, 100%, 0);
+    }
+  }
+
+  .pulse-dot {
+    animation: pulse-dot 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.35;
+    }
+  }
+}
+
+/* Image grade: zelfde donkere look voor alle fotografie */
+.img-grade {
+  filter: saturate(0.92) contrast(1.04);
+}
+
+/* Visueel verborgen maar beschikbaar voor schermlezers */
+.sr-only-focusable:not(:focus):not(:focus-within) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Kleine rode tekst (indexnummers in labels) in de toegankelijke tint. Bewust
+   buiten @layer, zodat dit voorrang heeft op de Tailwind-utility .text-red. */
+.label-caps .text-red,
+.eyebrow .text-red,
+.text-xs.text-red,
+.text-sm.text-red,
+.font-mono.text-red {
+  color: var(--color-red-ink);
+}
