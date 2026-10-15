@@ -4,7 +4,6 @@
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Icon } from '../Icon';
 import { Button, ButtonLink } from '../Button';
 import { Field, Honeypot, inputClass, describedBy } from '../forms/Field';
@@ -77,10 +76,9 @@ type Result = { reference: string | null; confirmationSent: boolean; mailMode?: 
 
 export function QuoteWizard() {
   const params = useSearchParams();
-  const reduce = useReducedMotion();
+  const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const [step, setStep] = useState(0);
   const [maxStep, setMaxStep] = useState(0);
-  const [dir, setDir] = useState(1);
   const [d, setD] = useState<Draft>(emptyDraft);
   const [files, setFiles] = useState<File[]>([]);
   const [fileNotes, setFileNotes] = useState<string[]>([]);
@@ -133,7 +131,6 @@ export function QuoteWizard() {
   }, []);
 
   const go = (n: number) => {
-    setDir(n > step ? 1 : -1);
     setStep(n);
     setMaxStep((m) => Math.max(m, n));
     setSubmitError('');
@@ -253,12 +250,6 @@ export function QuoteWizard() {
 
   if (result) return <Success result={result} email={d.email} name={d.contactName} />;
 
-  const variants = {
-    enter: (dd: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: dd * 28 }),
-    center: { opacity: 1, x: 0 },
-    exit: (dd: number) => (reduce ? { opacity: 0 } : { opacity: 0, x: dd * -28 }),
-  };
-
   return (
     <div ref={topRef} className="grid gap-8 lg:grid-cols-12 lg:gap-12">
       {/* stappen */}
@@ -270,7 +261,7 @@ export function QuoteWizard() {
             </p>
           </div>
           <div className="h-1 overflow-hidden rounded-full bg-line lg:hidden" role="progressbar" aria-label="Voortgang" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(pct)}>
-            <motion.div className="h-full bg-red" animate={{ width: `${Math.max(pct, 6)}%` }} transition={{ duration: 0.5, ease: [0.2, 0.7, 0.1, 1] }} />
+            <div className="h-full bg-red transition-[width] duration-500" style={{ width: `${Math.max(pct, 6)}%` }} />
           </div>
           <nav aria-label="Stappen van de aanvraag" className="hidden lg:block">
             <ol className="relative space-y-1">
@@ -325,7 +316,7 @@ export function QuoteWizard() {
         >
           <Honeypot value={hp} onChange={setHp} />
           <div className="absolute inset-x-0 top-0 hidden h-0.5 bg-line lg:block" aria-hidden="true">
-            <motion.div className="h-full bg-red" animate={{ width: `${Math.max(pct, 4)}%` }} transition={{ duration: 0.6, ease: [0.2, 0.7, 0.1, 1] }} />
+            <div className="h-full bg-red transition-[width] duration-500" style={{ width: `${Math.max(pct, 4)}%` }} />
           </div>
           <div className="p-5 sm:p-8 md:p-10">
             <p className="label-caps text-muted">
@@ -335,8 +326,7 @@ export function QuoteWizard() {
               {steps[step]!.title}
             </h2>
 
-            <AnimatePresence mode="wait" custom={dir} initial={false}>
-              <motion.div key={step} custom={dir} variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.32, ease: [0.2, 0.7, 0.1, 1] }} className="mt-8">
+            <div key={step} className="anim-step mt-8">
                 {step === 0 && files.length > 0 && (
                   <p className="mb-6 flex items-center gap-3 rounded-[3px] border border-line-strong bg-black/40 p-4 text-[0.9375rem] text-mist" role="status">
                     <Icon name="file" size={20} className="shrink-0 text-red" />
@@ -355,8 +345,7 @@ export function QuoteWizard() {
                 )}
                 {step === 3 && <StepContact d={d} update={update} errors={errors} />}
                 {step === 4 && <Review d={d} files={files} edit={go} />}
-              </motion.div>
-            </AnimatePresence>
+            </div>
 
             {submitError && (
               <p className="mt-8 flex gap-3 rounded-[3px] border border-red/50 bg-red/[0.08] p-4 text-[0.9375rem] text-offwhite" role="alert">
@@ -437,7 +426,7 @@ function StepTechnique({ d, update, error }: { d: Draft; update: <K extends keyo
         })}
       </div>
       {error ? (
-        <p id="q-techniques-error" className="mt-4 text-[0.8125rem] font-bold text-[#ff6b77]" role="alert">{error}</p>
+        <p id="q-techniques-error" className="mt-4 text-[0.8125rem] font-bold text-error" role="alert">{error}</p>
       ) : (
         <p id="q-techniques-hint" className="mt-4 text-[0.8125rem] text-muted">{d.techniques.length ? `${d.techniques.length} geselecteerd` : 'Nog niets geselecteerd'}</p>
       )}
@@ -463,7 +452,7 @@ function Chips<T extends { id: string; label: string }>({ name, options, value, 
           );
         })}
       </div>
-      {error && <p id={`q-${name}-error`} className="mt-2 text-[0.8125rem] font-bold text-[#ff6b77]" role="alert">{error}</p>}
+      {error && <p id={`q-${name}-error`} className="mt-2 text-[0.8125rem] font-bold text-error" role="alert">{error}</p>}
     </fieldset>
   );
 }
@@ -582,7 +571,7 @@ function StepContact({ d, update, errors }: { d: Draft; update: <K extends keyof
             <Link href={href('privacy')} target="_blank" className="text-offwhite underline decoration-red underline-offset-4">privacyverklaring</Link>. <span className="text-red" aria-hidden="true">*</span>
           </span>
         </label>
-        {errors.privacy && <p id="q-privacy-error" className="mt-2 text-[0.8125rem] font-bold text-[#ff6b77]" role="alert">{errors.privacy}</p>}
+        {errors.privacy && <p id="q-privacy-error" className="mt-2 text-[0.8125rem] font-bold text-error" role="alert">{errors.privacy}</p>}
       </div>
     </div>
   );
@@ -611,7 +600,7 @@ function Review({ d, files, edit }: { d: Draft; files: File[]; edit: (s: number)
       rows: [['Bestanden', files.length ? (
         <ul className="space-y-1">{files.map((f) => <li key={f.name + f.size} className="flex justify-between gap-4"><span className="truncate">{f.name}</span><span className="shrink-0 text-muted">{formatBytes(f.size)}</span></li>)}</ul>
       ) : (
-        <span className="text-[#ff6b77]">Geen bestanden — je kunt ze ook later nasturen.</span>
+        <span className="text-error">Geen bestanden — je kunt ze ook later nasturen.</span>
       )]],
     },
     {
@@ -661,9 +650,9 @@ function Success({ result, email, name }: { result: Result; email: string; name:
       <div className="overflow-hidden rounded-md border border-line bg-charcoal/50">
         <div className="h-0.5 bg-red" />
         <div className="p-7 sm:p-10 md:p-14">
-          <motion.span initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 18 }} className="grid size-16 place-items-center rounded-full bg-red text-black">
+          <span className="anim-step grid size-16 place-items-center rounded-full bg-red text-black">
             <Icon name="check" size={30} strokeWidth={2.6} />
-          </motion.span>
+          </span>
           <h2 ref={headingRef} tabIndex={-1} className="mt-8 text-[length:var(--text-h2)] text-offwhite outline-none">
             Aanvraag ontvangen{name ? `, ${name.split(' ')[0]}` : ''}<span className="text-red">.</span>
           </h2>
@@ -701,7 +690,7 @@ function Success({ result, email, name }: { result: Result; email: string; name:
           </ol>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <ButtonLink href={href('home')} variant="secondary">Naar de homepage</ButtonLink>
-            <ButtonLink href={href('services')} variant="ghost">Bekijk productietechnieken</ButtonLink>
+            <ButtonLink href={href('services')} variant="ghost">Bekijk diensten</ButtonLink>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ export function Field({ id, label, required, optional, hint, error, children, cl
       {children}
       {hint && !error && <p id={`${id}-hint`} className="mt-2 text-[0.8125rem] text-muted">{hint}</p>}
       {error && (
-        <p id={`${id}-error`} className="mt-2 flex items-center gap-2 text-[0.8125rem] font-bold text-[#ff6b77]" role="alert">
+        <p id={`${id}-error`} className="mt-2 flex items-center gap-2 text-[0.8125rem] font-bold text-error" role="alert">
           <span className="size-1.5 rounded-full bg-red" aria-hidden="true" />
           {error}
         </p>

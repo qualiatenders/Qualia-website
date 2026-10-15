@@ -1,7 +1,7 @@
 /**
  * Taalconfiguratie.
  *
- * Versie 1 is Nederlandstalig en draait zonder taalprefix (/productietechnieken).
+ * Versie 1 is Nederlandstalig en draait zonder taalprefix (/diensten).
  * De structuur is voorbereid op Engels: alle routes lopen via `routes.ts`, alle
  * teksten via `lib/content/<locale>` en `dictionaries/<locale>`. Engels toevoegen:
  *   1. 'en' aan `locales` toevoegen;

@@ -20,8 +20,8 @@ export function ClosingCta() {
   };
 
   return (
-    <section className="relative overflow-hidden border-t border-line py-24 md:py-36" aria-labelledby="cta-title">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_85%_100%,rgba(241,10,29,0.16),transparent_60%)]" aria-hidden="true" />
+    <section className="theme-light relative overflow-hidden py-20 md:py-28" aria-labelledby="cta-title">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(60%_80%_at_85%_100%,rgba(241,10,29,0.08),transparent_60%)]" aria-hidden="true" />
       <div className="container-x grid gap-14 lg:grid-cols-12 lg:items-center">
         <div className="lg:col-span-6" data-reveal>
           <p className="eyebrow">Offerte aanvragen</p>
@@ -40,7 +40,7 @@ export function ClosingCta() {
           </div>
           <div className="mt-5">
             <ButtonLink href={href('services')} variant="ghost" className="!min-h-10">
-              Bekijk onze productietechnieken
+              Bekijk onze diensten
             </ButtonLink>
           </div>
         </div>
@@ -58,7 +58,7 @@ export function ClosingCta() {
               handoff(e.dataTransfer.files);
             }}
             className={`relative flex min-h-[22rem] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center transition-all duration-500 ${
-              over ? 'scale-[1.01] border-red bg-red/[0.06]' : 'border-line-strong bg-charcoal/50'
+              over ? 'scale-[1.01] border-red bg-red/[0.06]' : 'border-line-strong bg-charcoal'
             }`}
           >
             {['top-3 left-3 border-t border-l', 'top-3 right-3 border-t border-r', 'bottom-3 left-3 border-b border-l', 'bottom-3 right-3 border-b border-r'].map((c) => (

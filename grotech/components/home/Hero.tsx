@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import { ButtonLink } from '../Button';
-import { HeroHud } from './HeroHud';
 import { href, quoteHref } from '@/lib/i18n/routes';
 
 const usps = [
@@ -12,7 +11,7 @@ const usps = [
 
 export function Hero() {
   return (
-    <section className="relative isolate flex min-h-[max(40rem,100svh)] flex-col overflow-hidden bg-black" aria-labelledby="hero-title">
+    <section className="relative isolate flex min-h-[max(38rem,92svh)] flex-col overflow-hidden bg-black" aria-labelledby="hero-title">
       {/* fotografie */}
       <div className="absolute inset-0 -z-10 md:left-[38%]">
         <Image
@@ -21,6 +20,7 @@ export function Hero() {
           fill
           priority
           sizes="(min-width: 768px) 62vw, 100vw"
+          quality={60}
           className="img-grade object-cover object-[50%_40%]"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/0 md:via-black/30" />
@@ -28,10 +28,6 @@ export function Hero() {
         <div className="absolute inset-0 bg-black/45 md:hidden" />
       </div>
       <div className="tech-grid absolute inset-0 -z-10 [mask-image:linear-gradient(to_right,black,transparent_60%)] opacity-70" aria-hidden="true" />
-      <div className="scan-line pointer-events-none absolute inset-x-0 top-0 -z-10 hidden h-1/2 md:block md:left-[38%]" aria-hidden="true">
-        <div className="absolute bottom-0 h-px w-full bg-gradient-to-r from-transparent via-red/70 to-transparent" />
-      </div>
-      <HeroHud />
 
       <div className="container-x relative flex flex-1 flex-col justify-center pt-[calc(var(--header-h)+3rem)] pb-14">
         <div className="max-w-[46rem]">

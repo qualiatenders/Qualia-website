@@ -11,6 +11,7 @@
   /* Lichtere tint uitsluitend voor kleine rode tekst op charcoal-vlakken (WCAG AA ≥ 4.5:1).
      Vlakken, lijnen en grote cijfers blijven GROTECH Red. */
   --color-red-ink: #ff4655;
+  --color-error: #ff6b77;
   --color-black: #090b0e;
   --color-charcoal: #14181d;
   --color-graphite: #1b2027;
@@ -320,4 +321,58 @@
 .text-sm.text-red,
 .font-mono.text-red {
   color: var(--color-red-ink);
+}
+
+/* ── Licht thema ───────────────────────────────────────────────────────────────
+   Secties met .theme-light draaien de kleurtokens om. Alle componenten gebruiken
+   dezelfde tokens (offwhite = tekst, black = achtergrond), dus ze werken op wit
+   zonder eigen varianten. Contrast gecontroleerd: tekst ≥ 5,5:1 op de vlakken. */
+.theme-light {
+  --color-black: #ffffff;
+  --color-charcoal: #f4f5f7;
+  --color-graphite: #e9ebee;
+  --color-offwhite: #090b0e;
+  --color-mist: #333a43;
+  --color-muted: #5b636d;
+  --color-line: rgb(9 11 14 / 0.10);
+  --color-line-strong: rgb(9 11 14 / 0.18);
+  --color-red-ink: #c20a1b;
+  --color-error: #b3061a;
+  background: var(--color-black);
+  color: var(--color-offwhite);
+  color-scheme: light;
+}
+.theme-light.bg-tint {
+  background: var(--color-charcoal);
+  --color-black: #f4f5f7;
+  --color-charcoal: #ffffff;
+}
+.theme-light input[type='date']::-webkit-calendar-picker-indicator {
+  filter: none;
+}
+.theme-light .tech-grid {
+  background-image:
+    linear-gradient(to right, rgb(9 11 14 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(9 11 14 / 0.05) 1px, transparent 1px);
+}
+
+/* Lichte CSS-animaties in plaats van een JS-animatiebibliotheek */
+@media (prefers-reduced-motion: no-preference) {
+  .anim-step {
+    animation: anim-step 0.35s var(--ease-precise) both;
+  }
+  @keyframes anim-step {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 0.5rem, 0);
+    }
+  }
+  .anim-fade {
+    animation: anim-fade 0.25s ease both;
+  }
+  @keyframes anim-fade {
+    from {
+      opacity: 0;
+    }
+  }
 }

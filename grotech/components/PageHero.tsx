@@ -48,12 +48,12 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-line pt-[calc(var(--header-h)+2.5rem)] pb-16 md:pb-24">
+    <section className="relative overflow-hidden border-b border-line pt-[calc(var(--header-h)+2rem)] pb-12 md:pb-16">
       <div className="tech-grid absolute inset-0 -z-10 opacity-70 [mask-image:linear-gradient(to_bottom,black,transparent)]" aria-hidden="true" />
       <div className="absolute top-0 right-0 -z-10 h-[34rem] w-[50rem] bg-[radial-gradient(closest-side,rgba(241,10,29,0.10),transparent)]" aria-hidden="true" />
       <div className="container-x">
         <Breadcrumbs items={crumbs} />
-        <div className={`mt-10 grid gap-12 md:mt-14 ${image ? 'lg:grid-cols-12 lg:items-center' : ''}`}>
+        <div className={`mt-8 grid gap-12 md:mt-10 ${image ? 'lg:grid-cols-12 lg:items-center' : ''}`}>
           <div className={image ? 'lg:col-span-6' : 'max-w-4xl'}>
             <p className="eyebrow" data-reveal>{eyebrow}</p>
             <h1 className="mt-6 text-[length:var(--text-h1)] text-offwhite" data-reveal style={{ '--reveal-delay': 60 } as React.CSSProperties}>

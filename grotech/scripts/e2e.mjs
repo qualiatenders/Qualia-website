@@ -74,15 +74,15 @@ const browser = await chromium.launch({ executablePath: exe });
 let wizardRef = null;
 
 console.log('\nOfferteflow in de browser');
-await test('wizard: volledige aanvraag via dienstpagina, met uploads en validatie', async () => {
+await test('wizard: volledige aanvraag via de dienstenpagina, met uploads en validatie', async () => {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   const before = inboxCount();
 
-  await page.goto(`${BASE}/productietechnieken/cnc-frezen`);
-  await page.getByRole('link', { name: /Upload je tekening/i }).first().click();
+  await page.goto(`${BASE}/diensten`);
+  await page.getByRole('link', { name: 'CNC-frezen aanvragen' }).click();
   await page.waitForURL(/offerte-aanvragen\?techniek=cnc-frezen/);
   await page.getByRole('heading', { name: 'Productietechniek', exact: true }).waitFor();
   assert(await page.getByRole('checkbox', { name: /CNC-frezen/ }).isChecked(), 'CNC-frezen niet voorgeselecteerd');
@@ -183,14 +183,13 @@ await test('homepage-dropzone geeft bestanden door aan de offerteflow', async ()
   await ctx.close();
 });
 
-await test('menu: megamenu opent met muis (hover + klik) en mobiel menu is zichtbaar en werkt', async () => {
+await test('menu: navigatie op desktop en mobiel menu is zichtbaar en werkt', async () => {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
   await page.goto(BASE);
-  await page.getByRole('button', { name: 'Productietechnieken' }).click();
-  await page.locator('#mega-services').waitFor({ state: 'visible' });
-  await page.waitForTimeout(400);
-  assert(await page.locator('#mega-services').isVisible(), 'megamenu sloot direct na hover + klik');
+  await page.getByRole('navigation', { name: 'Hoofdnavigatie' }).getByRole('link', { name: 'Diensten' }).click();
+  await page.waitForURL(/\/diensten/);
+  await page.getByRole('heading', { name: 'CNC-frezen', exact: true }).waitFor();
   await ctx.close();
   const m = await (await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true })).newPage();
   await m.goto(BASE);

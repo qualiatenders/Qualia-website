@@ -22,7 +22,7 @@ export default function ContactPage() {
         title={<>Eén aanspreekpunt<span className="text-red">.</span></>}
         lead="Een vraag over een onderdeel, een materiaal of een lopende aanvraag? Stuur ons een bericht. We reageren persoonlijk en in het Nederlands."
       />
-      <section className="py-16 md:py-24">
+      <section className="theme-light py-16 md:py-24">
         <div className="container-x grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-7" data-reveal>
             <h2 className="mb-8 text-[length:var(--text-h3)] text-offwhite">Stuur een bericht</h2>
@@ -38,7 +38,7 @@ export default function ContactPage() {
               </span>
             </Link>
             {(site.email || site.phone || hasAddress()) && (
-              <div className="rounded-md border border-line bg-charcoal/50 p-7 md:p-8">
+              <div className="rounded-md border border-line bg-charcoal p-7 md:p-8">
                 <h2 className="label-caps text-muted">Direct contact</h2>
                 <ul className="mt-6 space-y-4">
                   {site.email && <li><a href={`mailto:${site.email}`} className="flex items-center gap-4 text-lg font-bold text-offwhite hover:text-white"><Icon name="mail" size={22} className="text-red" />{site.email}</a></li>}

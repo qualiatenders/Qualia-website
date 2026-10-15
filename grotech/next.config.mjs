@@ -46,6 +46,7 @@ const nextConfig = {
   outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
   images: {
     formats: ['image/avif', 'image/webp'],
+    qualities: [60, 75],
   },
   async headers() {
     const headers = [...securityHeaders];

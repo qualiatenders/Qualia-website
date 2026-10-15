@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import { Icon } from '../Icon';
 import { uploadLimits, acceptAttribute, formatBytes } from '@/lib/quote/options';
 
@@ -39,7 +38,6 @@ const typeLabel = (n: string) => {
 export function FileDrop({ files, setFiles, notes, setNotes, error }: { files: File[]; setFiles: (f: File[]) => void; notes: string[]; setNotes: (n: string[]) => void; error?: string }) {
   const input = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
-  const reduce = useReducedMotion();
   const total = files.reduce((s, f) => s + f.size, 0);
 
   const add = (list: FileList | File[] | null) => {
@@ -101,16 +99,10 @@ export function FileDrop({ files, setFiles, notes, setNotes, error }: { files: F
             </div>
           </div>
           <ul className="space-y-2">
-            <AnimatePresence initial={false}>
               {files.map((f) => (
-                <motion.li
+                <li
                   key={f.name + f.size}
-                  layout={!reduce}
-                  initial={reduce ? false : { opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduce ? undefined : { opacity: 0, x: 16 }}
-                  transition={{ duration: 0.25 }}
-                  className="flex items-center gap-4 rounded-[3px] border border-line bg-black/50 py-2.5 pr-2 pl-3"
+                  className="anim-step flex items-center gap-4 rounded-[3px] border border-line bg-black/50 py-2.5 pr-2 pl-3"
                 >
                   <span className="grid h-10 w-11 shrink-0 place-items-center rounded-[2px] bg-graphite font-mono text-[0.6875rem] font-bold text-offwhite">{typeLabel(f.name)}</span>
                   <span className="min-w-0 flex-1">
@@ -121,9 +113,8 @@ export function FileDrop({ files, setFiles, notes, setNotes, error }: { files: F
                   <button type="button" onClick={() => setFiles(files.filter((x) => x !== f))} className="grid size-10 place-items-center rounded-[3px] text-muted transition-colors hover:bg-white/5 hover:text-offwhite" aria-label={`${f.name} verwijderen`}>
                     <Icon name="x" size={18} />
                   </button>
-                </motion.li>
+                </li>
               ))}
-            </AnimatePresence>
           </ul>
         </div>
       )}

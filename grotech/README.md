@@ -2,8 +2,9 @@
 
 Website + offertesysteem voor GROTECH. Nederlandstalig, voorbereid op Engels.
 
-- **Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · Framer Motion · Zod · Nodemailer
-- **Pagina's:** home, productietechnieken (overzicht + 5 dienstpagina's), materialen, werkwijze & kwaliteit, over GROTECH, offerte aanvragen, contact, privacyverklaring, cookieverklaring, disclaimer, 404
+- **Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · Zod · Nodemailer (animaties in CSS, geen animatiebibliotheek)
+- **Pagina's (6):** home (met werkwijze en over GROTECH), diensten (alle vijf technieken), offerte aanvragen, contact, privacyverklaring (incl. cookies), disclaimer, 404
+- **Vormgeving:** donkere header, hero en footer; inhoud op witte en lichtgrijze vlakken via `.theme-light` (draait de kleurtokens om, zie `app/globals.css`)
 - **Backend:** offerte-API met beveiligde uploads, contact-API, versleutelde opslag, e-mailnotificaties, beheeromgeving (`/beheer`)
 
 ---
@@ -141,8 +142,8 @@ Alternatief (Vercel e.d.) kan, maar vraagt externe opslag (bijv. EU-object stora
 | Wat | Bestand |
 | --- | --- |
 | Diensten (teksten, specs, FAQ, SEO) | `lib/content/nl/services.ts` |
-| Materialen + matrix | `lib/content/nl/materials.ts` |
-| Werkwijze, voordelen, kwaliteitspunten | `lib/content/nl/process.ts` |
+| Materialen (lijst op de homepage) | `lib/content/nl/materials.ts` |
+| Werkwijze in vier stappen | `lib/content/nl/process.ts` |
 | Keuzes en uploadlimieten offerteformulier | `lib/quote/options.ts` |
 | Routes / slugs | `lib/i18n/routes.ts` |
 | Kleuren, typografie | `app/globals.css` (`@theme`) |
@@ -164,7 +165,7 @@ ADMIN_USER=… ADMIN_PASSWORD=… SMTP_INBOX=… npm run test:e2e
 node scripts/audit.mjs
 ```
 
-De e2e-suite (13 tests) doorloopt de volledige offerteflow in een echte browser (validatie, uploads, geweigerd bestandstype, verzenden), controleert opslag (versleuteld, juiste rechten), e-mails (geen bijlagen, juiste reply-to), CSRF, vermomde bestanden, server-side validatie, botdetectie, rate limiting, honeypot, het contactformulier, ontoegankelijkheid van de opslag en inloggen + downloaden in `/beheer` (byte-voor-byte gelijk aan het origineel).
+De e2e-suite (14 tests) doorloopt de volledige offerteflow in een echte browser (validatie, uploads, geweigerd bestandstype, verzenden), controleert opslag (versleuteld, juiste rechten), e-mails (geen bijlagen, juiste reply-to), CSRF, vermomde bestanden, server-side validatie, botdetectie, rate limiting, honeypot, het contactformulier, de menu's op desktop en mobiel, ontoegankelijkheid van de opslag en inloggen + downloaden in `/beheer` (byte-voor-byte gelijk aan het origineel).
 
 ## 8. Engels toevoegen
 

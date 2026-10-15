@@ -8,16 +8,18 @@ export const LEGAL_UPDATED = '14 oktober 2026';
 
 export function LegalPage({ title, path, intro, children }: { title: string; path: string; intro: ReactNode; children: ReactNode }) {
   return (
-    <article className="pt-[calc(var(--header-h)+2.5rem)] pb-24">
-      <div className="container-x">
-        <Breadcrumbs items={[{ name: 'Home', path: '/' }, { name: title, path }]} />
-        <div className="mt-12 grid gap-12 lg:grid-cols-12">
-          <header className="lg:col-span-4">
-            <p className="eyebrow">Juridisch</p>
-            <h1 className="mt-5 text-[length:var(--text-h2)] text-offwhite">{title}</h1>
-            <p className="mt-5 text-sm text-muted">Laatst bijgewerkt: {LEGAL_UPDATED}</p>
-          </header>
-          <div className="prose-grotech lg:col-span-8">
+    <article>
+      <header className="border-b border-line pt-[calc(var(--header-h)+2rem)] pb-10">
+        <div className="container-x">
+          <Breadcrumbs items={[{ name: 'Home', path: '/' }, { name: title, path }]} />
+          <p className="eyebrow mt-8">Juridisch</p>
+          <h1 className="mt-5 text-[length:var(--text-h2)] text-offwhite">{title}</h1>
+          <p className="mt-4 text-sm text-muted">Laatst bijgewerkt: {LEGAL_UPDATED}</p>
+        </div>
+      </header>
+      <div className="theme-light py-14 md:py-20">
+        <div className="container-x">
+          <div className="prose-grotech">
             <p className="text-[length:var(--text-lead)] text-mist">{intro}</p>
             {children}
           </div>

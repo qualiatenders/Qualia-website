@@ -9,7 +9,7 @@ export function Footer() {
   const year = new Date().getFullYear();
   return (
     <footer className="relative border-t border-line bg-black">
-      <div className="container-x grid gap-12 py-16 md:grid-cols-12 md:py-20">
+      <div className="container-x grid gap-12 py-14 md:grid-cols-12 md:py-16">
         <div className="md:col-span-4">
           <Link href={href('home')} aria-label="GROTECH — naar de homepage" className="inline-block rounded-sm">
             <LogoLockup size="lg" />
@@ -25,32 +25,16 @@ export function Footer() {
           </Link>
         </div>
 
-        <nav aria-label="Productietechnieken" className="md:col-span-3">
-          <h2 className="label-caps text-muted">Productietechnieken</h2>
-          <ul className="mt-5 space-y-2.5">
-            {services.map((s) => (
-              <li key={s.slug}>
-                <Link href={serviceHref(s.slug)} className="text-[0.9375rem] text-mist transition-colors hover:text-offwhite">
-                  {s.name}
-                </Link>
-              </li>
-            ))}
-            <li>
-              <Link href={href('materials')} className="text-[0.9375rem] text-mist transition-colors hover:text-offwhite">
-                Materialen
-              </Link>
-            </li>
-          </ul>
-        </nav>
-
-        <nav aria-label="Bedrijf" className="md:col-span-2">
-          <h2 className="label-caps text-muted">GROTECH</h2>
-          <ul className="mt-5 space-y-2.5">
+        <nav aria-label="Footer" className="md:col-span-4">
+          <h2 className="label-caps text-muted">Navigatie</h2>
+          <ul className="mt-5 grid grid-cols-2 gap-x-6 gap-y-2.5">
             {[
-              ['Werkwijze & kwaliteit', href('process')],
+              ['Diensten', href('services')],
+              ['Werkwijze', href('process')],
               ['Over GROTECH', href('about')],
               ['Offerte aanvragen', href('quote')],
               ['Contact', href('contact')],
+              ...services.map((s) => [s.name, serviceHref(s.slug)] as const),
             ].map(([l, h]) => (
               <li key={h}>
                 <Link href={h!} className="text-[0.9375rem] text-mist transition-colors hover:text-offwhite">
@@ -61,7 +45,7 @@ export function Footer() {
           </ul>
         </nav>
 
-        <div className="md:col-span-3">
+        <div className="md:col-span-4">
           <h2 className="label-caps text-muted">Contact</h2>
           <ul className="mt-5 space-y-3 text-[0.9375rem] text-mist">
             {site.email && (
@@ -108,7 +92,6 @@ export function Footer() {
           </p>
           <ul className="flex flex-wrap gap-x-6 gap-y-2">
             <li><Link href={href('privacy')} className="hover:text-offwhite">Privacyverklaring</Link></li>
-            <li><Link href={href('cookies')} className="hover:text-offwhite">Cookieverklaring</Link></li>
             <li><Link href={href('disclaimer')} className="hover:text-offwhite">Disclaimer</Link></li>
           </ul>
           <p className="label-caps text-[0.625rem] tracking-[0.28em]">Engineering <span className="text-red">|</span> CNC Machining <span className="text-red">|</span> Global Production</p>

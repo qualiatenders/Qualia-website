@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
 import { Hero } from '@/components/home/Hero';
-import { Intro } from '@/components/home/Intro';
-import { ServicesExplorer } from '@/components/home/ServicesExplorer';
-import { VisualBlock } from '@/components/home/VisualBlock';
+import { Services } from '@/components/home/Services';
 import { Process } from '@/components/home/Process';
-import { Materials } from '@/components/home/Materials';
-import { Quality } from '@/components/home/Quality';
+import { About } from '@/components/home/About';
 import { ClosingCta } from '@/components/home/ClosingCta';
 import { buildMetadata } from '@/lib/seo';
 
@@ -23,12 +20,9 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Intro />
-      <ServicesExplorer />
-      <VisualBlock />
+      <Services />
       <Process />
-      <Materials />
-      <Quality />
+      <About />
       <ClosingCta />
     </>
   );

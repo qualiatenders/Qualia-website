@@ -4,7 +4,7 @@ import { LegalPage, CompanyBlock } from '@/components/LegalPage';
 import { href } from '@/lib/i18n/routes';
 import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = buildMetadata({ title: 'Privacyverklaring', description: 'Hoe GROTECH omgaat met persoonsgegevens en vertrouwelijke technische bestanden die via deze website worden verstrekt.', path: href('privacy') });
+export const metadata: Metadata = buildMetadata({ title: 'Privacyverklaring', description: 'Hoe GROTECH omgaat met persoonsgegevens, cookies en vertrouwelijke technische bestanden die via deze website worden verstrekt.', path: href('privacy') });
 
 export default function PrivacyPage() {
   return (
@@ -70,9 +70,18 @@ export default function PrivacyPage() {
         Je hebt het recht op inzage, rectificatie, verwijdering, beperking van de verwerking, overdraagbaarheid van gegevens en bezwaar. Neem hiervoor contact met ons op via de <Link href={href('contact')}>contactpagina</Link>. We reageren binnen een maand. Ben je niet tevreden over hoe we met je gegevens omgaan, dan kun je een klacht indienen bij de Autoriteit Persoonsgegevens (autoriteitpersoonsgegevens.nl).
       </p>
 
-      <h2>9. Cookies</h2>
+      <h2 id="cookies">9. Cookies</h2>
       <p>
-        Deze website plaatst geen tracking- of marketingcookies. Lees meer in onze <Link href={href('cookies')}>cookieverklaring</Link>.
+        Deze website plaatst geen tracking-, advertentie- of social-mediacookies; daarom is er ook geen cookiebanner. We gebruiken alleen strikt noodzakelijke opslag:
+      </p>
+      <ul>
+        <li><strong>Concept van je offerteaanvraag</strong> — de ingevulde velden (zonder bestanden) blijven tijdelijk in de sessie-opslag van je eigen browser staan, zodat je niets kwijtraakt bij vernieuwen. Ze verdwijnen als je het tabblad sluit.</li>
+        <li><strong>Beheeromgeving</strong> — medewerkers van GROTECH krijgen bij inloggen een strikt noodzakelijk sessiecookie. Bezoekers krijgen dit niet.</li>
+      </ul>
+      <p>
+        {process.env.NEXT_PUBLIC_ANALYTICS_SRC
+          ? 'Voor statistieken gebruiken we een cookieloze, privacyvriendelijke dienst die geen IP-adressen opslaat en geen profielen maakt.'
+          : 'We gebruiken geen statistiekendienst. Als we dat later doen, kiezen we een cookieloze, privacyvriendelijke oplossing en passen we deze tekst aan.'}
       </p>
 
       <h2>10. Wijzigingen</h2>

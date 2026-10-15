@@ -92,7 +92,7 @@ export function ContactForm() {
           <input id="c-privacy" type="checkbox" checked={v.privacy} onChange={set('privacy')} className="mt-1 size-5 shrink-0 accent-[#F10A1D]" aria-invalid={Boolean(errors.privacy)} aria-describedby={describedBy('c-privacy', errors.privacy)} />
           <span>Ik ga akkoord dat GROTECH mijn gegevens gebruikt om op mijn bericht te reageren, zoals beschreven in de <Link href={href('privacy')} className="text-offwhite underline decoration-red underline-offset-4">privacyverklaring</Link>.</span>
         </label>
-        {errors.privacy && <p id="c-privacy-error" className="mt-2 text-[0.8125rem] font-bold text-[#ff6b77]" role="alert">{errors.privacy}</p>}
+        {errors.privacy && <p id="c-privacy-error" className="mt-2 text-[0.8125rem] font-bold text-error" role="alert">{errors.privacy}</p>}
       </div>
       {state === 'error' && message && (
         <p className="flex gap-3 rounded-[3px] border border-red/50 bg-red/[0.08] p-4 text-[0.9375rem] text-offwhite" role="alert">

@@ -17,7 +17,7 @@ export function LoginForm() {
         <label htmlFor="password" className="mb-2 block text-sm font-bold">Wachtwoord</label>
         <input id="password" name="password" type="password" autoComplete="current-password" required className={inputClass} autoFocus={Boolean(state?.error)} />
       </div>
-      {state?.error && <p className="text-sm font-bold text-[#ff6b77]" role="alert">{state.error}</p>}
+      {state?.error && <p className="text-sm font-bold text-error" role="alert">{state.error}</p>}
       <Button type="submit" disabled={pending} className="w-full">{pending ? 'Inloggen…' : 'Inloggen'}</Button>
     </form>
   );

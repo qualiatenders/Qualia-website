@@ -10,8 +10,8 @@ const base =
 const sizes = { md: 'min-h-12 pl-5 pr-2 text-[0.8125rem]', lg: 'min-h-14 pl-6 pr-2 text-[0.875rem]' };
 const variants: Record<Variant, string> = {
   // Off-white vlak + rood accentblok: hoogste contrast, rood blijft accent.
-  primary: 'bg-offwhite text-black hover:bg-white shadow-[0_0_0_0_rgba(241,10,29,0)] hover:shadow-[0_10px_40px_-12px_rgba(241,10,29,0.55)]',
-  secondary: 'border border-line-strong text-offwhite hover:border-offwhite/60 hover:bg-white/[0.04]',
+  primary: 'bg-offwhite text-black hover:bg-offwhite/90 shadow-[0_0_0_0_rgba(241,10,29,0)] hover:shadow-[0_10px_40px_-12px_rgba(241,10,29,0.55)]',
+  secondary: 'border border-line-strong text-offwhite hover:border-offwhite/60 hover:bg-offwhite/[0.05]',
   ghost: 'text-offwhite !pl-0 hover:text-white',
 };
 

@@ -1,19 +1,17 @@
 import type { Locale } from './config';
 
 /**
- * Eén plek voor alle paden. Componenten linken via `href('materials')` en nooit
+ * Eén plek voor alle paden. Componenten linken via `href('services')` en nooit
  * met hardcoded strings, zodat Engelse slugs later alleen hier bij hoeven.
  */
 const paths = {
   home: { nl: '/', en: '/en' },
-  services: { nl: '/productietechnieken', en: '/en/manufacturing' },
-  materials: { nl: '/materialen', en: '/en/materials' },
-  process: { nl: '/werkwijze-en-kwaliteit', en: '/en/process-and-quality' },
-  about: { nl: '/over-grotech', en: '/en/about' },
+  services: { nl: '/diensten', en: '/en/services' },
+  process: { nl: '/#werkwijze', en: '/en#process' },
+  about: { nl: '/#over-grotech', en: '/en#about' },
   quote: { nl: '/offerte-aanvragen', en: '/en/request-a-quote' },
   contact: { nl: '/contact', en: '/en/contact' },
   privacy: { nl: '/privacyverklaring', en: '/en/privacy' },
-  cookies: { nl: '/cookieverklaring', en: '/en/cookies' },
   disclaimer: { nl: '/disclaimer', en: '/en/disclaimer' },
 } as const satisfies Record<string, Record<Locale, string>>;
 
@@ -23,8 +21,9 @@ export function href(key: RouteKey, locale: Locale = 'nl'): string {
   return paths[key][locale];
 }
 
+/** Elke dienst is een sectie op de dienstenpagina. */
 export function serviceHref(slug: string, locale: Locale = 'nl'): string {
-  return `${paths.services[locale]}/${slug}`;
+  return `${paths.services[locale]}#${slug}`;
 }
 
 export function quoteHref(techniqueSlug?: string, locale: Locale = 'nl'): string {

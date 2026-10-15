@@ -7,7 +7,7 @@ import { chromium } from 'playwright-core';
 import fs from 'node:fs';
 
 const BASE = process.env.BASE || 'http://localhost:3000';
-const pages = ['/', '/productietechnieken', '/productietechnieken/cnc-frezen', '/productietechnieken/cnc-draaien', '/productietechnieken/aluminium-snijwerk', '/productietechnieken/aluminium-zetwerk', '/productietechnieken/laswerk-samenstellingen', '/materialen', '/werkwijze-en-kwaliteit', '/over-grotech', '/offerte-aanvragen', '/contact', '/privacyverklaring', '/cookieverklaring', '/disclaimer'];
+const pages = ['/', '/diensten', '/offerte-aanvragen', '/contact', '/privacyverklaring', '/disclaimer'];
 const axe = fs.readFileSync('node_modules/axe-core/axe.min.js', 'utf8');
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
 let problems = 0;

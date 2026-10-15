@@ -13,11 +13,11 @@ export const metadata: Metadata = buildMetadata({
 
 export default function QuotePage() {
   return (
-    <section className="relative pt-[calc(var(--header-h)+2.5rem)] pb-24 md:pb-32">
-      <div className="tech-grid absolute inset-x-0 top-0 -z-10 h-[32rem] opacity-60 [mask-image:linear-gradient(to_bottom,black,transparent)]" aria-hidden="true" />
+    <>
+    <section className="relative border-b border-line pt-[calc(var(--header-h)+2rem)] pb-10 md:pb-12">
       <div className="container-x">
         <Breadcrumbs items={[{ name: 'Home', path: '/' }, { name: 'Offerte aanvragen', path: href('quote') }]} />
-        <div className="mt-8 mb-10 grid gap-6 md:mb-14 lg:grid-cols-12 lg:items-end">
+        <div className="mt-8 grid gap-6 lg:grid-cols-12 lg:items-end">
           <div className="lg:col-span-8">
             <p className="eyebrow">Offerte aanvragen</p>
             <h1 className="mt-5 text-[length:var(--text-h1)] text-offwhite">
@@ -28,10 +28,15 @@ export default function QuotePage() {
             In vijf korte stappen naar een complete aanvraag. Geen automatische prijs: we beoordelen je aanvraag technisch en sturen een heldere offerte.
           </p>
         </div>
+      </div>
+    </section>
+    <section className="theme-light bg-tint pt-10 pb-20 md:pt-14 md:pb-28">
+      <div className="container-x">
         <Suspense fallback={<div className="h-[40rem] animate-pulse rounded-md border border-line bg-charcoal/40" />}>
           <QuoteWizard />
         </Suspense>
       </div>
     </section>
+    </>
   );
 }
