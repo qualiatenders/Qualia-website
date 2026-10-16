@@ -10,14 +10,25 @@ import { href, quoteHref, serviceHref } from '@/lib/i18n/routes';
 import { buildMetadata, serviceJsonLd } from '@/lib/seo';
 
 export const metadata: Metadata = buildMetadata({
-  title: 'Diensten — CNC-frezen, draaien, snijwerk, zetwerk en laswerk',
+  title: 'Diensten — aluminium snij-, zet- en laswerk en CNC-verspaning',
   description:
-    'CNC-frezen, CNC-draaien, aluminium snijwerk, aluminium zetwerk en laswerk & samenstellingen. Productie volgens tekening, van prototype tot serie, via één Nederlands aanspreekpunt.',
+    'Specialist in aluminium: snijwerk, zetwerk en laswerk in aluminium, en CNC-frezen en -draaien in alle materialen. Productie volgens tekening, via één Nederlands aanspreekpunt.',
   path: href('services'),
 });
 
 const pick = (slug: string, i: number) => services.find((s) => s.slug === slug)!.faq[i]!;
-const faq = [pick('cnc-frezen', 0), pick('cnc-frezen', 1), pick('cnc-frezen', 2), pick('cnc-draaien', 1), pick('aluminium-snijwerk', 1), pick('laswerk-samenstellingen', 0)];
+const faq = [
+  {
+    q: 'In welke materialen werken jullie?',
+    a: 'We zijn gespecialiseerd in aluminium. Snijwerk, zetwerk en laswerk doen we uitsluitend in aluminium. CNC-frezen en CNC-draaien doen we in alle gangbare materialen: aluminium, RVS, staal, messing, koper en technische kunststoffen.',
+  },
+  pick('cnc-frezen', 0),
+  pick('cnc-frezen', 1),
+  pick('cnc-frezen', 2),
+  pick('cnc-draaien', 0),
+  pick('aluminium-snijwerk', 0),
+  pick('aluminium-laswerk', 0),
+];
 
 export default function ServicesPage() {
   return (
@@ -25,8 +36,8 @@ export default function ServicesPage() {
       <PageHero
         crumbs={[{ name: 'Home', path: '/' }, { name: 'Diensten', path: href('services') }]}
         eyebrow="Diensten"
-        title={<>Elke techniek. <span className="text-mist">Eén aanspreekpunt.</span></>}
-        lead="Van één gefreesd prototype tot een complete gelaste samenstelling. Wij beoordelen je tekening, organiseren de productie en bewaken de kwaliteit tot aan levering."
+        title={<>Specialist in aluminium<span className="text-red">.</span></>}
+        lead="Snijwerk, zetwerk en laswerk doen we uitsluitend in aluminium. CNC-frezen en -draaien in alle gangbare materialen. Wij beoordelen je tekening, organiseren de productie en bewaken de kwaliteit tot aan levering."
       >
         <nav aria-label="Diensten op deze pagina" className="mt-10 flex flex-wrap gap-2" data-reveal>
           {services.map((s) => (

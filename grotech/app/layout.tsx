@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: { default: 'GROTECH — Precision Manufacturing', template: '%s | GROTECH' },
   description:
-    'GROTECH is je Nederlandse productiepartner voor CNC-frezen, CNC-draaien, aluminium snij- en zetwerk, laswerk en complete samenstellingen. Upload je tekening en vraag een offerte aan.',
+    'GROTECH is gespecialiseerd in aluminium: snijwerk, zetwerk en laswerk in aluminium, en CNC-frezen en -draaien in alle materialen. Upload je tekening en vraag een offerte aan.',
   applicationName: site.name,
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }, { url: '/favicon-64.png', sizes: '64x64', type: 'image/png' }],

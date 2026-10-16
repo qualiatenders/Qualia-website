@@ -47,9 +47,9 @@ export function organizationJsonLd() {
     logo: `${site.url}/icon-512.png`,
     slogan: site.tagline,
     description:
-      'GROTECH is een Nederlandse B2B-productiepartner voor CNC-frezen, CNC-draaien, aluminium snij- en zetwerk, laswerk en complete samenstellingen, via geselecteerde productiepartners en in eigen beheer.',
+      'GROTECH is een Nederlandse B2B-productiepartner, gespecialiseerd in aluminium: snijwerk, zetwerk, laswerk en samenstellingen in aluminium, en CNC-frezen en -draaien in alle materialen. Via geselecteerde productiepartners en in eigen beheer.',
     areaServed: [{ '@type': 'Country', name: 'Nederland' }, { '@type': 'Place', name: 'Europa' }],
-    knowsAbout: ['CNC-frezen', 'CNC-draaien', 'Lasersnijden', 'Watersnijden', 'CNC-kantwerk', 'TIG-lassen', 'MIG/MAG-lassen'],
+    knowsAbout: ['Aluminium', 'Aluminium snijwerk', 'Aluminium zetwerk', 'Aluminium lassen', 'TIG-lassen', 'MIG-lassen', 'CNC-frezen', 'CNC-draaien'],
   };
   if (site.email) org.email = site.email;
   if (site.phone) org.telephone = site.phone;

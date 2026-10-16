@@ -2,6 +2,8 @@
 
 Website + offertesysteem voor GROTECH. Nederlandstalig, voorbereid op Engels.
 
+**Positionering:** specialist in aluminium. Snijwerk, zetwerk en laswerk uitsluitend in aluminium; CNC-frezen en -draaien in alle materialen (aluminium, RVS, staal, messing, koper, kunststof). Het offerteformulier wijst hierop als iemand een andere combinatie kiest.
+
 - **Stack:** Next.js 15 (App Router) · TypeScript · Tailwind CSS 4 · Zod · Nodemailer (animaties in CSS, geen animatiebibliotheek)
 - **Pagina's (6):** home (met werkwijze en over GROTECH), diensten (alle vijf technieken), offerte aanvragen, contact, privacyverklaring (incl. cookies), disclaimer, 404
 - **Vormgeving:** donkere header, hero en footer; inhoud op witte en lichtgrijze vlakken via `.theme-light` (draait de kleurtokens om, zie `app/globals.css`)
@@ -152,7 +154,7 @@ Alternatief (Vercel e.d.) kan, maar vraagt externe opslag (bijv. EU-object stora
 
 - Logo, monogram en woordmerk (`public/brand/`) zijn vectorbestanden die één-op-één zijn overgetrokken uit het originele brandbook-logo (niet nagetekend). Kleur: GROTECH Red `#F10A1D`.
 - Fotografie (`public/images/spindle.jpg`, `part-housing.jpg`, `milling-chips.jpg`) komt uit het GROTECH-brandbook. Controleer dat de rechten hiervan bij GROTECH liggen.
-- Productbeelden per dienst (`public/images/renders/`) zijn **3D-renders** die voor deze site zijn gemaakt. Ze worden op de site als "illustratieve render" gelabeld; er worden nergens fabrieksfoto's of klantprojecten gesuggereerd.
+- Productbeelden (`public/images/renders/`) zijn **fotorealistische 3D-renders** (Blender Cycles), voor deze site gemaakt; de scènes staan in `scripts/renders/`. Ze worden op de site als "illustratieve render" gelabeld; er worden nergens fabrieksfoto's of klantprojecten gesuggereerd.
 - Eigen foto's toevoegen: vervang het bestand met dezelfde naam (4:3 voor dienstbeelden).
 
 **Merkafwijkingen, bewust:** kleine rode tekst gebruikt de tint `#FF4655` en foutmeldingen `#FF6B77`, omdat GROTECH Red op charcoal niet aan WCAG AA (4.5:1) voldoet. De primaire knop is off-white met een rood accentblok: witte tekst op rood haalt 4.37:1 en dat is te laag voor knoptekst.

@@ -12,9 +12,9 @@ export function Services() {
         <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
           <div className="max-w-2xl" data-reveal>
             <p className="eyebrow">Diensten</p>
-            <h2 id="services-title" className="mt-5 text-[length:var(--text-h2)]">Vijf technieken. Eén aanspreekpunt.</h2>
+            <h2 id="services-title" className="mt-5 text-[length:var(--text-h2)]">Gespecialiseerd in aluminium.</h2>
           </div>
-          <p className="max-w-md text-mist" data-reveal>Kies één techniek of combineer ze in één aanvraag. Wij organiseren de productie en leveren het geheel.</p>
+          <p className="max-w-md text-mist" data-reveal>Snijwerk, zetwerk en laswerk uitsluitend in aluminium. CNC-frezen en -draaien in alle materialen. Combineer ze gerust in één aanvraag.</p>
         </div>
 
         <ul className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -40,7 +40,7 @@ export function Services() {
               <div>
                 <Icon name="layers" size={34} strokeWidth={1.4} className="text-red" />
                 <h3 className="mt-6 text-2xl font-black">Complete samenstelling?</h3>
-                <p className="mt-3 text-[0.9375rem] text-[#b4bac2]">Snijden, zetten, frezen en lassen tot één onderdeel. Eén aanvraag, één offerte, één levering.</p>
+                <p className="mt-3 text-[0.9375rem] text-[#b4bac2]">Aluminium snijden, zetten, frezen en lassen tot één onderdeel. Eén aanvraag, één offerte, één levering.</p>
               </div>
               <div>
                 <Link href={quoteHref()} className="inline-flex min-h-12 items-center justify-between gap-4 rounded-[3px] bg-[#f6f7f8] pr-2 pl-5 text-[0.8125rem] font-bold tracking-[0.12em] text-[#090b0e] uppercase transition-colors hover:bg-white">

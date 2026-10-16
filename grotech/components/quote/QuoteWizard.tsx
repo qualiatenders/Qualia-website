@@ -9,7 +9,7 @@ import { Button, ButtonLink } from '../Button';
 import { Field, Honeypot, inputClass, describedBy } from '../forms/Field';
 import { useFormToken } from '../forms/useFormToken';
 import { FileDrop, validateFiles } from './FileDrop';
-import { techniques, materialOptions, surfaceOptions, labelFor, formatBytes, uploadLimits } from '@/lib/quote/options';
+import { techniques, materialOptions, surfaceOptions, labelFor, formatBytes, uploadLimits, aluminiumOnly } from '@/lib/quote/options';
 import { stepTechniqueSchema, specsErrors, stepContactSchema, fieldErrors, todayIso } from '@/lib/quote/schema';
 import { takePendingFiles } from '@/lib/quote/draft-files';
 import { href } from '@/lib/i18n/routes';
@@ -463,6 +463,14 @@ function StepSpecs({ d, update, errors }: { d: Draft; update: <K extends keyof D
     <div className="space-y-9">
       <div className="space-y-4">
         <Chips name="material" legend="Materiaal" options={materialOptions} value={d.material} onChange={(v) => update('material', v)} error={errors.material} />
+        {['rvs', 'staal', 'messing', 'koper', 'kunststof'].includes(d.material) && d.techniques.some((t) => aluminiumOnly.includes(t)) && (
+          <p className="flex gap-3 rounded-[3px] border border-line-strong bg-black/40 p-4 text-[0.9375rem] text-mist" role="status">
+            <Icon name="info" size={20} className="mt-0.5 shrink-0 text-red" />
+            <span>
+              Snij-, zet- en laswerk doen we <strong className="text-offwhite">uitsluitend in aluminium</strong>. CNC-frezen en -draaien kunnen wel in {labelFor(materialOptions, d.material).toLowerCase()}. Gaat het om een combinatie van onderdelen? Licht het toe bij de opmerkingen.
+            </span>
+          </p>
+        )}
         {d.material && (
           <Field
             id="q-materialDetail"

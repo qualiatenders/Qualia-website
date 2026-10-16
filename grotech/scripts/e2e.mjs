@@ -86,7 +86,7 @@ await test('wizard: volledige aanvraag via de dienstenpagina, met uploads en val
   await page.waitForURL(/offerte-aanvragen\?techniek=cnc-frezen/);
   await page.getByRole('heading', { name: 'Productietechniek', exact: true }).waitFor();
   assert(await page.getByRole('checkbox', { name: /CNC-frezen/ }).isChecked(), 'CNC-frezen niet voorgeselecteerd');
-  await page.getByText('Laswerk', { exact: true }).click();
+  await page.locator('form').getByText('Aluminium laswerk', { exact: true }).click();
   await shot(page, 'wizard-1');
   await page.getByRole('button', { name: 'Volgende stap' }).click();
 
@@ -128,7 +128,7 @@ await test('wizard: volledige aanvraag via de dienstenpagina, met uploads en val
 
   // stap 5: overzicht
   await page.getByRole('heading', { name: 'Controleren & verzenden', exact: true }).waitFor();
-  for (const t of ['CNC-frezen, Laswerk', 'Aluminium — 6082-T6', 'Machinebouw Test BV', 'behuizing-01.step']) await page.getByText(t).first().waitFor();
+  for (const t of ['CNC-frezen, Aluminium laswerk', 'Aluminium — 6082-T6', 'Machinebouw Test BV', 'behuizing-01.step']) await page.getByText(t).first().waitFor();
   await shot(page, 'wizard-5');
   await sleep(6500); // menselijke invultijd t.o.v. het formuliertoken
   await page.getByRole('button', { name: 'Aanvraag definitief verzenden' }).click();
@@ -173,7 +173,7 @@ await test('homepage-dropzone geeft bestanden door aan de offerteflow', async ()
   await page.locator('input[type=file][aria-label="Tekeningen kiezen"]').setInputFiles([path.join(FX, 'plaat-3mm.dxf')]);
   await page.waitForURL(/offerte-aanvragen\?bestanden=1/);
   await page.getByText('1 bestand klaargezet.').waitFor();
-  await page.getByText('Snijwerk', { exact: true }).click();
+  await page.locator('form').getByText('Aluminium snijwerk', { exact: true }).click();
   await page.getByRole('button', { name: 'Volgende stap' }).click();
   await page.getByText('Aluminium', { exact: true }).click();
   await page.getByText('Leverdatum is flexibel').click();

@@ -15,7 +15,7 @@ export function Footer() {
             <LogoLockup size="lg" />
           </Link>
           <p className="mt-6 max-w-xs text-[0.9375rem] leading-relaxed text-muted">
-            Technische precisie. Zonder onnodige complexiteit. Eén Nederlands aanspreekpunt voor CNC-werk, plaatbewerking en samenstellingen.
+            Specialist in aluminium: snijden, zetten, lassen en verspanen. CNC-frezen en -draaien in alle materialen. Eén Nederlands aanspreekpunt.
           </p>
           <Link href={quoteHref()} className="group mt-8 inline-flex items-center gap-3 text-sm font-bold tracking-[0.12em] uppercase">
             <span className="grid size-9 place-items-center rounded-[2px] bg-red text-black">

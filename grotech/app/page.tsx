@@ -10,10 +10,10 @@ export const metadata: Metadata = {
   ...buildMetadata({
     title: 'GROTECH — Precision Manufacturing',
     description:
-      'Van CNC-precisieonderdelen tot complete metalen samenstellingen. CNC-frezen, CNC-draaien, aluminium snij- en zetwerk en laswerk via één Nederlands aanspreekpunt. Upload je tekening.',
+      'Specialist in aluminium: snijwerk, zetwerk, laswerk en samenstellingen in aluminium, en CNC-frezen en -draaien in alle materialen. Eén Nederlands aanspreekpunt. Upload je tekening.',
     path: '/',
   }),
-  title: { absolute: 'GROTECH — Precision Manufacturing | CNC-werk, plaatbewerking en samenstellingen' },
+  title: { absolute: 'GROTECH — Specialist in aluminium | Snij-, zet- en laswerk en CNC-verspaning' },
 };
 
 export default function HomePage() {

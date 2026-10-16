@@ -1,7 +1,8 @@
 import type { Material } from '../types';
 
 /**
- * Materiaaloverzicht. Genoemde kwaliteiten zijn voorbeelden van veelgevraagde
+ * Materiaaloverzicht. Snij-, zet- en laswerk uitsluitend in aluminium;
+ * CNC-verspaning (frezen en draaien) in alle materialen. Genoemde kwaliteiten zijn voorbeelden van veelgevraagde
  * soorten — beschikbaarheid en geschiktheid worden altijd per aanvraag bevestigd.
  * 'ja' = gangbare combinatie, 'aanvraag' = mogelijk, per opdracht te bevestigen.
  */
@@ -10,7 +11,7 @@ export const materials: Material[] = [
     id: 'aluminium',
     name: 'Aluminium',
     symbol: 'Al',
-    summary: 'Licht, goed verspaanbaar en corrosiebestendig. Het meest gevraagde materiaal voor frees-, snij- en zetwerk.',
+    summary: 'Onze specialiteit. Licht, goed verspaanbaar en corrosiebestendig: we snijden, zetten, lassen en verspanen het.',
     properties: ['Laag gewicht', 'Goed verspaanbaar', 'Natuurlijke corrosiebestendigheid', 'Geschikt voor anodiseren'],
     examples: 'Veelgevraagd zijn onder meer 5083, 6060, 6082 en 7075.',
     applications: ['Machinebouw', 'Behuizingen', 'Maritiem en jachtbouw', 'Constructiedelen'],
@@ -24,7 +25,7 @@ export const materials: Material[] = [
     properties: ['Corrosiebestendig', 'Hoge sterkte', 'Hygiënisch', 'Taai bij verspanen'],
     examples: 'Veelgevraagd zijn onder meer 304 (1.4301) en 316 (1.4401/1.4404).',
     applications: ['Voedingsmiddelen- en procesindustrie', 'Maritiem', 'Afsluiters en koppelingen', 'Constructies'],
-    techniques: { frezen: 'ja', draaien: 'ja', snijwerk: 'aanvraag', zetwerk: 'aanvraag', laswerk: 'ja', samenstelling: 'ja' },
+    techniques: { frezen: 'ja', draaien: 'ja' },
   },
   {
     id: 'staal',
@@ -34,7 +35,7 @@ export const materials: Material[] = [
     properties: ['Hoge sterkte en stijfheid', 'Goed lasbaar (afhankelijk van kwaliteit)', 'Te harden of te veredelen', 'Vraagt meestal een oppervlaktebescherming'],
     examples: 'Veelgevraagd zijn onder meer S235, S355, C45 en 42CrMo4.',
     applications: ['Machineframes', 'Assen en tandwielen', 'Constructiedelen', 'Opspanmiddelen'],
-    techniques: { frezen: 'ja', draaien: 'ja', snijwerk: 'aanvraag', zetwerk: 'aanvraag', laswerk: 'ja', samenstelling: 'ja' },
+    techniques: { frezen: 'ja', draaien: 'ja' },
   },
   {
     id: 'messing',
@@ -44,7 +45,7 @@ export const materials: Material[] = [
     properties: ['Zeer goed verspaanbaar', 'Elektrisch en thermisch geleidend', 'Corrosiebestendig', 'Fraaie afwerking'],
     examples: 'Bijvoorbeeld CW614N; geschikte kwaliteit afhankelijk van toepassing.',
     applications: ['Fittingen en koppelingen', 'Bussen en inzetstukken', 'Elektrotechniek', 'Instrumentatie'],
-    techniques: { frezen: 'ja', draaien: 'ja', samenstelling: 'aanvraag' },
+    techniques: { frezen: 'ja', draaien: 'ja' },
   },
   {
     id: 'koper',
@@ -54,7 +55,7 @@ export const materials: Material[] = [
     properties: ['Uitstekende elektrische geleiding', 'Uitstekende warmtegeleiding', 'Zacht, vraagt specifieke verspaning'],
     examples: 'Bijvoorbeeld Cu-ETP of Cu-OF, afhankelijk van toepassing.',
     applications: ['Stroomrails en contacten', 'Koellichamen', 'Elektrotechnische componenten'],
-    techniques: { frezen: 'ja', draaien: 'ja', snijwerk: 'aanvraag' },
+    techniques: { frezen: 'ja', draaien: 'ja' },
   },
   {
     id: 'kunststof',
@@ -64,7 +65,7 @@ export const materials: Material[] = [
     properties: ['Laag gewicht', 'Slijtvast en zelfsmerend (afhankelijk van type)', 'Elektrisch isolerend', 'Chemisch bestendig (afhankelijk van type)'],
     examples: 'Veelgevraagd zijn onder meer POM, PA, PE-HMW/UHMW en PEEK.',
     applications: ['Glijlagers en slijtstrips', 'Geleiders en tandwielen', 'Isolatoren', 'Voedingsmiddelentoepassingen'],
-    techniques: { frezen: 'ja', draaien: 'ja', snijwerk: 'aanvraag' },
+    techniques: { frezen: 'ja', draaien: 'ja' },
     note: 'Kunststoffen gedragen zich anders dan metaal bij verspanen en temperatuur. Toleranties beoordelen we per materiaal.',
   },
 ];

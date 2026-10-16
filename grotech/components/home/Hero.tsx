@@ -3,10 +3,10 @@ import { ButtonLink } from '../Button';
 import { href, quoteHref } from '@/lib/i18n/routes';
 
 const usps = [
-  ['01', 'Eén aanspreekpunt'],
-  ['02', 'Productie volgens tekening'],
-  ['03', 'Nationaal & internationaal netwerk'],
-  ['04', 'Persoonlijk, in het Nederlands'],
+  ['01', 'Specialist in aluminium'],
+  ['02', 'CNC-verspaning in alle materialen'],
+  ['03', 'Eén aanspreekpunt'],
+  ['04', 'Productie volgens tekening'],
 ];
 
 export function Hero() {
@@ -32,7 +32,7 @@ export function Hero() {
       <div className="container-x relative flex flex-1 flex-col justify-center pt-[calc(var(--header-h)+3rem)] pb-14">
         <div className="max-w-[46rem]">
           <p className="eyebrow" data-reveal>
-            Precision Manufacturing — Nederland
+            Aluminium specialist — Nederland
           </p>
           <h1 id="hero-title" className="mt-7 text-[length:var(--text-display)] leading-[0.92] font-black tracking-[-0.035em] text-offwhite uppercase" data-reveal style={{ '--reveal-delay': 80 } as React.CSSProperties}>
             Precision
@@ -42,7 +42,7 @@ export function Hero() {
             compromise<span className="text-red">.</span>
           </h1>
           <p className="mt-8 max-w-[36rem] text-[length:var(--text-lead)] leading-relaxed text-mist" data-reveal style={{ '--reveal-delay': 180 } as React.CSSProperties}>
-            Van CNC-precisieonderdelen tot complete metalen samenstellingen. Technische expertise, internationale productiemogelijkheden en één betrouwbaar aanspreekpunt.
+            Specialist in aluminium: snijden, zetten, lassen en verspanen. CNC-frezen en -draaien in alle materialen. Technische expertise en één betrouwbaar aanspreekpunt.
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap" data-reveal style={{ '--reveal-delay': 260 } as React.CSSProperties}>
             <ButtonLink href={quoteHref()} size="lg" icon="upload">

@@ -5,12 +5,12 @@ import type { TechniqueId } from '../content/types';
  * de server-side validatie exact dezelfde waarden accepteert als de UI toont.
  */
 export const techniques: { id: TechniqueId; label: string; description: string; serviceSlug?: string; image?: string }[] = [
-  { id: 'frezen', label: 'CNC-frezen', description: 'Prismatische en complexe precisiedelen', serviceSlug: 'cnc-frezen', image: '/images/renders/housing-800.webp' },
-  { id: 'draaien', label: 'CNC-draaien', description: 'Assen, bussen, flenzen en draaidelen', serviceSlug: 'cnc-draaien', image: '/images/renders/shaft-800.webp' },
-  { id: 'snijwerk', label: 'Snijwerk', description: 'Plaatdelen volgens DXF of tekening', serviceSlug: 'aluminium-snijwerk', image: '/images/renders/plate-800.webp' },
-  { id: 'zetwerk', label: 'Zetwerk', description: 'CNC-kantwerk van plaatdelen', serviceSlug: 'aluminium-zetwerk', image: '/images/renders/bracket-800.webp' },
-  { id: 'laswerk', label: 'Laswerk', description: 'TIG, MIG en MAG', serviceSlug: 'laswerk-samenstellingen', image: '/images/renders/frame-800.webp' },
-  { id: 'samenstelling', label: 'Complete samenstelling', description: 'Meerdere bewerkingen tot één geheel' },
+  { id: 'frezen', label: 'CNC-frezen', description: 'Precisiedelen in alle materialen', serviceSlug: 'cnc-frezen', image: '/images/renders/housing-800.webp' },
+  { id: 'draaien', label: 'CNC-draaien', description: 'Draaidelen in alle materialen', serviceSlug: 'cnc-draaien', image: '/images/renders/shaft-800.webp' },
+  { id: 'snijwerk', label: 'Aluminium snijwerk', description: 'Aluminium plaatdelen volgens DXF of tekening', serviceSlug: 'aluminium-snijwerk', image: '/images/renders/plate-800.webp' },
+  { id: 'zetwerk', label: 'Aluminium zetwerk', description: 'CNC-kantwerk van aluminium plaat', serviceSlug: 'aluminium-zetwerk', image: '/images/renders/bracket-800.webp' },
+  { id: 'laswerk', label: 'Aluminium laswerk', description: 'TIG en MIG in aluminium', serviceSlug: 'aluminium-laswerk', image: '/images/renders/frame-800.webp' },
+  { id: 'samenstelling', label: 'Complete samenstelling', description: 'Aluminium onderdelen tot één geheel' },
 ];
 
 export const techniqueIds = techniques.map((t) => t.id) as [TechniqueId, ...TechniqueId[]];
@@ -61,3 +61,6 @@ export function formatBytes(bytes: number) {
   if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} kB`;
   return `${(bytes / 1024 / 1024).toFixed(bytes < 10 * 1024 * 1024 ? 1 : 0).replace('.', ',')} MB`;
 }
+
+/** Snij-, zet- en laswerk doen we uitsluitend in aluminium. */
+export const aluminiumOnly: readonly string[] = ['snijwerk', 'zetwerk', 'laswerk'];
