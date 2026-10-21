@@ -1,0 +1,179 @@
+[
+ {
+  "name": "International Federation of Surveyors",
+  "abbr": "FIG",
+  "url": "https://www.fig.net",
+  "scope": "Global",
+  "focus": [
+   "Surveying",
+   "Land administration"
+  ],
+  "description": "Federation of national associations representing surveyors worldwide, covering the full range of surveying disciplines."
+ },
+ {
+  "name": "International Society for Photogrammetry and Remote Sensing",
+  "abbr": "ISPRS",
+  "url": "https://www.isprs.org",
+  "scope": "Global",
+  "focus": [
+   "Photogrammetry",
+   "Remote sensing"
+  ],
+  "description": "Non-governmental organisation advancing international cooperation in photogrammetry, remote sensing and spatial information sciences."
+ },
+ {
+  "name": "Open Geospatial Consortium",
+  "abbr": "OGC",
+  "url": "https://www.ogc.org",
+  "scope": "Global",
+  "focus": [
+   "Standards",
+   "Interoperability"
+  ],
+  "description": "Member-driven consortium that develops open standards for geospatial content and location-based services."
+ },
+ {
+  "name": "International Hydrographic Organization",
+  "abbr": "IHO",
+  "url": "https://iho.int",
+  "scope": "Global",
+  "focus": [
+   "Hydrography",
+   "Nautical charting"
+  ],
+  "description": "Intergovernmental organisation coordinating hydrographic activities and standards for safe navigation."
+ },
+ {
+  "name": "UN Committee of Experts on Global Geospatial Information Management",
+  "abbr": "UN-GGIM",
+  "url": "https://ggim.un.org",
+  "scope": "Global",
+  "focus": [
+   "Policy",
+   "Geospatial information"
+  ],
+  "description": "United Nations body setting the agenda for the development and use of global geospatial information."
+ },
+ {
+  "name": "International Association of Geodesy",
+  "abbr": "IAG",
+  "url": "https://www.iag-aig.org",
+  "scope": "Global",
+  "focus": [
+   "Geodesy",
+   "Reference frames"
+  ],
+  "description": "Scientific organisation promoting research and cooperation in geodesy, including global reference frames."
+ },
+ {
+  "name": "Open Source Geospatial Foundation",
+  "abbr": "OSGeo",
+  "url": "https://www.osgeo.org",
+  "scope": "Global",
+  "focus": [
+   "Open source",
+   "Software"
+  ],
+  "description": "Foundation supporting the collaborative development of open-source geospatial software and its community."
+ },
+ {
+  "name": "International Cartographic Association",
+  "abbr": "ICA",
+  "url": "https://icaci.org",
+  "scope": "Global",
+  "focus": [
+   "Cartography",
+   "GIScience"
+  ],
+  "description": "Organisation promoting cartography and GIScience through research, education and international collaboration."
+ },
+ {
+  "name": "EuroGeographics",
+  "abbr": "EG",
+  "url": "https://eurogeographics.org",
+  "scope": "Europe",
+  "focus": [
+   "National mapping",
+   "Cadastre"
+  ],
+  "description": "Association of European national mapping, cadastre and land registry authorities."
+ },
+ {
+  "name": "European Association of Remote Sensing Companies",
+  "abbr": "EARSC",
+  "url": "https://earsc.org",
+  "scope": "Europe",
+  "focus": [
+   "Earth observation",
+   "Industry"
+  ],
+  "description": "Association representing European companies providing Earth observation-based geo-information services."
+ },
+ {
+  "name": "European Spatial Data Research",
+  "abbr": "EuroSDR",
+  "url": "https://www.eurosdr.net",
+  "scope": "Europe",
+  "focus": [
+   "Research",
+   "National mapping"
+  ],
+  "description": "Network linking national mapping agencies with research institutes to address spatial data challenges."
+ },
+ {
+  "name": "Council of European Geodetic Surveyors",
+  "abbr": "CLGE",
+  "url": "https://www.clge.eu",
+  "scope": "Europe",
+  "focus": [
+   "Surveying",
+   "Profession"
+  ],
+  "description": "Body representing the geodetic surveying profession in Europe."
+ },
+ {
+  "name": "American Society for Photogrammetry and Remote Sensing",
+  "abbr": "ASPRS",
+  "url": "https://www.asprs.org",
+  "scope": "Americas",
+  "focus": [
+   "Photogrammetry",
+   "LiDAR",
+   "Remote sensing"
+  ],
+  "description": "Scientific association advancing imaging and geospatial information science and technology."
+ },
+ {
+  "name": "National Society of Professional Surveyors",
+  "abbr": "NSPS",
+  "url": "https://www.nsps.us.com",
+  "scope": "Americas",
+  "focus": [
+   "Surveying",
+   "Profession"
+  ],
+  "description": "National organisation representing the surveying profession in the United States."
+ },
+ {
+  "name": "URISA",
+  "abbr": "URISA",
+  "url": "https://www.urisa.org",
+  "scope": "Americas",
+  "focus": [
+   "GIS",
+   "Public sector"
+  ],
+  "description": "Association for GIS professionals, with a focus on the use of spatial technology in government."
+ },
+ {
+  "name": "Surveying and Spatial Sciences Institute",
+  "abbr": "SSSI",
+  "url": "https://www.sssi.org.au",
+  "scope": "Asia-Pacific",
+  "focus": [
+   "Surveying",
+   "Spatial sciences"
+  ],
+  "description": "Peak body for surveying and spatial science professionals in Australia."
+ }
+]
