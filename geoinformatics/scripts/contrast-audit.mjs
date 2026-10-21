@@ -8,6 +8,8 @@ const base = process.argv[2] || 'http://localhost:3100';
 const paths = (process.argv[3] || '/,/lidar-reveals-20000-amazonian-precolonial-earthworks/,/latest/,/category/lidar-3d-scanning/,/analysis/,/events/,/organizations/,/newsletter/,/advertise/,/about/,/contact/,/legal/privacy/,/search/,/nope/').split(',');
 const executablePath = process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
 
+const HOSTILE = ':root{color-scheme:light;color:#000}body{margin:0;font:14px/1.3 system-ui,sans-serif;color:#000;background:transparent}';
+
 const audit = () => {
   const parse = (c) => {
     const m = c.match(/rgba?\(([^)]+)\)/);
@@ -88,6 +90,9 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mob
     await page.goto(base + p, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.querySelectorAll('[data-reveal]').forEach((e) => e.classList.add('is-visible')));
     await page.addStyleTag({ content: 'nextjs-portal{display:none!important}' });
+    // Simulate a hostile host wrapper (like an embedding viewer): an unlayered reset
+    // that turns default text black. Inherited text must survive it.
+    await page.addStyleTag({ content: HOSTILE });
     await page.waitForTimeout(600);
     const issues = await page.evaluate(audit);
     if (issues.length) {
@@ -99,6 +104,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mob
   // Open-state UI
   if (name === 'desktop') {
     await page.goto(base + '/', { waitUntil: 'networkidle' });
+    await page.addStyleTag({ content: HOSTILE });
     for (const label of ['Industries', 'Search']) {
       await page.getByRole('button', { name: label }).click();
       await page.waitForTimeout(700);
@@ -110,6 +116,7 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mob
     }
   } else {
     await page.goto(base + '/', { waitUntil: 'networkidle' });
+    await page.addStyleTag({ content: HOSTILE });
     await page.getByRole('button', { name: 'Menu' }).click();
     await page.waitForTimeout(900);
     const issues = await page.evaluate(audit);

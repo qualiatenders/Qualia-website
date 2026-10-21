@@ -31,17 +31,16 @@ export function PlacementExplorer() {
   const Slot = ({ id, className, label }: { id: PlacementId; className: string; label?: string }) => {
     const on = active === id;
     return (
-      <motion.button
+      <button
         type="button"
         onClick={() => choose(id)}
         aria-label={placements.find((p) => p.id === id)!.name}
         aria-pressed={on}
-        animate={{ backgroundColor: on ? 'rgba(215,25,32,1)' : 'rgba(215,25,32,0.14)' }}
-        transition={{ duration: reduce ? 0 : 0.35 }}
-        className={`relative grid place-items-center overflow-hidden border ${on ? 'border-red' : 'border-red/40'} ${className}`}
+        // Colour follows state directly (no animated background), so text contrast holds at every moment.
+        className={`relative grid place-items-center overflow-hidden border transition-colors duration-300 ${on ? 'border-red bg-red' : 'border-red/50 bg-[#fbe8e9]'} ${className}`}
       >
-        <span className={`font-mono text-[0.55rem] tracking-[0.12em] uppercase sm:text-[0.6rem] ${on ? 'text-white' : 'text-red'}`}>{label ?? placements.find((p) => p.id === id)!.format.split('·')[0]}</span>
-      </motion.button>
+        <span className={`font-sans text-[0.6rem] font-bold tracking-[0.08em] uppercase sm:text-[0.65rem] ${on ? 'text-white' : 'text-ink'}`}>{label ?? placements.find((p) => p.id === id)!.format.split('·')[0]}</span>
+      </button>
     );
   };
 

@@ -137,6 +137,7 @@ for (const [key, { html }] of pages) {
   h = h.replace(/<script\b(?![^>]*application\/(ld\+)?json)[^>]*>[\s\S]*?<\/script>/g, '');
   // Reset the geo layer to its start state; it runs again in the preview.
   h = h.replace(/\sdata-(tiles|coord|contour|globe)-ready=""/g, '');
+  h = h.replace(/(<p class="[^"]*?)\s*\bfix-locked\b([^"]*" data-fix)/g, '$1$2');
   h = h.replace(/<div class="geo-tiles[^"]*" aria-hidden="true">(<span[^>]*><\/span>)*<\/div>/g, '');
   h = h.replace(/<div class="geo-cursor[^"]*"[\s\S]*?<\/span><\/span><\/div>/g, '');
   h = h.replace(/(<svg[^>]*data-contour[^>]*class="[^"]*?)\s*\barmed\b\s*(drawn)?/g, '$1');

@@ -77,7 +77,7 @@ export function initGeoFx(root = document) {
         const noise = k < 1 ? (Math.random() - 0.5) * (1 - k) * 0.01 : 0;
         el.textContent = Math.max(0, target * e + noise).toFixed(digits);
         if (k < 1) requestAnimationFrame(step);
-        else el.closest('[data-fix]')?.classList.add('fixed');
+        else el.closest('[data-fix]')?.classList.add('fix-locked');
       };
       requestAnimationFrame(step);
     });

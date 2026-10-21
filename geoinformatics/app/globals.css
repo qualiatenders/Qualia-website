@@ -39,6 +39,25 @@
   --breakpoint-3xl: 112rem;
 }
 
+/*
+ * Unlayered on purpose. Hosts that wrap the page (e.g. an embedding viewer)
+ * often ship an unlayered reset such as `body { color: #000; font: 14px … }`,
+ * which beats anything inside @layer. Text colour, background and type of the
+ * document root are therefore set here, outside the layers, so inherited text
+ * (headlines, links, the logo, icons) can never fall back to black on ink.
+ * `!important` only pins the root; every element below keeps its own classes.
+ */
+:root,
+:root body {
+  background-color: #0b0d10 !important;
+  color: #ffffff !important;
+}
+:root body {
+  font-family: var(--font-sans) !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+}
+
 @layer base {
   :root {
     color-scheme: dark;
@@ -913,7 +932,7 @@ svg[data-contour].armed.drawn path {
   background: var(--color-fog);
   transition: background-color 0.3s;
 }
-[data-fix].fixed .fix-dot {
+[data-fix].fix-locked .fix-dot {
   background: #3ecf6e;
   box-shadow: 0 0 0 3px rgb(62 207 110 / 0.2);
 }
