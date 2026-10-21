@@ -252,7 +252,7 @@ const visuals: Record<Visual, Draw> = {
             );
           });
         })}
-        <text x={440} y={70} fill="#fff" fillOpacity={0.4} fontSize={16} fontFamily="monospace">
+        <text x={440} y={70} fill="#fff" fontSize={16} fontFamily="monospace">
           z/{hx}/{hy}
         </text>
       </>

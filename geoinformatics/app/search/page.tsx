@@ -30,7 +30,7 @@ export default async function SearchPage({ searchParams }: Props) {
           <label htmlFor="search-q" className="sr-only">
             Search terms
           </label>
-          <input id="search-q" name="q" type="search" defaultValue={q} placeholder="Technologies, organisations, topics…" className="min-w-0 flex-1 bg-transparent px-5 py-4 text-lg placeholder:text-white/40 focus:outline-none" />
+          <input id="search-q" name="q" type="search" defaultValue={q} placeholder="Technologies, organisations, topics…" className="min-w-0 flex-1 bg-transparent px-5 py-4 text-lg placeholder:text-white focus:outline-none" />
           {desk && <input type="hidden" name="desk" value={desk} />}
           <button type="submit" className="btn btn-red min-h-0 px-6">
             <Icon name="search" className="size-5" />

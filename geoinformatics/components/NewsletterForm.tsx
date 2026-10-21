@@ -61,7 +61,7 @@ export function NewsletterForm({ source, variant = 'dark', size = 'md' }: { sour
                 autoComplete="email"
                 placeholder="Your work email"
                 className={`min-h-13 min-w-0 flex-1 border px-4 text-base transition-colors focus:outline-none sm:border-r-0 ${size === 'lg' ? 'lg:px-6 lg:text-lg' : ''} ${
-                  dark ? 'border-white/25 bg-white/5 text-white placeholder:text-white/45 focus:border-white' : 'border-ink/25 bg-white text-ink placeholder:text-stone focus:border-ink'
+                  dark ? 'border-white/25 bg-white/5 text-white placeholder:text-white focus:border-white' : 'border-ink/25 bg-white text-ink placeholder:text-ink focus:border-ink'
                 }`}
               />
               <button type="submit" disabled={state.status === 'sending'} className={`btn btn-red min-h-13 flex-none sm:h-full ${size === 'lg' ? 'px-8 text-base' : ''}`}>

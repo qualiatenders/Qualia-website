@@ -49,7 +49,7 @@ export function Hero({ lead, secondary, headlines, desks }: { lead: Article; sec
             <li key={c.slug} className="flex-none border-r border-white/10 first:border-l">
               <Link href={c.path} className="group flex items-center gap-3 px-4 py-4 transition-colors hover:bg-white/[0.04] lg:px-5">
                 <span className="meta text-red-ink">{c.code}</span>
-                <span className="text-sm font-medium whitespace-nowrap text-white/85 group-hover:text-white">{c.name}</span>
+                <span className="text-sm font-medium whitespace-nowrap text-white group-hover:text-white">{c.name}</span>
               </Link>
             </li>
           ))}

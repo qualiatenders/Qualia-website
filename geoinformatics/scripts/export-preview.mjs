@@ -96,7 +96,7 @@ for (const name of placementNames) {
 }
 
 // Success states of the forms, rendered by the real components.
-snap.newsletterDone = `<div class="flex gap-4 border-l-2 border-red py-2 pl-5" data-nl-done><svg viewBox="0 0 24 24" class="mt-0.5 size-6 flex-none text-red" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg><div><p class="font-display text-xl font-semibold">Check your inbox.</p><p class="mt-1 text-sm opacity-80">We have sent you a confirmation link. Your subscription starts once you click it. <em>(Preview: nothing was sent.)</em></p></div></div>`;
+snap.newsletterDone = `<div class="flex gap-4 border-l-2 border-red py-2 pl-5" data-nl-done><svg viewBox="0 0 24 24" class="mt-0.5 size-6 flex-none text-red" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m5 12 5 5 9-10"></path></svg><div><p class="font-display text-xl font-semibold">Check your inbox.</p><p class="mt-1 text-sm">We have sent you a confirmation link. Your subscription starts once you click it. <em>(Preview: nothing was sent.)</em></p></div></div>`;
 await browser.close();
 
 /* ── Stylesheets and fonts ──────────────────────────────────────────────── */

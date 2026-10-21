@@ -22,8 +22,9 @@ const M = 48;
 const ink = rgb(0.043, 0.051, 0.063);
 const red = rgb(0.843, 0.098, 0.125);
 const white = rgb(1, 1, 1);
-const fog = rgb(0.66, 0.69, 0.72);
-const stone = rgb(0.29, 0.31, 0.34);
+// House rule: white text on dark, black text on white — no grey text.
+const fog = white;
+const stone = ink;
 const line = rgb(0.85, 0.85, 0.83);
 const paper = rgb(0.96, 0.96, 0.953);
 

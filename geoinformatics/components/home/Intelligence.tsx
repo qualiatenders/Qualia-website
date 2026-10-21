@@ -26,7 +26,7 @@ export function Intelligence({ items }: { items: Article[] }) {
             <h2 id="intel-title" className="mt-5 font-display text-mega leading-[0.88] font-semibold tracking-[-0.02em]">
               Geospatial
               <br />
-              <span className="text-white/40">Intelligence</span>
+              <span className="text-red-ink italic">Intelligence</span>
             </h2>
           </div>
           <div className="max-w-sm" data-reveal style={{ ['--reveal-delay' as string]: '120ms' }}>

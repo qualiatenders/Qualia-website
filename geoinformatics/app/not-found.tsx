@@ -16,7 +16,7 @@ export default function NotFound() {
           <label htmlFor="nf-q" className="sr-only">
             Search
           </label>
-          <input id="nf-q" name="q" type="search" placeholder="Search GeoInformatics" className="min-w-0 flex-1 bg-transparent px-5 py-4 placeholder:text-white/40 focus:outline-none" />
+          <input id="nf-q" name="q" type="search" placeholder="Search GeoInformatics" className="min-w-0 flex-1 bg-transparent px-5 py-4 placeholder:text-white focus:outline-none" />
           <button className="btn btn-light min-h-0">Search</button>
         </form>
         <div className="mt-10 flex flex-wrap gap-3">

@@ -103,7 +103,7 @@ export function Header({ dateLine }: { dateLine: string }) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2 lg:gap-3">
-            <button type="button" onClick={() => toggle('search')} aria-expanded={panel === 'search'} aria-label="Search" className="grid size-11 place-items-center text-white/85 transition-colors hover:text-white">
+            <button type="button" onClick={() => toggle('search')} aria-expanded={panel === 'search'} aria-label="Search" className="grid size-11 place-items-center text-white transition-colors hover:text-white">
               <Icon name={panel === 'search' ? 'close' : 'search'} />
             </button>
             <Link href="/advertise/" className="btn btn-outline hidden min-h-10 border-white/25 px-4 text-sm xl:inline-flex">
@@ -202,7 +202,7 @@ function SearchPanel({ onDone }: { onDone: () => void }) {
           type="search"
           autoComplete="off"
           placeholder="Search news, technologies, organisations…"
-          className="min-w-0 flex-1 bg-transparent font-display text-xl tracking-[-0.02em] placeholder:text-white/35 focus:outline-none lg:text-3xl"
+          className="min-w-0 flex-1 bg-transparent font-display text-xl tracking-[-0.02em] placeholder:text-white focus:outline-none lg:text-3xl"
         />
         <button type="submit" className="btn btn-light">
           Search
@@ -231,7 +231,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
           <label htmlFor="mobile-search" className="sr-only">
             Search
           </label>
-          <input id="mobile-search" name="q" type="search" placeholder="Search GeoInformatics" className="min-w-0 flex-1 bg-transparent px-4 py-3 text-base placeholder:text-white/40 focus:outline-none" />
+          <input id="mobile-search" name="q" type="search" placeholder="Search GeoInformatics" className="min-w-0 flex-1 bg-transparent px-4 py-3 text-base placeholder:text-white focus:outline-none" />
           <button type="submit" aria-label="Search" className="grid w-12 place-items-center bg-white text-ink">
             <Icon name="search" />
           </button>

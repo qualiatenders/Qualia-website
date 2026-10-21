@@ -27,7 +27,7 @@ export function Ticker({ items, mode }: { items: BreakingItem[]; mode: 'breaking
           <ul className="ticker-track flex h-full w-max items-center" style={{ ['--ticker-duration' as string]: `${Math.max(40, items.length * 12)}s` }}>
             {loop.map((it, i) => (
               <li key={`${it.id}-${i}`} className="flex items-center" aria-hidden={i >= items.length ? true : undefined}>
-                <Link href={it.path} tabIndex={i >= items.length ? -1 : undefined} className="px-6 text-[0.875rem] font-medium whitespace-nowrap text-white/90 transition-colors hover:text-white hover:underline">
+                <Link href={it.path} tabIndex={i >= items.length ? -1 : undefined} className="px-6 text-[0.875rem] font-medium whitespace-nowrap text-white transition-colors hover:text-white hover:underline">
                   {it.title}
                 </Link>
                 <span className="size-1 rotate-45 bg-red" aria-hidden="true" />
@@ -35,7 +35,7 @@ export function Ticker({ items, mode }: { items: BreakingItem[]; mode: 'breaking
             ))}
           </ul>
         </div>
-        <button type="button" onClick={() => setPaused((p) => !p)} className="grid w-11 flex-none place-items-center border-l border-white/10 text-white/70 hover:text-white motion-reduce:hidden" aria-label={paused ? 'Resume headline ticker' : 'Pause headline ticker'} aria-pressed={paused}>
+        <button type="button" onClick={() => setPaused((p) => !p)} className="grid w-11 flex-none place-items-center border-l border-white/10 text-white hover:text-white motion-reduce:hidden" aria-label={paused ? 'Resume headline ticker' : 'Pause headline ticker'} aria-pressed={paused}>
           <Icon name={paused ? 'play' : 'pause'} className="size-4" />
         </button>
       </div>

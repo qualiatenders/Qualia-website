@@ -17,8 +17,9 @@
   --color-red: #d71920;
   /* Lighter red for small red text on dark planes (AA ≥ 4.5:1 on ink). */
   --color-red-ink: #ff4a52;
-  --color-fog: #a9afb8;
-  --color-stone: #6b7079;
+  /* Text rule: white on dark, black on white. No grey text; hierarchy comes from type. */
+  --color-fog: #ffffff;
+  --color-stone: #0b0d10;
 
   --font-display: var(--font-display-face), 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-sans: var(--font-sans-face), 'Schibsted Grotesk', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -46,8 +47,8 @@
     --surface: var(--color-ink);
     --surface-raised: var(--color-anthracite);
     --fg: var(--color-white);
-    --fg-muted: var(--color-fog);
-    --fg-subtle: #8c929b;
+    --fg-muted: var(--color-white);
+    --fg-subtle: var(--color-white);
     --line: rgb(255 255 255 / 0.1);
     --line-strong: rgb(255 255 255 / 0.2);
     --accent-text: var(--color-red-ink);
@@ -120,8 +121,8 @@
     --surface: var(--color-paper);
     --surface-raised: var(--color-white);
     --fg: var(--color-ink);
-    --fg-muted: #4a4f57;
-    --fg-subtle: #6b7079;
+    --fg-muted: var(--color-ink);
+    --fg-subtle: var(--color-ink);
     --line: rgb(11 13 16 / 0.12);
     --line-strong: rgb(11 13 16 / 0.28);
     --accent-text: var(--color-red);
@@ -133,8 +134,8 @@
     --surface: var(--color-white);
     --surface-raised: var(--color-paper);
     --fg: var(--color-ink);
-    --fg-muted: #4a4f57;
-    --fg-subtle: #6b7079;
+    --fg-muted: var(--color-ink);
+    --fg-subtle: var(--color-ink);
     --line: rgb(11 13 16 / 0.12);
     --line-strong: rgb(11 13 16 / 0.28);
     --accent-text: var(--color-red);
@@ -150,8 +151,8 @@
     --surface: var(--color-anthracite);
     --surface-raised: var(--color-graphite);
     --fg: var(--color-white);
-    --fg-muted: var(--color-fog);
-    --fg-subtle: #8c929b;
+    --fg-muted: var(--color-white);
+    --fg-subtle: var(--color-white);
     --line: rgb(255 255 255 / 0.1);
     --line-strong: rgb(255 255 255 / 0.2);
     --accent-text: var(--color-red-ink);
@@ -345,7 +346,9 @@
       box-shadow 0.2s ease;
   }
   .field::placeholder {
-    color: var(--fg-subtle);
+    color: var(--fg);
+    font-style: italic;
+    opacity: 1;
   }
   .field:focus {
     outline: none;
@@ -409,7 +412,7 @@
     font-family: var(--font-display);
     font-size: 1.1875rem;
     line-height: 1.7;
-    color: #1d2025;
+    color: var(--color-ink);
   }
   @media (min-width: 64rem) {
     .article-body {
@@ -956,4 +959,19 @@ svg[data-contour].armed.drawn path {
 [data-pin].active .pin-dot {
   background: #fff;
   box-shadow: 0 0 0 4px rgb(215 25 32 / 0.6);
+}
+
+/* Outlined numerals (Most read): text without grey, depth without a second colour */
+.num-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.25px var(--fg);
+}
+.num-outline.is-first {
+  color: var(--color-red);
+  -webkit-text-stroke: 0;
+}
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  font-style: italic;
 }

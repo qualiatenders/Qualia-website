@@ -20,7 +20,7 @@ export function Trending({ items, title = 'Most read', note = 'Last 7 days', ton
       <ol>
         {items.map((a, i) => (
           <li key={a.id} className="group relative grid grid-cols-[3.75rem_1fr] items-start gap-3 border-b border-line py-5 last:border-b-0 last:pb-0" data-reveal style={{ ['--reveal-delay' as string]: `${i * 70}ms` }}>
-            <span aria-hidden="true" className={`font-display text-[3.25rem] leading-[0.8] font-semibold tracking-[-0.02em] tabular transition-colors duration-500 ${i === 0 ? 'text-red' : 'text-[color:var(--line-strong)] group-hover:text-red'}`}>
+            <span aria-hidden="true" className={`font-display text-[3.25rem] leading-[0.8] font-semibold tracking-[-0.02em] tabular transition-colors duration-500 ${i === 0 ? 'num-outline is-first' : 'num-outline group-hover:[-webkit-text-stroke-color:var(--color-red)]'}`}>
               {pad2(i + 1)}
             </span>
             <div className="min-w-0">
