@@ -4,30 +4,32 @@ import { intelligenceKinds } from '@/lib/taxonomy';
 import type { Article } from '@/lib/types';
 import { Ticker } from '@/components/Ticker';
 import { Hero } from '@/components/home/Hero';
-import { Intelligence } from '@/components/home/Intelligence';
-import { Industries } from '@/components/home/Industries';
-import { DeskBlocks } from '@/components/home/DeskBlocks';
+import { LatestTeaser } from '@/components/home/LatestTeaser';
 import { NewsGlobe } from '@/components/home/NewsGlobe';
-import { ContourRule } from '@/components/ContourRule';
+import { Intelligence } from '@/components/home/Intelligence';
+import { IndustriesStrip } from '@/components/home/IndustriesStrip';
 import { NewsletterBand } from '@/components/home/NewsletterBand';
 import { AdvertiseBand } from '@/components/home/AdvertiseBand';
-import { LatestFeed } from '@/components/LatestFeed';
-import { Trending } from '@/components/Trending';
-import { SectionHeading } from '@/components/SectionHeading';
 import { EventList, sortEvents } from '@/components/EventList';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { Icon } from '@/components/Icon';
 
 export const revalidate = 300;
 
-const FEED = 9;
-
+/**
+ * The homepage is a front page, not an archive: every block is a short,
+ * curiosity-driven teaser with one clear way through to its own page
+ * (latest, news map, analysis, industries, events). Three ad positions only:
+ * billboard under the hero, rectangle beside Most read, one leaderboard
+ * between Intelligence and the industries.
+ */
 export default async function HomePage() {
   const [featured, latest, breaking, mostRead, intel, events, desks] = await Promise.all([
     content.featured(),
-    content.list({ perPage: 30 }),
+    content.list({ perPage: 40 }),
     content.breaking(),
     content.mostRead(5),
-    content.list({ perPage: 5, kinds: intelligenceKinds }),
+    content.list({ perPage: 4, kinds: intelligenceKinds }),
     content.events(),
     content.categories(),
   ]);
@@ -37,27 +39,20 @@ export default async function HomePage() {
   const used = new Set<string>();
   const take = (a: Article | undefined) => (a && !used.has(a.id) ? (used.add(a.id), a) : undefined);
   const lead = take(featured.find((a) => a.featured === 'lead')) ?? take(editorial[0])!;
-  const secondary = [
-    ...featured.filter((a) => a.featured === 'secondary').map(take),
-    ...editorial.map((a) => (used.size < 3 ? take(a) : undefined)),
-  ]
+  const secondary = [...featured.filter((a) => a.featured === 'secondary').map(take), ...editorial.map((a) => (used.size < 3 ? take(a) : undefined))]
     .filter((a): a is Article => Boolean(a))
     .slice(0, 2);
-  const headlines = latest.items.filter((a) => !used.has(a.id)).slice(0, 6);
+  const headlines = latest.items.filter((a) => !used.has(a.id)).slice(0, 5);
   headlines.forEach((a) => used.add(a.id));
+  const teaser = latest.items.filter((a) => !used.has(a.id)).slice(0, 6);
+  const intelItems = intel.items.filter((a) => a.id !== lead.id).slice(0, 3);
 
-  const feedExclude = [...used];
-  const feed = latest.items.filter((a) => !used.has(a.id)).slice(0, FEED);
-  const intelItems = intel.items.filter((a) => a.id !== lead.id);
-
-  const perDesk = await Promise.all(desks.map(async (c) => ({ desk: c, items: (await content.list({ category: c.slug, perPage: 4 })).items })));
-  const deskLatest = Object.fromEntries(perDesk.map((d) => [d.desk.slug, d.items[0]]));
-  // The four busiest desks get their own block on the homepage.
-  const deskBlocks = [...perDesk].sort((a, b) => b.items.length - a.items.length).slice(0, 4);
+  const counts = Object.fromEntries(await Promise.all(desks.map(async (c) => [c.slug, (await content.list({ category: c.slug, perPage: 1 })).total] as const)));
 
   const ticker = breaking.length
     ? { mode: 'breaking' as const, items: breaking }
     : { mode: 'latest' as const, items: latest.items.slice(0, 8).map((a) => ({ id: a.id, title: a.title, path: a.path, live: false })) };
+  const upcoming = sortEvents(events).slice(0, 3);
 
   return (
     <>
@@ -66,54 +61,33 @@ export default async function HomePage() {
 
       <AdSlot placement="home-takeover" className="bg-ink pb-10" />
 
-      <section aria-labelledby="latest-title" className="surface-paper py-14 lg:py-20">
-        <div className="shell grid gap-12 lg:grid-cols-12 lg:gap-10 xl:gap-14">
-          <div className="min-w-0 lg:col-span-8">
-            <SectionHeading index="01" id="latest-title" title="Latest news" href="/latest/" linkLabel="All news" />
-            <LatestFeed initial={feed} totalPages={Math.ceil(Math.max(0, latest.total - feedExclude.length) / FEED)} categories={desks} perPage={FEED} exclude={feedExclude} />
-          </div>
-          <div className="lg:col-span-4">
-            <div className="space-y-10 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]">
-              <Trending items={mostRead} />
-              <AdSlot placement="sidebar-rectangle" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <LatestTeaser items={teaser} total={latest.total} mostRead={mostRead} />
 
-      <AdSlot placement="home-leaderboard" className="surface-paper border-t border-line py-10" />
+      <NewsGlobe articles={latest.items} variant="teaser" />
 
-      <NewsGlobe articles={latest.items} />
+      <Intelligence items={intelItems} compact />
 
-      <div className="bg-ink">
-        <ContourRule seed={3} />
-      </div>
+      <AdSlot placement="home-leaderboard" className="surface-white border-b border-line py-10" />
 
-      <Intelligence items={intelItems} />
+      <IndustriesStrip desks={desks} counts={counts} />
 
-      <DeskBlocks blocks={deskBlocks} />
-
-      <Industries desks={desks} latest={deskLatest} />
-
-      {events.length > 0 && (
-        <section aria-labelledby="events-title" className="surface-paper py-16 lg:py-24">
+      {upcoming.length > 0 && (
+        <section aria-labelledby="events-title" className="surface-paper py-14 lg:py-20">
           <div className="shell grid gap-10 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <SectionHeading index="05" id="events-title" title="Events" />
-              <p className="max-w-sm text-fg-muted" data-reveal>
-                Conferences, expos and summits where the geospatial industry meets. Organising one? Tell our editors.
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <Link href="/events/" className="group btn btn-dark">
-                  Full calendar <span className="arrow" aria-hidden="true">→</span>
-                </Link>
-                <Link href="/contact/?topic=event" className="btn btn-outline">
-                  Submit an event
-                </Link>
-              </div>
+              <p className="kicker text-accent">Industry calendar</p>
+              <h2 id="events-title" className="mt-2 font-sans text-[clamp(1.6rem,1.2rem+1.4vw,2.5rem)] font-extrabold tracking-[-0.01em] uppercase">
+                Where to be next
+              </h2>
+              <p className="mt-4 max-w-sm">Conferences, expos and summits where the geospatial industry meets.</p>
+              <Link href="/events/" className="group btn btn-dark mt-6">
+                Full events calendar <Icon name="arrow" className="arrow size-4" />
+              </Link>
             </div>
             <div className="lg:col-span-8">
-              <EventList events={sortEvents(events).slice(0, 5)} compact />
+              <div className="[&_li:nth-child(3)]:max-sm:hidden">
+                <EventList events={upcoming} compact />
+              </div>
             </div>
           </div>
         </section>

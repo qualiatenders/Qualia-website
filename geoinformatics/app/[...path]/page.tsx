@@ -148,7 +148,6 @@ export default async function ArticlePage({ params }: Props) {
         </figure>
 
         <div className="surface-paper pb-16 lg:pb-24">
-          <AdSlot placement="site-leaderboard" category={a.category.slug} className="shell pt-8" />
           <div className="shell grid gap-12 pt-10 lg:grid-cols-[3.5rem_minmax(0,1fr)_300px] lg:gap-10 lg:pt-14 xl:grid-cols-[5rem_minmax(0,1fr)_300px] xl:gap-16">
             <aside className="hidden lg:block" aria-label="Share">
               <div className="sticky top-[calc(var(--header-h)+2rem)]">

@@ -9,11 +9,13 @@ import { formatDate } from '@/lib/format';
  * fly there, click a pin to read. The story list is the accessible,
  * no-JS version of the same information.
  */
-export function NewsGlobe({ articles }: { articles: Article[] }) {
-  const located = articles.filter((a) => a.location).slice(0, 14);
+export function NewsGlobe({ articles, variant = 'full' }: { articles: Article[]; variant?: 'full' | 'teaser' }) {
+  const located = articles.filter((a) => a.location).slice(0, variant === 'teaser' ? 20 : 40);
   if (located.length < 3) return null;
   const pins = located.map((a) => ({ lat: a.location!.lat, lon: a.location!.lon, name: a.location!.name, title: a.title }));
   const data = JSON.stringify({ land: landRings(), pins }).replace(/</g, '\\u003c');
+
+  if (variant === 'teaser') return <GlobeTeaser located={located} data={data} />;
 
   return (
     <section aria-labelledby="globe-title" className="relative overflow-hidden bg-ink py-16 text-white lg:py-24">
@@ -54,6 +56,49 @@ export function NewsGlobe({ articles }: { articles: Article[] }) {
             </div>
           </div>
           <p className="meta mt-4 text-center">Coastlines: Natural Earth · Orthographic projection · WGS 84</p>
+        </div>
+        <script type="application/json" dangerouslySetInnerHTML={{ __html: data }} />
+      </div>
+    </section>
+  );
+}
+
+/** Homepage teaser: a live globe and one clear invitation to open the full news map. */
+function GlobeTeaser({ located, data }: { located: Article[]; data: string }) {
+  const places = new Set(located.map((a) => a.location!.name)).size;
+  return (
+    <section aria-labelledby="globe-teaser-title" className="relative overflow-hidden bg-ink text-white">
+      <div className="graticule pointer-events-none absolute inset-0 opacity-50" aria-hidden="true" />
+      <div className="globe-wrap shell relative grid items-center gap-8 py-12 md:grid-cols-2 lg:py-14" data-globe>
+        <div className="order-2 md:order-1">
+          <p className="kicker flex items-center gap-3 text-red-ink">
+            <span className="live-dot" aria-hidden="true" /> Live news map
+          </p>
+          <h2 id="globe-teaser-title" className="mt-4 font-display text-[clamp(2rem,1.3rem+2.4vw,3.5rem)] leading-[1.02] font-medium tracking-[-0.02em]">
+            {located.length} stories. {places} places. <span className="text-red-ink italic">One planet.</span>
+          </h2>
+          <p className="mt-4 max-w-md">See where the geospatial industry is moving this month, from Southwest Amazonia to Munich. Spin the globe, then dive into any story.</p>
+          <Link href="/news-map/" className="group btn btn-red mt-7 min-h-13 px-7 text-base">
+            Open the news map <span className="arrow" aria-hidden="true">→</span>
+          </Link>
+          <ul className="sr-only">
+            {located.map((a) => (
+              <li key={a.id}>
+                <Link href={a.path} data-pin>
+                  {a.location!.name}: {a.title}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="relative order-1 md:order-2">
+          <div className="relative mx-auto aspect-square w-full max-w-[22rem] lg:max-w-[26rem]">
+            <canvas className="size-full" role="img" aria-label="Globe showing where recent stories happen" />
+            <div className="globe-tip" data-globe-tip hidden>
+              <p className="kicker text-red" data-tip-place />
+              <p className="mt-1 font-display text-[0.95rem] leading-snug font-medium" data-tip-title />
+            </div>
+          </div>
         </div>
         <script type="application/json" dangerouslySetInnerHTML={{ __html: data }} />
       </div>

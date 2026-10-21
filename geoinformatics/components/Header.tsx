@@ -11,6 +11,7 @@ import { Icon } from './Icon';
 const mainNav = [
   { href: '/latest/', label: 'Latest' },
   { href: '/analysis/', label: 'Intelligence' },
+  { href: '/news-map/', label: 'News map' },
   { href: '/events/', label: 'Events' },
   { href: '/organizations/', label: 'Organizations' },
 ];
@@ -136,8 +137,8 @@ export function Header({ dateLine }: { dateLine: string }) {
                 <p className="kicker text-red-ink">Explore by industry</p>
                 <p className="mt-4 font-display text-3xl leading-tight font-semibold tracking-[-0.015em]">Ten desks. One industry.</p>
                 <p className="mt-4 text-sm leading-relaxed text-fog">Every story is filed under the discipline it matters to most, so you can follow your field without missing what is shifting next door.</p>
-                <Link href="/latest/" className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold">
-                  All latest news <Icon name="arrow" className="arrow size-4" />
+                <Link href="/industries/" className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold">
+                  All industries at a glance <Icon name="arrow" className="arrow size-4" />
                 </Link>
               </div>
               <ul className="grid grid-cols-2 gap-x-10 xl:grid-cols-2">

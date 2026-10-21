@@ -29,7 +29,7 @@ const audit = () => {
   const bgOf = (el) => {
     for (let n = el; n; n = n.parentElement) {
       // A full-size, absolutely positioned layer behind the text (e.g. an active pill) is its background.
-      const layer = n.parentElement && [...n.parentElement.children].find((s) => s !== n && getComputedStyle(s).position === 'absolute' && s.getBoundingClientRect().width >= n.getBoundingClientRect().width - 1 && (parse(getComputedStyle(s).backgroundColor) || [0, 0, 0, 0])[3] > 0.5);
+      const layer = n.parentElement && [...n.parentElement.children].find((s) => s !== n && getComputedStyle(s).position === 'absolute' && Number(getComputedStyle(s).opacity) > 0.5 && s.getBoundingClientRect().width >= n.getBoundingClientRect().width - 1 && (parse(getComputedStyle(s).backgroundColor) || [0, 0, 0, 0])[3] > 0.5);
       if (layer) return { color: parse(getComputedStyle(layer).backgroundColor), el: layer };
       const cs = getComputedStyle(n);
       const c = parse(cs.backgroundColor);

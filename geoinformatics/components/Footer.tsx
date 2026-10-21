@@ -8,6 +8,8 @@ import { BrandIcon } from './Icon';
 const platform = [
   { href: '/latest/', label: 'Latest news' },
   { href: '/analysis/', label: 'Intelligence' },
+  { href: '/news-map/', label: 'Live news map' },
+  { href: '/industries/', label: 'All industries' },
   { href: '/events/', label: 'Events calendar' },
   { href: '/organizations/', label: 'Organizations' },
   { href: '/newsletter/', label: 'Newsletter' },
