@@ -1,0 +1,15 @@
+/* Interactions for the static preview export (see export-preview.mjs). */
+@keyframes pv-drop {
+  from { opacity: 0; transform: translateY(-8px); clip-path: inset(0 0 100% 0); }
+  to { opacity: 1; transform: none; clip-path: inset(0 0 0 0); }
+}
+@keyframes pv-fade {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+.pv-drop { animation: pv-drop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pv-fade { animation: pv-fade 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.pv-busy { opacity: 0.45; transition: opacity 0.2s; }
+@media (prefers-reduced-motion: reduce) {
+  .pv-drop, .pv-fade { animation: none; }
+}
