@@ -10,7 +10,7 @@ export default function NotFound() {
       </div>
       <div className="shell relative">
         <p className="meta text-red-ink">Error 404 · Coordinates not found</p>
-        <h1 className="mt-6 font-display text-[clamp(4rem,2rem+12vw,13rem)] leading-[0.8] font-semibold tracking-[-0.07em]">Off the map.</h1>
+        <h1 className="mt-6 font-display text-[clamp(4rem,2rem+12vw,13rem)] leading-[0.8] font-semibold tracking-[-0.02em]">Off the map.</h1>
         <p className="mt-8 max-w-xl text-lead text-fog">This page doesn’t exist, or it has moved. Try a search, or head back to the latest news.</p>
         <form role="search" action="/search/" className="mt-10 flex max-w-xl border border-white/25 focus-within:border-white">
           <label htmlFor="nf-q" className="sr-only">

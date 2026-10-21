@@ -2,10 +2,11 @@
 // reveal, feed filters and paging, search, forms (simulated), the ad-placement
 // explorer and the reading progress bar. Plain JS, no framework.
 (() => {
-  const ROOT = document.currentScript.dataset.root || '';
+  // Inlined into every exported page (the artifact viewer only runs inline scripts).
+  const ROOT = window.GI_ROOT || '';
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let SNAP = {};
-  let INDEX = [];
+  const SNAP = window.GI_SNAP || {};
+  const INDEX = window.GI_INDEX || [];
 
   const toFile = (href) => {
     if (!href || !href.startsWith('/') || href.startsWith('//')) return href;
@@ -321,15 +322,20 @@
     }),
   );
 
-  /* ── Snapshots (megamenu, search panel, mobile menu, explorer states) ─ */
-  const s = document.createElement('script');
-  s.src = ROOT + 'assets/snapshots.js';
-  s.onload = () => {
-    SNAP = window.GI_SNAP || {};
-    INDEX = window.GI_INDEX || [];
-    if (searchPage) runSearch();
-  };
-  document.head.appendChild(s);
+  /* ── Parallax on premium visuals ───────────────────────────────────── */
+  const plx = [...document.querySelectorAll('[data-parallax]')];
+  if (plx.length && !reduce) {
+    const move = () =>
+      plx.forEach((el) => {
+        const r = el.parentElement.getBoundingClientRect();
+        const p = (r.top + r.height / 2 - innerHeight / 2) / innerHeight;
+        const amt = Number(el.dataset.parallax) || 6;
+        el.style.transform = `translate3d(0, ${(-p * amt).toFixed(2)}%, 0) scale(${1 + amt / 50})`;
+      });
+    addEventListener('scroll', move, { passive: true });
+    move();
+  }
+
+  if (searchPage) runSearch();
   paintBar();
-  void reduce;
 })();

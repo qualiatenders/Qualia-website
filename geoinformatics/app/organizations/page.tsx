@@ -34,7 +34,7 @@ export default async function OrganizationsPage() {
         <div className="shell space-y-16">
           {groups.map((g) => (
             <section key={g.scope} id={g.scope.toLowerCase()} aria-labelledby={`h-${g.scope}`}>
-              <h2 id={`h-${g.scope}`} className="border-b border-line-strong pb-4 font-display text-2xl font-semibold tracking-[-0.03em] uppercase">
+              <h2 id={`h-${g.scope}`} className="border-b border-line-strong pb-4 font-sans text-2xl font-extrabold tracking-[-0.01em] uppercase">
                 {g.scope}
               </h2>
               <ul className="grid gap-px bg-[var(--line)] sm:grid-cols-2 lg:grid-cols-3">
@@ -42,7 +42,7 @@ export default async function OrganizationsPage() {
                   <li key={o.id} className="bg-white" data-reveal style={{ ['--reveal-delay' as string]: `${(i % 3) * 60}ms` }}>
                     <a href={o.url} target="_blank" rel="noopener" className="group flex h-full flex-col p-6 transition-colors hover:bg-paper lg:p-8">
                       <span className="flex items-start justify-between gap-4">
-                        <span className="font-display text-3xl leading-none font-semibold tracking-[-0.04em] text-red">{o.abbr}</span>
+                        <span className="font-display text-3xl leading-none font-semibold tracking-[-0.02em] text-red">{o.abbr}</span>
                         <Icon name="arrowUpRight" className="size-5 text-fg-subtle transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-ink" />
                       </span>
                       <span className="mt-5 font-display text-lg leading-tight font-semibold">

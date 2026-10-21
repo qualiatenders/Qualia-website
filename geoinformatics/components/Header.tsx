@@ -62,6 +62,8 @@ export function Header({ dateLine }: { dateLine: string }) {
           <p className="meta flex items-center gap-3 text-fog">
             <span>{dateLine}</span>
             <span aria-hidden="true" className="h-3 w-px bg-white/20" />
+            <LiveClock />
+            <span aria-hidden="true" className="h-3 w-px bg-white/20" />
             <span className="inline-flex items-center gap-1.5">
               <Icon name="globe" className="size-3.5" />
               International edition
@@ -132,7 +134,7 @@ export function Header({ dateLine }: { dateLine: string }) {
             <div className="shell grid grid-cols-[1fr_2.6fr] gap-12 py-10">
               <div>
                 <p className="kicker text-red-ink">Explore by industry</p>
-                <p className="mt-4 font-display text-3xl leading-tight font-semibold tracking-[-0.03em]">Ten desks. One industry.</p>
+                <p className="mt-4 font-display text-3xl leading-tight font-semibold tracking-[-0.015em]">Ten desks. One industry.</p>
                 <p className="mt-4 text-sm leading-relaxed text-fog">Every story is filed under the discipline it matters to most, so you can follow your field without missing what is shifting next door.</p>
                 <Link href="/latest/" className="group mt-6 inline-flex items-center gap-2 text-sm font-semibold">
                   All latest news <Icon name="arrow" className="arrow size-4" />
@@ -239,7 +241,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
           <ul>
             {[{ href: '/', label: 'Home' }, ...mainNav].map((n, i) => (
               <motion.li key={n.href} {...item(i)} className="border-b border-white/10">
-                <Link href={n.href} aria-current={pathname === n.href ? 'page' : undefined} className="flex items-center justify-between py-4 font-display text-[1.75rem] leading-none font-semibold tracking-[-0.03em]">
+                <Link href={n.href} aria-current={pathname === n.href ? 'page' : undefined} className="flex items-center justify-between py-4 font-display text-[1.75rem] leading-none font-semibold tracking-[-0.015em]">
                   {n.label}
                   <Icon name="arrow" className="size-5 text-red-ink" />
                 </Link>
@@ -274,5 +276,22 @@ function MobileMenu({ pathname }: { pathname: string }) {
         </p>
       </div>
     </motion.div>
+  );
+}
+
+/** UTC clock in the utility bar; the newsroom's reference time. */
+function LiveClock() {
+  const [now, setNow] = useState<string | null>(null);
+  useEffect(() => {
+    const tick = () => setNow(new Date().toISOString().slice(11, 16));
+    tick();
+    const t = window.setInterval(tick, 15_000);
+    return () => window.clearInterval(t);
+  }, []);
+  return (
+    <span className="inline-flex items-center gap-1.5 tabular-nums">
+      <span className="live-dot" aria-hidden="true" />
+      {now ?? '--:--'} UTC
+    </span>
   );
 }

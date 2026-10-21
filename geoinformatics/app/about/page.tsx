@@ -24,7 +24,7 @@ export default function AboutPage() {
       <section className="surface-white py-16 lg:py-24">
         <div className="shell grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <h2 className="font-display text-3xl leading-tight font-semibold tracking-[-0.03em] uppercase">Our mission</h2>
+            <h2 className="font-sans text-3xl leading-tight font-extrabold tracking-[-0.01em] uppercase">Our mission</h2>
           </div>
           <div className="space-y-6 text-lg leading-relaxed text-fg-muted lg:col-span-7">
             <p>Geospatial technology now underpins construction, energy, agriculture, defence, insurance, climate science and the cities we live in. Yet the industry’s news is scattered across press releases, vendor blogs and specialist journals.</p>
@@ -44,7 +44,7 @@ export default function AboutPage() {
             ))}
           </div>
           <div className="mt-16 grid gap-10 lg:grid-cols-12">
-            <h2 className="font-display text-3xl font-semibold tracking-[-0.03em] uppercase lg:col-span-4">What we cover</h2>
+            <h2 className="font-sans text-3xl font-extrabold tracking-[-0.01em] uppercase lg:col-span-4">What we cover</h2>
             <ul className="grid gap-x-8 sm:grid-cols-2 lg:col-span-8">
               {categories.map((c) => (
                 <li key={c.slug} className="border-b border-line">

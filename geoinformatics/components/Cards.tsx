@@ -14,18 +14,20 @@ const stretch = 'after:absolute after:inset-0 after:content-[""]';
 export function LeadCard({ article }: { article: Article }) {
   return (
     <article className="group relative">
-      <ArticleMedia article={article} priority sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 60vw, 100vw" className="aspect-[16/10] lg:aspect-[16/10]" />
+      <ArticleMedia article={article} priority kenBurns sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 60vw, 100vw" className="aspect-[16/10]" />
       <div className="mt-5 lg:mt-6">
         <div className="flex items-center gap-3">
           <CategoryTag article={article} />
           <SponsoredBadge article={article} />
         </div>
-        <h2 className="mt-3 font-display text-[clamp(1.85rem,1.1rem+2.6vw,3.5rem)] leading-[1.02] font-semibold tracking-[-0.035em]">
+        <h2 className="rise mt-3 font-display text-[clamp(2rem,1.1rem+2.8vw,3.75rem)] leading-[1.02] font-semibold tracking-[-0.015em]" style={{ ['--rise-delay' as string]: '120ms' }}>
           <Link href={article.path} className={`headline-link ${stretch}`}>
             {article.title}
           </Link>
         </h2>
-        <p className="mt-4 max-w-[60ch] text-[1.0625rem] leading-relaxed text-fg-muted lg:text-lg">{article.excerpt}</p>
+        <p className="rise mt-4 max-w-[60ch] font-display text-[1.125rem] leading-relaxed text-fg-muted lg:text-[1.25rem]" style={{ ['--rise-delay' as string]: '260ms' }}>
+          {article.excerpt}
+        </p>
         <TimeMeta article={article} showAuthor className="mt-4" />
       </div>
     </article>

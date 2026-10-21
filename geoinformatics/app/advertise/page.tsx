@@ -39,7 +39,7 @@ export default function AdvertisePage() {
           <p className="kicker flex items-center gap-3 text-red-ink" data-reveal>
             <span className="rule-red" aria-hidden="true" /> Advertising &amp; partnerships
           </p>
-          <h1 className="mt-6 max-w-6xl font-display text-[clamp(2.5rem,1rem+5.4vw,6.5rem)] leading-[0.9] font-semibold tracking-[-0.055em] uppercase" data-reveal style={{ ['--reveal-delay' as string]: '80ms' }}>
+          <h1 className="mt-6 max-w-6xl font-display text-[clamp(2.5rem,1rem+5.4vw,6.5rem)] leading-[1] font-medium tracking-[-0.02em]" data-reveal style={{ ['--reveal-delay' as string]: '80ms' }}>
             Put your brand at the center of geospatial innovation.
           </h1>
           <p className="mt-8 max-w-2xl text-lead leading-relaxed text-fog" data-reveal style={{ ['--reveal-delay' as string]: '160ms' }}>
@@ -76,7 +76,7 @@ export default function AdvertisePage() {
                 {stats.map((s) => (
                   <div key={s.label} className="bg-paper p-6">
                     <dt className="kicker text-fg-subtle">{s.label}</dt>
-                    <dd className="mt-3 font-display text-4xl font-semibold tracking-[-0.04em]">{s.value}</dd>
+                    <dd className="mt-3 font-display text-4xl font-semibold tracking-[-0.02em]">{s.value}</dd>
                     <dd className="meta mt-2">Source: {s.source}</dd>
                   </div>
                 ))}
@@ -154,13 +154,13 @@ export default function AdvertisePage() {
           <div className="grid gap-px bg-[var(--line)] md:grid-cols-2">
             {otherFormats.map((f, i) => (
               <div key={f.title} className="group bg-paper p-8 transition-colors hover:bg-white lg:p-10" data-reveal style={{ ['--reveal-delay' as string]: `${i * 70}ms` }}>
-                <h3 className="font-display text-2xl font-semibold tracking-[-0.03em]">{f.title}</h3>
+                <h3 className="font-display text-2xl font-semibold tracking-[-0.015em]">{f.title}</h3>
                 <p className="mt-3 max-w-lg text-fg-muted">{f.body}</p>
               </div>
             ))}
           </div>
           <div className="mt-16 grid gap-10 lg:grid-cols-12">
-            <h3 className="font-display text-2xl font-semibold tracking-[-0.03em] uppercase lg:col-span-4">Targeting</h3>
+            <h3 className="font-sans text-2xl font-extrabold tracking-[-0.01em] uppercase lg:col-span-4">Targeting</h3>
             <dl className="grid gap-8 sm:grid-cols-2 lg:col-span-8">
               {targetingOptions.map((t) => (
                 <div key={t.title} className="border-t-2 border-ink pt-4">
@@ -184,7 +184,7 @@ export default function AdvertisePage() {
         <div className="shell grid gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
             <p className="kicker text-accent">Start a conversation</p>
-            <h2 id="enquire-title" className="mt-4 font-display text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[0.95] font-semibold tracking-[-0.045em] uppercase">
+            <h2 id="enquire-title" className="mt-4 font-display text-[clamp(2rem,1.3rem+2vw,3.25rem)] leading-[1] font-medium tracking-[-0.02em]">
               Request a proposal
             </h2>
             <p className="mt-5 text-fg-muted">Tell us what you want to achieve. We reply with availability, recommendations and a quote.</p>

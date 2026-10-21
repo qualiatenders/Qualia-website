@@ -6,11 +6,11 @@ import { GeoArt } from './GeoArt';
  * Article visual: the featured photograph from WordPress, or the desk's
  * generated visual when there is none. The parent sets the aspect ratio.
  */
-export function ArticleMedia({ article, sizes, priority = false, className = '' }: { article: Article; sizes: string; priority?: boolean; className?: string }) {
+export function ArticleMedia({ article, sizes, priority = false, className = '', kenBurns = false }: { article: Article; sizes: string; priority?: boolean; className?: string; kenBurns?: boolean }) {
   return (
     <div className={`zoom-media relative bg-anthracite ${className}`}>
       {article.image ? (
-        <Image src={article.image.src} alt={article.image.alt} fill sizes={sizes} priority={priority} quality={75} className="object-cover" />
+        <Image src={article.image.src} alt={article.image.alt} fill sizes={sizes} priority={priority} quality={75} className={`object-cover ${kenBurns ? 'kenburns' : ''}`} />
       ) : (
         <GeoArt visual={article.category.visual} seed={article.slug} className="absolute inset-0 size-full" />
       )}

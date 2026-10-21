@@ -8,7 +8,7 @@ export function NewsletterBand({ source = 'home' }: { source?: string }) {
       <div className="shell relative grid gap-10 py-16 lg:grid-cols-12 lg:items-end lg:gap-12 lg:py-24">
         <div className="lg:col-span-7" data-reveal>
           <p className="kicker text-white">The GeoInformatics newsletter</p>
-          <h2 id="nl-title" className="mt-5 font-display text-[clamp(2.4rem,1.2rem+4.6vw,5.75rem)] leading-[0.9] font-semibold tracking-[-0.05em] uppercase">
+          <h2 id="nl-title" className="mt-5 font-display text-[clamp(2.4rem,1.2rem+4.6vw,5.75rem)] leading-[1] font-medium tracking-[-0.02em]">
             The world of geospatial. Delivered.
           </h2>
         </div>

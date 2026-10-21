@@ -16,7 +16,7 @@ export function Hero({ lead, secondary, headlines, desks }: { lead: Article; sec
         <div className="lg:col-span-7 xl:col-span-6" data-reveal>
           <LeadCard article={lead} />
         </div>
-        <div className="grid gap-8 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 xl:col-span-3 lg:border-l lg:border-white/10 lg:pl-8 xl:pl-10">
+        <div className="grid content-start gap-8 sm:grid-cols-2 lg:col-span-5 lg:grid-cols-1 lg:gap-10 xl:col-span-3 lg:border-l lg:border-white/10 lg:pl-8 xl:pl-10">
           {secondary.map((a, i) => (
             <div key={a.id} data-reveal style={{ ['--reveal-delay' as string]: `${100 + i * 90}ms` }}>
               <FeatureCard article={a} sizes="(min-width: 1280px) 22vw, (min-width: 1024px) 36vw, (min-width: 640px) 50vw, 100vw" />

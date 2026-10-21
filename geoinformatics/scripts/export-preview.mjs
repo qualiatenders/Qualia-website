@@ -115,12 +115,15 @@ for (const href of cssHrefs) {
   fs.writeFileSync(path.join(out, 'assets', name), css);
   cssMap.set(href, name);
 }
+fs.cpSync(new URL('../public/preview', import.meta.url), path.join(out, 'preview'), { recursive: true });
 for (const a of ASSETS) {
   const r = await fetch(new URL(a, base));
   if (r.ok) fs.writeFileSync(path.join(out, a.slice(1)), Buffer.from(await r.arrayBuffer()));
 }
 
 /* ── Rewrite and write pages ────────────────────────────────────────────── */
+const previewJs = fs.readFileSync(new URL('./preview/preview.js', import.meta.url), 'utf8');
+const previewCss = fs.readFileSync(new URL('./preview/preview.css', import.meta.url), 'utf8');
 function rel(fromFile, toFile) {
   const r = path.posix.relative(path.posix.dirname(fromFile), toFile);
   return r || path.posix.basename(toFile);
@@ -144,17 +147,29 @@ for (const [key, { html }] of pages) {
     const target = pages.has(n) ? fileFor(n) : '404.html';
     return ` ${attr}="${rel(file, target)}${url.hash}"`;
   });
+  // next/image URLs point at the optimiser, which a static copy doesn't have: use the files directly.
+  h = h.replace(/<img\b[^>]*>/g, (tag) =>
+    tag
+      .replace(/\ssrcset="[^"]*\/_next\/image[^"]*"/g, '')
+      .replace(/\ssizes="[^"]*"/g, '')
+      .replace(/\ssrc="\/_next\/image\/?\?url=([^&"]+)[^"]*"/, (m, u) => ` src="${root}${decodeURIComponent(u).replace(/^\//, '')}"`),
+  );
   h = h.replace(/\bis-visible\b/g, '');
   h = h.replace(
     /Preview mode: articles shown are sample content for design review\.[\s\S]*?to publish live news\./,
     'Interactive preview with sample content. Forms and sign-ups are simulated; nothing is sent.',
   );
-  h = h.replace('</head>', `<script>document.documentElement.classList.add('js')</script><link rel="stylesheet" href="${root}assets/preview.css"><script src="${root}assets/preview.js" data-root="${root}" defer></script></head>`);
+  // The artifact viewer only runs inline scripts, so interactions and the
+  // snapshots they need are inlined into every page.
+  const pageSnap = { mega: snap.mega, search: snap.search, mobile: snap.mobile, newsletterDone: snap.newsletterDone, ...(key === '/advertise/' ? { explorer: snap.explorer } : {}) };
+  const data = `window.GI_ROOT=${JSON.stringify(root)};window.GI_SNAP=${JSON.stringify(pageSnap).replace(/</g, '\\u003c')};${key === '/search/' ? '__INDEX__' : ''}`;
+  h = h.replace('</head>', () => `<script>document.documentElement.classList.add('js')</script><style>${previewCss}</style></head>`);
+  h = h.replace('</body>', () => `<script>${data}</script><script>${previewJs}</script></body>`);
   fs.mkdirSync(path.join(out, path.dirname(file)), { recursive: true });
   fs.writeFileSync(path.join(out, file), h);
 }
 
-// Search index for the client-side search page.
+// Search index for the client-side search page (inlined into the search page).
 const index = [];
 for (const [key, { html }] of pages) {
   const isArticle = /"@type":"(News|Analysis|Opinion)?(NewsArticle|Article|AnalysisNewsArticle|OpinionNewsArticle)"/.test(html) && /<article>/.test(html);
@@ -164,7 +179,6 @@ for (const [key, { html }] of pages) {
   const cat = html.match(/class="cat-tag[^"]*"[^>]*>([^<]+)</)?.[1] ?? '';
   index.push({ file: fileFor(key), title, desc, cat });
 }
-fs.writeFileSync(path.join(out, 'assets/snapshots.js'), `window.GI_SNAP=${JSON.stringify(snap)};window.GI_INDEX=${JSON.stringify(index)};`);
-fs.copyFileSync(new URL('./preview/preview.js', import.meta.url), path.join(out, 'assets/preview.js'));
-fs.copyFileSync(new URL('./preview/preview.css', import.meta.url), path.join(out, 'assets/preview.css'));
+const searchFile = path.join(out, 'search/index.html');
+fs.writeFileSync(searchFile, fs.readFileSync(searchFile, 'utf8').replace('__INDEX__', () => `window.GI_INDEX=${JSON.stringify(index).replace(/</g, '\\u003c')};`));
 console.log(`\n${pages.size} pages → ${out}`);

@@ -32,7 +32,7 @@ export function FormStatus({ state }: { state: { status: string; message?: strin
 export function Sent({ title, body }: { title: string; body: string }) {
   return (
     <div role="status" className="border-l-2 border-red py-4 pl-6">
-      <p className="font-display text-3xl font-semibold tracking-[-0.03em]">{title}</p>
+      <p className="font-display text-3xl font-semibold tracking-[-0.015em]">{title}</p>
       <p className="mt-2 max-w-lg text-fg-muted">{body}</p>
     </div>
   );

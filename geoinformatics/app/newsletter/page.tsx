@@ -34,7 +34,7 @@ export default async function NewsletterPage() {
             <p className="kicker flex items-center gap-3 text-red-ink">
               <span className="rule-red" aria-hidden="true" /> Free newsletter
             </p>
-            <h1 className="mt-6 font-display text-[clamp(2.75rem,1rem+6vw,7rem)] leading-[0.86] font-semibold tracking-[-0.06em] uppercase">
+            <h1 className="mt-6 font-display text-[clamp(2.75rem,1rem+6vw,7rem)] leading-[1] font-medium tracking-[-0.02em]">
               The world of geospatial. Delivered.
             </h1>
           </div>
@@ -47,7 +47,7 @@ export default async function NewsletterPage() {
       <section className="surface-paper py-16 lg:py-24">
         <div className="shell grid gap-14 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-3xl font-semibold tracking-[-0.03em] uppercase">What you get</h2>
+            <h2 className="font-sans text-3xl font-extrabold tracking-[-0.01em] uppercase">What you get</h2>
             <ul className="mt-8 space-y-5">
               {promises.map((p) => (
                 <li key={p} className="flex gap-4 border-b border-line pb-5 text-lg">
@@ -59,7 +59,7 @@ export default async function NewsletterPage() {
           </div>
           {recent.length > 0 && (
             <div>
-              <h2 className="font-display text-3xl font-semibold tracking-[-0.03em] uppercase">Recently on GeoInformatics</h2>
+              <h2 className="font-sans text-3xl font-extrabold tracking-[-0.01em] uppercase">Recently on GeoInformatics</h2>
               <div className="mt-6 divide-y divide-[color:var(--line)]">
                 {recent.map((a) => (
                   <HeadlineItem key={a.id} article={a} />

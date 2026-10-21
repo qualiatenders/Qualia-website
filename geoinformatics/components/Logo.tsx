@@ -10,8 +10,8 @@ export function Logo({ className = '', compact = false }: { className?: string; 
         <path d="M16 6.5 26 24H6z" fill="none" stroke="#fff" strokeWidth="2" strokeLinejoin="miter" />
         <circle cx="16" cy="18" r="2.4" fill="#fff" />
       </svg>
-      <span className="font-display text-[1.2rem] leading-none font-semibold tracking-[-0.035em] lg:text-[1.4rem]">
-        Geo<span className="font-normal">Informatics</span>
+      <span className="font-sans text-[1.25rem] leading-none font-black tracking-[-0.03em] lg:text-[1.45rem]">
+        Geo<span className="font-medium">Informatics</span>
         {!compact && <span className="sr-only"> — geospatial news</span>}
       </span>
     </span>

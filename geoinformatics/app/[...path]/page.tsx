@@ -80,7 +80,7 @@ export default async function ArticlePage({ params }: Props) {
                 </Link>
                 {a.kind !== 'news' && <span className="kicker text-fog">{kindLabel[a.kind]}</span>}
               </p>
-              <h1 className="mt-5 font-display text-h1 leading-[1.02] font-semibold tracking-[-0.04em]">{a.title}</h1>
+              <h1 className="mt-5 font-display text-h1 leading-[1.02] font-semibold tracking-[-0.02em]">{a.title}</h1>
               <p className="mt-6 max-w-3xl text-lead leading-relaxed text-fog">{a.excerpt}</p>
             </div>
             <div className="mt-10 flex flex-col gap-6 border-t border-white/15 pt-6 md:flex-row md:items-center md:justify-between">
@@ -189,7 +189,7 @@ export default async function ArticlePage({ params }: Props) {
 
                 <section aria-labelledby="article-nl" className="surface-dark graticule relative p-6 sm:p-8">
                   <p className="kicker text-red-ink">Newsletter</p>
-                  <h2 id="article-nl" className="mt-3 font-display text-2xl leading-tight font-semibold tracking-[-0.03em] sm:text-3xl">
+                  <h2 id="article-nl" className="mt-3 font-display text-2xl leading-tight font-semibold tracking-[-0.015em] sm:text-3xl">
                     Stories like this, in your inbox.
                   </h2>
                   <p className="mt-2 mb-6 text-fog">The week in geospatial — selected by our editors. Free.</p>
@@ -217,7 +217,7 @@ export default async function ArticlePage({ params }: Props) {
               <Link href={next.path} className="group mb-14 flex flex-col gap-4 border-b border-line-strong pb-10 md:flex-row md:items-end md:justify-between">
                 <span>
                   <span className="kicker text-accent">Up next · {next.category.name}</span>
-                  <span className="mt-3 block max-w-4xl font-display text-[clamp(1.6rem,1.1rem+1.8vw,2.75rem)] leading-[1.05] font-semibold tracking-[-0.035em]">
+                  <span className="mt-3 block max-w-4xl font-display text-[clamp(1.6rem,1.1rem+1.8vw,2.75rem)] leading-[1.05] font-semibold tracking-[-0.015em]">
                     <span className="headline-link">{next.title}</span>
                   </span>
                 </span>
@@ -226,7 +226,7 @@ export default async function ArticlePage({ params }: Props) {
                 </span>
               </Link>
             )}
-            <h2 id="related-title" className="font-display text-2xl font-semibold tracking-[-0.03em] uppercase">
+            <h2 id="related-title" className="font-sans text-2xl font-extrabold tracking-[-0.01em] uppercase">
               More from {a.category.name}
             </h2>
             <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-4">

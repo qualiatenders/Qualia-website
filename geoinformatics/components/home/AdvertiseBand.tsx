@@ -11,7 +11,7 @@ export function AdvertiseBand() {
           <p className="kicker flex items-center gap-3 text-accent">
             <span className="rule-red" aria-hidden="true" /> For brands &amp; partners
           </p>
-          <h2 id="adv-title" className="mt-5 font-display text-[clamp(2rem,1.2rem+2.8vw,4rem)] leading-[0.95] font-semibold tracking-[-0.045em] uppercase">
+          <h2 id="adv-title" className="mt-5 font-display text-[clamp(2rem,1.2rem+2.8vw,4rem)] leading-[1] font-medium tracking-[-0.02em]">
             Reach the people shaping the geospatial industry.
           </h2>
           <p className="mt-6 max-w-2xl text-lg text-fg-muted">

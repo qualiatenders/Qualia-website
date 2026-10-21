@@ -23,7 +23,7 @@ export function Intelligence({ items }: { items: Article[] }) {
             <p className="kicker flex items-center gap-3 text-red-ink">
               <span className="rule-red" aria-hidden="true" /> Analysis · Interviews · Long reads
             </p>
-            <h2 id="intel-title" className="mt-5 font-display text-mega leading-[0.88] font-semibold tracking-[-0.055em]">
+            <h2 id="intel-title" className="mt-5 font-display text-mega leading-[0.88] font-semibold tracking-[-0.02em]">
               Geospatial
               <br />
               <span className="text-white/40">Intelligence</span>
@@ -49,7 +49,7 @@ export function Intelligence({ items }: { items: Article[] }) {
             <p className="kicker text-red-ink">
               {kindLabel[main.kind]} · {main.category.name}
             </p>
-            <h3 className="mt-4 font-display text-[clamp(1.9rem,1.2rem+2.2vw,3.25rem)] leading-[1.02] font-semibold tracking-[-0.035em]">
+            <h3 className="mt-4 font-display text-[clamp(1.9rem,1.2rem+2.2vw,3.25rem)] leading-[1.02] font-semibold tracking-[-0.015em]">
               <Link href={main.path} className="headline-link after:absolute after:inset-0 after:content-['']">
                 {main.title}
               </Link>

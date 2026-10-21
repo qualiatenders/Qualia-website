@@ -110,7 +110,7 @@ function HouseAd({ kind, placement }: { kind: 'advertise' | 'newsletter'; placem
     >
       <span className={`flex min-w-0 ${square ? 'flex-col gap-4' : 'flex-col gap-1 sm:flex-row sm:items-center sm:gap-5'}`}>
         <span className="kicker text-red-ink">GeoInformatics</span>
-        <span className={`font-display leading-[1.08] font-semibold tracking-[-0.03em] ${tall ? 'text-4xl' : square ? 'text-2xl' : 'text-[0.95rem] sm:text-xl lg:text-2xl'}`}>{title}</span>
+        <span className={`font-display leading-[1.08] font-semibold tracking-[-0.015em] ${tall ? 'text-4xl' : square ? 'text-2xl' : 'text-[0.95rem] sm:text-xl lg:text-2xl'}`}>{title}</span>
       </span>
       <span className="btn btn-red min-h-9 flex-none px-3 text-xs sm:text-sm">
         {cta} <span className="arrow" aria-hidden="true">→</span>

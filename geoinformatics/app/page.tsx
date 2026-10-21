@@ -6,6 +6,7 @@ import { Ticker } from '@/components/Ticker';
 import { Hero } from '@/components/home/Hero';
 import { Intelligence } from '@/components/home/Intelligence';
 import { Industries } from '@/components/home/Industries';
+import { DeskBlocks } from '@/components/home/DeskBlocks';
 import { NewsletterBand } from '@/components/home/NewsletterBand';
 import { AdvertiseBand } from '@/components/home/AdvertiseBand';
 import { LatestFeed } from '@/components/LatestFeed';
@@ -47,9 +48,10 @@ export default async function HomePage() {
   const feed = latest.items.filter((a) => !used.has(a.id)).slice(0, FEED);
   const intelItems = intel.items.filter((a) => a.id !== lead.id);
 
-  const deskLatest = Object.fromEntries(
-    await Promise.all(desks.map(async (c) => [c.slug, (await content.list({ category: c.slug, perPage: 1 })).items[0]] as const)),
-  );
+  const perDesk = await Promise.all(desks.map(async (c) => ({ desk: c, items: (await content.list({ category: c.slug, perPage: 4 })).items })));
+  const deskLatest = Object.fromEntries(perDesk.map((d) => [d.desk.slug, d.items[0]]));
+  // The four busiest desks get their own block on the homepage.
+  const deskBlocks = [...perDesk].sort((a, b) => b.items.length - a.items.length).slice(0, 4);
 
   const ticker = breaking.length
     ? { mode: 'breaking' as const, items: breaking }
@@ -80,6 +82,8 @@ export default async function HomePage() {
       <AdSlot placement="home-leaderboard" className="surface-paper border-t border-line py-10" />
 
       <Intelligence items={intelItems} />
+
+      <DeskBlocks blocks={deskBlocks} />
 
       <Industries desks={desks} latest={deskLatest} />
 

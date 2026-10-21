@@ -12,7 +12,7 @@ export function Trending({ items, title = 'Most read', note = 'Last 7 days', ton
   return (
     <section aria-labelledby="trending-title" className={`${dark ? 'surface-anthracite graticule' : ''} relative p-6 sm:p-8`}>
       <div className="flex items-baseline justify-between border-b border-line-strong pb-4">
-        <h2 id="trending-title" className="font-display text-2xl font-semibold tracking-[-0.03em] uppercase">
+        <h2 id="trending-title" className="font-sans text-2xl font-extrabold tracking-[-0.01em] uppercase">
           {title}
         </h2>
         <span className="meta">{note}</span>
@@ -20,7 +20,7 @@ export function Trending({ items, title = 'Most read', note = 'Last 7 days', ton
       <ol>
         {items.map((a, i) => (
           <li key={a.id} className="group relative grid grid-cols-[3.75rem_1fr] items-start gap-3 border-b border-line py-5 last:border-b-0 last:pb-0" data-reveal style={{ ['--reveal-delay' as string]: `${i * 70}ms` }}>
-            <span aria-hidden="true" className={`font-display text-[3.25rem] leading-[0.8] font-semibold tracking-[-0.06em] tabular transition-colors duration-500 ${i === 0 ? 'text-red' : 'text-[color:var(--line-strong)] group-hover:text-red'}`}>
+            <span aria-hidden="true" className={`font-display text-[3.25rem] leading-[0.8] font-semibold tracking-[-0.02em] tabular transition-colors duration-500 ${i === 0 ? 'text-red' : 'text-[color:var(--line-strong)] group-hover:text-red'}`}>
               {pad2(i + 1)}
             </span>
             <div className="min-w-0">

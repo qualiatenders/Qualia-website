@@ -11,7 +11,7 @@ export function Parallax({ children, amount = 8, className = '' }: { children: R
   const y = useTransform(scrollYProgress, [0, 1], [`-${amount}%`, `${amount}%`]);
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.div style={reduce ? undefined : { y, scale: 1 + amount / 50 }} className="absolute inset-0">
+      <motion.div style={reduce ? undefined : { y, scale: 1 + amount / 50 }} data-parallax={amount} className="absolute inset-0">
         {children}
       </motion.div>
     </div>

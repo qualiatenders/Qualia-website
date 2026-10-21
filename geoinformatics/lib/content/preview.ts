@@ -2,7 +2,7 @@ import 'server-only';
 import { categories as desks, categoryBySlug } from '@/lib/taxonomy';
 import type { Article, ArticleList } from '@/lib/types';
 import type { ContentSource, ListQuery } from './source';
-import { previewArticles, previewEvents, previewOrganizations, type PreviewArticle } from './preview-data';
+import { previewArticles, previewEvents, previewOrganizations, SOURCE_BASE, type PreviewArticle } from './preview-data';
 
 /** Preview content source. Active only while WORDPRESS_URL is not configured. */
 
@@ -18,20 +18,18 @@ function toHtml(body: string[]) {
     .join('\n');
 }
 
-// Anchor "now" once per process so relative timestamps stay stable within a render.
-const anchor = Date.now();
-
 function toArticle(a: PreviewArticle, i: number): Article {
   const category = categoryBySlug(a.category) ?? desks[0]!;
-  const published = new Date(anchor - a.hoursAgo * 3_600_000).toISOString();
+  const published = a.date;
   const words = a.body.join(' ').split(/\s+/).length;
+  const source = `${SOURCE_BASE}/${a.slug}/`;
   return {
     id: String(i + 1),
     slug: a.slug,
     path: `/${a.slug}/`,
     title: a.title,
     excerpt: a.excerpt,
-    html: toHtml(a.body),
+    html: `${toHtml(a.body)}\n<p class="preview-note"><em>Preview edition: this is a short summary. <a href="${source}" target="_blank" rel="noopener">Read the full article on GeoInformatics</a>.</em></p>`,
     kind: a.kind,
     category,
     categories: [category],
@@ -39,12 +37,13 @@ function toArticle(a: PreviewArticle, i: number): Article {
     author: { slug: 'editorial', name: 'GeoInformatics Editorial', role: 'Editorial desk', path: '/author/editorial/' },
     publishedAt: published,
     updatedAt: published,
-    image: null,
-    readingMinutes: Math.max(2, Math.round(words / 230)),
+    image: { src: `/preview/${a.image}.jpg`, width: 1600, height: 1000, alt: '', caption: 'Illustrative image', credit: 'GeoInformatics preview render' },
+    readingMinutes: Math.max(1, Math.round(words / 230)),
     breaking: Boolean(a.breaking),
     featured: a.featured ?? null,
     sponsored: a.sponsored ? { sponsor: a.sponsored, label: 'Sponsored' } : null,
     trendingRank: null,
+    source: { name: 'GeoInformatics (original article)', url: source },
     seo: {},
   };
 }
@@ -76,8 +75,13 @@ export const previewSource: ContentSource = {
   list: async (q) => page(filter(q), q),
   featured: async () => all.filter((a) => a.featured).map(lite),
   breaking: async () => all.filter((a) => a.breaking).map((a) => ({ id: a.id, title: a.title, path: a.path, live: true })),
-  // No traffic is measured in preview mode, so "most read" falls back to the newest editorial pieces.
-  mostRead: async (limit = 5) => all.filter((a) => !a.sponsored).slice(3, 3 + limit).map(lite),
+  // No traffic is measured in preview mode; an editor-style pick stands in for the ranking.
+  mostRead: async (limit = 5) =>
+    ['vexcel-brings-natural-language-3d-imagery-search-to-gis-workflows', 'satellogic-launches-first-merlin-satellite-multiple-newsats', 'lidar-reveals-20000-amazonian-precolonial-earthworks', 'trustpoint-and-calian-demonstrate-new-c-band-gnss-antenna-for-gps-independent-positioning', 'faro-insight-unveils-focus-i-1-scanners-and-rovi-i-1']
+      .map((s) => all.find((a) => a.slug === s)!)
+      .filter(Boolean)
+      .slice(0, limit)
+      .map(lite),
   byPath: async (path) => all.find((a) => a.path === path || a.slug === path.replace(/\//g, '')) ?? null,
   related: async (article, limit = 4) => {
     const same = all.filter((a) => a.id !== article.id && !a.sponsored && a.category.slug === article.category.slug);

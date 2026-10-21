@@ -67,7 +67,7 @@ export function Footer({ preview }: { preview: boolean }) {
 
       {/* Oversized wordmark as a closing typographic gesture */}
       <div aria-hidden="true" className="shell overflow-hidden select-none">
-        <p className="font-display text-[clamp(3rem,13.4vw,13rem)] whitespace-nowrap leading-[0.8] font-semibold tracking-[-0.06em] text-white/[0.06]">GeoInformatics</p>
+        <p className="font-display text-[clamp(3rem,13.4vw,13rem)] whitespace-nowrap leading-[0.8] font-semibold tracking-[-0.02em] text-white/[0.06]">GeoInformatics</p>
       </div>
 
       <div className="border-t border-white/10">

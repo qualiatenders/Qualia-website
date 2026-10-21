@@ -8,7 +8,7 @@ export function SectionHeading({ index, title, href, linkLabel = 'View all', id,
       <div className="flex items-end justify-between gap-6 border-b border-line-strong pb-4">
         <div className="flex items-baseline gap-4">
           {index && <span className="meta tabular text-accent">{index}</span>}
-          <h2 id={id} className="font-display text-[clamp(1.6rem,1.2rem+1.4vw,2.5rem)] font-semibold tracking-[-0.03em] uppercase">
+          <h2 id={id} className="font-sans text-[clamp(1.6rem,1.2rem+1.4vw,2.5rem)] font-extrabold tracking-[-0.01em] uppercase">
             {title}
           </h2>
         </div>

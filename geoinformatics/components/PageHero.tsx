@@ -36,7 +36,7 @@ export function PageHero({
               {kicker}
             </p>
           )}
-          <h1 className="mt-5 font-display text-mega leading-[0.9] font-semibold tracking-[-0.05em]">
+          <h1 className="mt-5 font-display text-mega leading-[0.9] font-semibold tracking-[-0.02em]">
             {code && <span className="mr-4 align-top font-mono text-base font-normal tracking-[0.1em] text-red-ink">{code}</span>}
             {title}
           </h1>
