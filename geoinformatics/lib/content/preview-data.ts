@@ -22,6 +22,8 @@ export type PreviewArticle = {
   date: string;
   body: string[];
   image: string;
+  /** Place the story is about, or its dateline (company headquarters, event venue). */
+  location?: { name: string; lat: number; lon: number };
   featured?: 'lead' | 'secondary';
   breaking?: boolean;
   sponsored?: string;
@@ -35,6 +37,7 @@ export const SOURCE_BASE = 'https://www.geoinformatics.com';
 export const previewArticles: PreviewArticle[] = [
   {
     slug: 'lidar-reveals-20000-amazonian-precolonial-earthworks',
+    location: { name: 'Southwest Amazonia', lat: -10.0, lon: -67.5 },
     title: 'LiDAR reveals 20,000 Amazonian precolonial earthworks',
     excerpt: 'A study published in Nature reports the identification of more than 20,000 precolonial earthworks in Southwest Amazonia, mapped with airborne laser scanning beneath the forest canopy.',
     category: 'lidar-3d-scanning',
@@ -70,6 +73,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'hexagon-to-acquire-rocscience',
+    location: { name: 'Stockholm', lat: 59.33, lon: 18.07 },
     title: 'Hexagon to acquire Rocscience',
     excerpt: 'Hexagon AB has announced that it has signed an agreement to acquire Rocscience, the geotechnical engineering software company.',
     category: 'business-industry',
@@ -85,6 +89,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'hesai-launches-kosmo-3d-world-data-engine',
+    location: { name: 'Shanghai', lat: 31.23, lon: 121.47 },
     title: 'Hesai launches Kosmo 3D World Data Engine for reality capture and physical AI',
     excerpt: 'Hesai has introduced the Kosmo One spatial camera together with the cloud-based Kosmo World processing environment.',
     category: 'lidar-3d-scanning',
@@ -113,6 +118,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'trimble-launches-st30-smart-target-with-gnss',
+    location: { name: 'Westminster, Colorado', lat: 39.84, lon: -105.04 },
     title: 'Trimble launches ST30 smart target with GNSS',
     excerpt: 'Trimble has introduced the ST30 smart target, combining optical prism tracking, tilt compensation, automated rod height measurement and integrated GNSS in a single unit.',
     category: 'surveying-reality-capture',
@@ -127,6 +133,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'artec-3d-releases-twins-for-billion-point-environments',
+    location: { name: 'Luxembourg', lat: 49.61, lon: 6.13 },
     title: 'Artec 3D releases Twins for billion-point environments',
     excerpt: 'Artec 3D has launched Artec Twins, a software platform designed for very large scanned environments.',
     category: 'digital-twins-bim',
@@ -140,6 +147,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'vexcel-brings-natural-language-3d-imagery-search-to-gis-workflows',
+    location: { name: 'Graz', lat: 47.07, lon: 15.44 },
     title: 'Vexcel brings natural language 3D imagery search to GIS workflows',
     excerpt: 'Vexcel has introduced natural language search to its Platform API, enabling users to identify objects and features across its imagery coverage in 47 countries.',
     category: 'geoai',
@@ -156,6 +164,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'topcon-unveils-geomatics-workflow-updates-at-intergeo',
+    location: { name: 'Munich', lat: 48.14, lon: 11.58 },
     title: 'Topcon unveils geomatics workflow updates at INTERGEO',
     excerpt: 'Topcon introduced several reality-capture products at INTERGEO 2026 in Munich, including the Origo positioning system and the CR-M2 mobile mapping system.',
     category: 'surveying-reality-capture',
@@ -170,6 +179,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'faro-insight-unveils-focus-i-1-scanners-and-rovi-i-1',
+    location: { name: 'Lake Mary, Florida', lat: 28.76, lon: -81.32 },
     title: 'FARO INSIGHT unveils Focus i.1 scanners and Rovi i.1',
     excerpt: 'FARO INSIGHT has introduced two new terrestrial laser scanners, the Focus i.1 and Focus i.1 X, together with the Rovi i.1 reality capture package.',
     category: 'lidar-3d-scanning',
@@ -184,6 +194,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'leica-launches-x-pad-portfolio-and-gs11-antenna',
+    location: { name: 'Heerbrugg', lat: 47.41, lon: 9.62 },
     title: 'Leica launches X-PAD portfolio and GS11 antenna',
     excerpt: 'Leica Geosystems has launched the X-PAD portfolio and the GS11 GNSS smart antenna, with Hexagon GeoCloud handling field-to-office data exchange.',
     category: 'gnss-positioning',
@@ -215,6 +226,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'intergeo-2026-where-geodata-ai-and-live-experiences-shape-the-future-of-the-industry',
+    location: { name: 'Munich', lat: 48.14, lon: 11.58 },
     title: 'INTERGEO 2026: where geodata, AI and live experiences shape the future of the industry',
     excerpt: 'INTERGEO 2026 runs from 15 to 17 September in Munich, with digital twins, AI, reality capture and intelligent data rooms in focus.',
     category: 'business-industry',
@@ -243,6 +255,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'esri-adds-airbus-imagery-to-world-imagery-basemap',
+    location: { name: 'San Diego', lat: 32.71, lon: -117.16 },
     title: 'Esri to add Airbus 30 cm imagery to its World Imagery basemap',
     excerpt: 'Esri announced at its 2026 User Conference that it will add high-resolution Airbus imagery for about 2,000 cities to its World Imagery basemap.',
     category: 'gis-mapping',
@@ -268,6 +281,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'ordnance-survey-renews-ogc-strategic-membership',
+    location: { name: 'Southampton', lat: 50.93, lon: -1.4 },
     title: 'Ordnance Survey renews OGC Strategic Membership',
     excerpt: 'Great Britain’s national mapping service has renewed its Strategic Membership of the Open Geospatial Consortium.',
     category: 'gis-mapping',
@@ -293,6 +307,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: '22983-2',
+    location: { name: 'Puncak Jaya, Papua', lat: -4.08, lon: 137.18 },
     title: 'Trimble enables first centimeter-accurate 3D model of Puncak Jaya glaciers',
     excerpt: 'Project Pressure used Trimble GNSS equipment and drone photogrammetry to build a centimeter-accurate 3D model of the receding glaciers in Papua, Indonesia.',
     category: 'surveying-reality-capture',
@@ -321,6 +336,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'trimble-unveils-maxwell-8-gnss-receiver-lineup',
+    location: { name: 'Westminster, Colorado', lat: 39.84, lon: -105.04 },
     title: 'Trimble unveils Maxwell 8 GNSS receiver lineup',
     excerpt: 'Trimble has launched four GNSS receiver modules built on Maxwell 8 technology for OEM integrators in geospatial, marine, construction and mining.',
     category: 'gnss-positioning',
@@ -335,6 +351,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'riegl-and-diamond-integrate-lidar-into-da62-mpp',
+    location: { name: 'Horn, Austria', lat: 48.66, lon: 15.66 },
     title: 'RIEGL and Diamond integrate LiDAR into DA62 MPP',
     excerpt: 'RIEGL has integrated its airborne LiDAR and multi-sensor systems into Diamond Aircraft’s DA62 MPP SurveyStar.',
     category: 'lidar-3d-scanning',
@@ -346,6 +363,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'artec-3d-launches-artec-jet-a-survey-grade-mobile-lidar-scanner',
+    location: { name: 'Luxembourg', lat: 49.61, lon: 6.13 },
     title: 'Artec 3D launches Artec Jet, a survey-grade mobile LiDAR scanner',
     excerpt: 'Artec Jet can be carried by hand, mounted on a drone or used from a vehicle.',
     category: 'lidar-3d-scanning',
@@ -357,6 +375,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'phase-one-introduces-ix-process',
+    location: { name: 'Copenhagen', lat: 55.68, lon: 12.57 },
     title: 'Phase One introduces iX Process',
     excerpt: 'Phase One has released software that handles aerial imagery from capture through photogrammetry, moving to a subscription licensing model.',
     category: 'geospatial-technology',
@@ -368,6 +387,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'emesent-gx1',
+    location: { name: 'Brisbane', lat: -27.47, lon: 153.03 },
     title: 'Emesent launches all-in-one SLAM LiDAR, RTK and 360° imagery scanner',
     excerpt: 'Emesent describes the GX1 as an integrated SLAM and RTK scanner with 5–10 mm global accuracy.',
     category: 'lidar-3d-scanning',
@@ -401,6 +421,7 @@ export const previewArticles: PreviewArticle[] = [
   },
   {
     slug: 'esri-and-pix4d',
+    location: { name: 'Lausanne', lat: 46.52, lon: 6.63 },
     title: 'Esri and Pix4D launch real-time terrestrial mapping workflow',
     excerpt: 'Esri and Pix4D have launched a workflow for real-time terrestrial mapping.',
     category: 'geospatial-technology',

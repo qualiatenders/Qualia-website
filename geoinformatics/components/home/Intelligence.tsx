@@ -38,7 +38,7 @@ export function Intelligence({ items }: { items: Article[] }) {
         </div>
 
         <article className="group relative mt-14 grid gap-8 lg:mt-20 lg:grid-cols-12 lg:gap-12" data-reveal>
-          <Parallax className="aspect-[4/3] lg:col-span-7 lg:aspect-[16/11]" amount={6}>
+          <Parallax className="aspect-[4/3] lg:col-span-7 lg:aspect-[16/11]" amount={6} geoCursor={main.location ? `${main.location.lat},${main.location.lon}` : undefined}>
             {main.image ? (
               <Image src={main.image.src} alt={main.image.alt} fill sizes="(min-width: 1024px) 58vw, 100vw" className="object-cover" />
             ) : (

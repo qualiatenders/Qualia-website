@@ -27,6 +27,9 @@ function gi_post_meta_fields() {
 		'gi_newsletter'      => array( 'type' => 'boolean', 'default' => false ),
 		'gi_author_name'     => array( 'type' => 'string', 'default' => '' ),
 		'gi_author_role'     => array( 'type' => 'string', 'default' => '' ),
+		'gi_location_name'   => array( 'type' => 'string', 'default' => '' ),
+		'gi_location_lat'    => array( 'type' => 'number', 'default' => 0 ),
+		'gi_location_lon'    => array( 'type' => 'number', 'default' => 0 ),
 	);
 }
 
@@ -73,6 +76,11 @@ add_action( 'rest_api_init', function () {
 				'author_name'   => get_post_meta( $id, 'gi_author_name', true ),
 				'author_role'   => get_post_meta( $id, 'gi_author_role', true ),
 				'newsletter'    => (bool) get_post_meta( $id, 'gi_newsletter', true ),
+				'location'      => get_post_meta( $id, 'gi_location_name', true ) ? array(
+					'name' => get_post_meta( $id, 'gi_location_name', true ),
+					'lat'  => (float) get_post_meta( $id, 'gi_location_lat', true ),
+					'lon'  => (float) get_post_meta( $id, 'gi_location_lon', true ),
+				) : null,
 			);
 		},
 		'schema'       => array( 'type' => 'object', 'context' => array( 'view', 'embed' ) ),
@@ -200,6 +208,17 @@ function gi_editorial_box( WP_Post $post ) {
 			<label for="gi_author_role">Author role</label>
 			<input type="text" name="gi_author_role" id="gi_author_role" value="<?php echo esc_attr( $m( 'gi_author_role' ) ); ?>" placeholder="e.g. Senior editor">
 		</fieldset>
+
+		<fieldset>
+			<legend><strong>Location (news globe)</strong></legend>
+			<label for="gi_location_name">Place</label>
+			<input type="text" name="gi_location_name" id="gi_location_name" value="<?php echo esc_attr( $m( 'gi_location_name' ) ); ?>" placeholder="e.g. Munich, or Southwest Amazonia">
+			<label for="gi_location_lat">Latitude / longitude (WGS 84, decimal degrees)</label>
+			<div style="display:flex;gap:6px">
+				<input type="text" inputmode="decimal" name="gi_location_lat" id="gi_location_lat" value="<?php echo esc_attr( $m( 'gi_location_name' ) ? $m( 'gi_location_lat' ) : '' ); ?>" placeholder="48.14" aria-label="Latitude">
+				<input type="text" inputmode="decimal" name="gi_location_lon" id="gi_location_lon" value="<?php echo esc_attr( $m( 'gi_location_name' ) ? $m( 'gi_location_lon' ) : '' ); ?>" placeholder="11.58" aria-label="Longitude">
+			</div>
+		</fieldset>
 	</div>
 	<?php
 }
@@ -228,6 +247,12 @@ add_action( 'save_post_post', function ( $post_id ) {
 	update_post_meta( $post_id, 'gi_source_url', esc_url_raw( $text( 'gi_source_url' ) ) );
 	update_post_meta( $post_id, 'gi_author_name', $text( 'gi_author_name' ) );
 	update_post_meta( $post_id, 'gi_author_role', $text( 'gi_author_role' ) );
+	$lat = (float) str_replace( ',', '.', $text( 'gi_location_lat' ) );
+	$lon = (float) str_replace( ',', '.', $text( 'gi_location_lon' ) );
+	$has = '' !== $text( 'gi_location_name' ) && abs( $lat ) <= 90 && abs( $lon ) <= 180;
+	update_post_meta( $post_id, 'gi_location_name', $has ? $text( 'gi_location_name' ) : '' );
+	update_post_meta( $post_id, 'gi_location_lat', $has ? $lat : 0 );
+	update_post_meta( $post_id, 'gi_location_lon', $has ? $lon : 0 );
 
 	// Only one lead story at a time: the newest choice wins.
 	if ( 'lead' === get_post_meta( $post_id, 'gi_featured', true ) ) {

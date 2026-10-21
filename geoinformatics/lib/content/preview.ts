@@ -43,6 +43,7 @@ function toArticle(a: PreviewArticle, i: number): Article {
     featured: a.featured ?? null,
     sponsored: a.sponsored ? { sponsor: a.sponsored, label: 'Sponsored' } : null,
     trendingRank: null,
+    location: a.location,
     source: { name: 'GeoInformatics (original article)', url: source },
     seo: {},
   };

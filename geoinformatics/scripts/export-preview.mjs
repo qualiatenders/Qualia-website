@@ -122,7 +122,8 @@ for (const a of ASSETS) {
 }
 
 /* ── Rewrite and write pages ────────────────────────────────────────────── */
-const previewJs = fs.readFileSync(new URL('./preview/preview.js', import.meta.url), 'utf8');
+const geoFx = fs.readFileSync(new URL('../lib/geo-fx.js', import.meta.url), 'utf8').replace('export function initGeoFx', 'function initGeoFx');
+const previewJs = fs.readFileSync(new URL('./preview/preview.js', import.meta.url), 'utf8') + `\n${geoFx}\ninitGeoFx();`;
 const previewCss = fs.readFileSync(new URL('./preview/preview.css', import.meta.url), 'utf8');
 function rel(fromFile, toFile) {
   const r = path.posix.relative(path.posix.dirname(fromFile), toFile);
@@ -133,7 +134,13 @@ for (const [key, { html }] of pages) {
   const file = key === '/does-not-exist/' ? '404.html' : fileFor(key);
   const root = rel(file, 'index.html').replace(/index\.html$/, '');
   let h = html;
-  h = h.replace(/<script\b(?![^>]*application\/ld\+json)[^>]*>[\s\S]*?<\/script>/g, '');
+  h = h.replace(/<script\b(?![^>]*application\/(ld\+)?json)[^>]*>[\s\S]*?<\/script>/g, '');
+  // Reset the geo layer to its start state; it runs again in the preview.
+  h = h.replace(/\sdata-(tiles|coord|contour|globe)-ready=""/g, '');
+  h = h.replace(/<div class="geo-tiles[^"]*" aria-hidden="true">(<span[^>]*><\/span>)*<\/div>/g, '');
+  h = h.replace(/<div class="geo-cursor[^"]*"[\s\S]*?<\/span><\/span><\/div>/g, '');
+  h = h.replace(/(<svg[^>]*data-contour[^>]*class="[^"]*?)\s*\barmed\b\s*(drawn)?/g, '$1');
+  h = h.replace(/(<span data-coord="(-?[\d.]+)"[^>]*>)[^<]*(<\/span>)/g, (m, open, v, close) => `${open}${Math.abs(Number(v)).toFixed(4)}${close}`);
   h = h.replace(/<link\b[^>]*rel="(preload|modulepreload|prefetch|preconnect|dns-prefetch)"[^>]*>/g, '');
   h = h.replace(/<nextjs-portal[\s\S]*?<\/nextjs-portal>/g, '').replace(/<next-route-announcer[\s\S]*?<\/next-route-announcer>/g, '');
   h = h.replace(/<link\b[^>]*rel="stylesheet"[^>]*href="([^"]+)"[^>]*>/g, (m, href) => (cssMap.has(href) ? `<link rel="stylesheet" href="${root}assets/${cssMap.get(href)}">` : ''));

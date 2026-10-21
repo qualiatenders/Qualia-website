@@ -753,3 +753,207 @@
     animation: none;
   }
 }
+
+/* ── Geo interaction layer (lib/geo-fx.js) ─────────────────────────────── */
+
+/* Map tiles resolving over an image */
+.geo-tiles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  pointer-events: none;
+}
+.geo-tiles span {
+  background: var(--color-anthracite);
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.07);
+}
+.geo-tiles.go span {
+  animation: tile-out 0.55s var(--ease-editorial) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes tile-out {
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+/* LiDAR scan line sweeping across card imagery on hover */
+.scan::after {
+  content: '';
+  position: absolute;
+  inset: -20% 0 auto;
+  height: 22%;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0%, rgb(255 74 82 / 0.05) 75%, rgb(255 74 82 / 0.22) 96%, rgb(255 120 126 / 0.95) 98.5%, transparent 100%);
+  mix-blend-mode: screen;
+  transform: translateY(-110%);
+  opacity: 0;
+}
+.group:hover .scan::after,
+.group:focus-within .scan::after {
+  animation: scan-sweep 1.15s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+@keyframes scan-sweep {
+  0% {
+    transform: translateY(-60%);
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(560%);
+    opacity: 0;
+  }
+}
+
+/* GIS cursor */
+.geo-cursor {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+.geo-cursor i {
+  position: absolute;
+  background: rgb(255 255 255 / 0.55);
+}
+.geo-cursor .h {
+  left: 0;
+  right: 0;
+  top: var(--y);
+  height: 1px;
+}
+.geo-cursor .v {
+  top: 0;
+  bottom: 0;
+  left: var(--x);
+  width: 1px;
+}
+.geo-cursor .ring {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 26px;
+  height: 26px;
+  margin: -13px 0 0 -13px;
+  border: 1.5px solid var(--color-red);
+  border-radius: 50%;
+}
+.geo-cursor .readout {
+  position: absolute;
+  left: calc(var(--x) + 18px);
+  top: calc(var(--y) + 14px);
+  padding: 0.35rem 0.55rem;
+  background: rgb(11 13 16 / 0.82);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: pre;
+}
+.geo-cursor.flip-x .readout {
+  left: auto;
+  right: calc(100% - var(--x) + 18px);
+}
+.geo-cursor.flip-y .readout {
+  top: auto;
+  bottom: calc(100% - var(--y) + 14px);
+}
+.geo-cursor .scale {
+  position: absolute;
+  left: 1rem;
+  bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #fff;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.6);
+}
+.geo-cursor .scale em {
+  width: 120px;
+  height: 6px;
+  border: 1.5px solid #fff;
+  border-top: 0;
+}
+
+/* Contour divider that draws itself in */
+svg[data-contour] path {
+  fill: none;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+}
+svg[data-contour].armed path {
+  stroke-dashoffset: 1;
+}
+svg[data-contour].armed.drawn path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 2.4s var(--ease-editorial);
+  transition-delay: var(--cd, 0ms);
+}
+
+/* Coordinates settling after a fix */
+[data-fix] .fix-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 9999px;
+  background: var(--color-fog);
+  transition: background-color 0.3s;
+}
+[data-fix].fixed .fix-dot {
+  background: #3ecf6e;
+  box-shadow: 0 0 0 3px rgb(62 207 110 / 0.2);
+}
+
+/* News globe */
+.globe-wrap {
+  --globe-ocean: #10141a;
+  --globe-land: #2c323b;
+  --globe-coast: #5a6370;
+  --globe-grid: rgb(255 255 255 / 0.07);
+  --globe-pin: #d71920;
+  --globe-halo: rgb(110 160 255 / 0.22);
+}
+.globe-wrap canvas {
+  touch-action: pan-y;
+  cursor: grab;
+}
+.globe-tip {
+  position: absolute;
+  z-index: 5;
+  transform: translate(-50%, calc(-100% - 18px));
+  pointer-events: none;
+  width: max-content;
+  max-width: 17rem;
+  padding: 0.6rem 0.8rem;
+  background: #fff;
+  color: var(--color-ink);
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.6);
+}
+.globe-tip::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  transform: translateX(-50%) rotate(45deg);
+}
+[data-pin].active {
+  background: rgb(255 255 255 / 0.06);
+}
+[data-pin].active .pin-dot {
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(215 25 32 / 0.6);
+}

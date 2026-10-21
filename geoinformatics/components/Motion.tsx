@@ -4,13 +4,13 @@ import { motion, useReducedMotion, useScroll, useSpring, useTransform } from 'mo
 import { useRef } from 'react';
 
 /** Subtle vertical parallax for premium visuals. Off with reduced motion. */
-export function Parallax({ children, amount = 8, className = '' }: { children: React.ReactNode; amount?: number; className?: string }) {
+export function Parallax({ children, amount = 8, className = '', geoCursor }: { children: React.ReactNode; amount?: number; className?: string; geoCursor?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const reduce = useReducedMotion();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
   const y = useTransform(scrollYProgress, [0, 1], [`-${amount}%`, `${amount}%`]);
   return (
-    <div ref={ref} className={`relative overflow-hidden ${className}`}>
+    <div ref={ref} className={`relative overflow-hidden ${className}`} data-tiles data-geo-cursor={geoCursor}>
       <motion.div style={reduce ? undefined : { y, scale: 1 + amount / 50 }} data-parallax={amount} className="absolute inset-0">
         {children}
       </motion.div>

@@ -4,6 +4,7 @@ import { display, sans } from '@/lib/fonts';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { RevealObserver } from '@/components/Reveal';
+import { GeoFx } from '@/components/GeoFx';
 import { Analytics } from '@/components/Analytics';
 import { JsonLd } from '@/components/JsonLd';
 import { site } from '@/lib/site';
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </main>
         <Footer preview={isPreviewContent} />
         <RevealObserver />
+        <GeoFx />
         <Analytics />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
       </body>

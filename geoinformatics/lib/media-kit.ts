@@ -93,14 +93,21 @@ function para(page: PDFPage, text: string, x: number, y: number, o: { font: PDFF
   return y - lines.length * lead;
 }
 
-function mark(page: PDFPage, x: number, y: number, s: number) {
-  page.drawRectangle({ x, y, width: s, height: s, color: red });
+/** Single-colour logo mark: white on dark pages, black on white pages. */
+function mark(page: PDFPage, x: number, y: number, s: number, color = white) {
   const k = s / 32;
-  page.drawSvgPath('M16 6.5 L26 24 L6 24 Z', { x, y: y + s, scale: k, borderColor: white, borderWidth: 2 });
-  page.drawCircle({ x: x + 16 * k, y: y + s - 18 * k, size: 2.4 * k, color: white });
+  page.drawSvgPath('M16 3.5 L29 27 L3 27 Z', { x, y: y + s, scale: k, borderColor: color, borderWidth: 2.2 * k * 1.4 });
+  page.drawCircle({ x: x + 16 * k, y: y + s - 19 * k, size: 3 * k, color });
+}
+
+function logo(page: PDFPage, f: Fonts, x: number, y: number, size: number, color = white) {
+  mark(page, x, y - size * 0.25, size * 1.6, color);
+  page.drawText('Geo', { x: x + size * 2.1, y, size, font: f.bodyBold, color });
+  page.drawText('Informatics', { x: x + size * 2.1 + f.bodyBold.widthOfTextAtSize('Geo', size), y, size, font: f.body, color });
 }
 
 function footer(page: PDFPage, f: Fonts, n: number) {
+  logo(page, f, W - M - 112, H - 44, 11, ink);
   page.drawLine({ start: { x: M, y: 36 }, end: { x: W - M, y: 36 }, thickness: 0.5, color: line });
   page.drawText(`${site.name} · Media kit ${new Date().getFullYear()}`, { x: M, y: 22, size: 7.5, font: f.body, color: stone });
   page.drawText(String(n).padStart(2, '0'), { x: W - M - 10, y: 22, size: 7.5, font: f.bodyBold, color: red });
@@ -140,8 +147,7 @@ export async function buildMediaKit() {
     // orbit motif
     p.drawEllipse({ x: W * 0.62, y: -260, xScale: 520, yScale: 520, borderColor: rgb(0.35, 0.37, 0.4), borderWidth: 0.6 });
     p.drawEllipse({ x: W * 0.7, y: -220, xScale: 640, yScale: 560, borderColor: red, borderWidth: 1.2 });
-    mark(p, M, H - M - 28, 28);
-    p.drawText(site.name, { x: M + 38, y: H - M - 20, size: 17, font: f.displayBold, color: white });
+    logo(p, f, M, H - M - 18, 17, white);
     p.drawText(`MEDIA KIT ${year}`, { x: M, y: H - 190, size: 9, font: f.bodyBold, color: red });
     let y = H - 240;
     for (const l of ['PUT YOUR BRAND', 'AT THE CENTER OF', 'GEOSPATIAL', 'INNOVATION.']) {

@@ -1,5 +1,7 @@
 export type ArticleKind = 'news' | 'analysis' | 'interview' | 'feature' | 'opinion';
 
+export type GeoPoint = { name: string; lat: number; lon: number };
+
 export type Visual =
   | 'orbit'
   | 'pointcloud'
@@ -69,6 +71,8 @@ export type Article = {
   sponsored: Sponsorship | null;
   /** Editor-set position in the trending list (1–5), overrides measured ranking. */
   trendingRank: number | null;
+  /** Where the story happens or is datelined; drives the news globe. */
+  location?: GeoPoint;
   /** Source attribution for press releases or syndicated content. */
   source?: { name: string; url?: string };
   seo: { title?: string; description?: string; canonical?: string; noindex?: boolean };

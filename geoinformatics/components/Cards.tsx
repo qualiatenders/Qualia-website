@@ -3,6 +3,7 @@ import type { Article } from '@/lib/types';
 import { ArticleMedia } from './ArticleMedia';
 import { CategoryTag, SponsoredBadge, TimeMeta } from './ArticleMeta';
 import { pad2, timeAgo } from '@/lib/format';
+import { Coordinates } from './Coordinates';
 
 /**
  * Card family. Each card is one link (the headline) stretched over the card
@@ -14,7 +15,7 @@ const stretch = 'after:absolute after:inset-0 after:content-[""]';
 export function LeadCard({ article }: { article: Article }) {
   return (
     <article className="group relative">
-      <ArticleMedia article={article} priority kenBurns sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 60vw, 100vw" className="aspect-[16/10]" />
+      <ArticleMedia article={article} priority kenBurns geoCursor sizes="(min-width: 1280px) 58vw, (min-width: 1024px) 60vw, 100vw" className="aspect-[16/10]" />
       <div className="mt-5 lg:mt-6">
         <div className="flex items-center gap-3">
           <CategoryTag article={article} />
@@ -29,6 +30,7 @@ export function LeadCard({ article }: { article: Article }) {
           {article.excerpt}
         </p>
         <TimeMeta article={article} showAuthor className="mt-4" />
+        {article.location && <Coordinates point={article.location} className="mt-2" />}
       </div>
     </article>
   );

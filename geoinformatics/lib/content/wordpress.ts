@@ -47,6 +47,7 @@ type WpPost = {
     source?: { name?: string; url?: string } | null;
     author_name?: string;
     author_role?: string;
+    location?: { name: string; lat: number; lon: number } | null;
   };
   _embedded?: {
     author?: { name: string; slug: string; description?: string; link?: string }[];
@@ -187,6 +188,7 @@ function toArticle(p: WpPost, withBody: boolean): Article {
     featured: p.gi?.featured || null,
     sponsored,
     trendingRank: p.gi?.trending_rank ?? null,
+    location: p.gi?.location ?? undefined,
     source: p.gi?.source?.name ? { name: p.gi.source.name, url: p.gi.source.url } : undefined,
     seo: {
       title: p.yoast_head_json?.title,

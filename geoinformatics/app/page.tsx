@@ -7,6 +7,8 @@ import { Hero } from '@/components/home/Hero';
 import { Intelligence } from '@/components/home/Intelligence';
 import { Industries } from '@/components/home/Industries';
 import { DeskBlocks } from '@/components/home/DeskBlocks';
+import { NewsGlobe } from '@/components/home/NewsGlobe';
+import { ContourRule } from '@/components/ContourRule';
 import { NewsletterBand } from '@/components/home/NewsletterBand';
 import { AdvertiseBand } from '@/components/home/AdvertiseBand';
 import { LatestFeed } from '@/components/LatestFeed';
@@ -80,6 +82,12 @@ export default async function HomePage() {
       </section>
 
       <AdSlot placement="home-leaderboard" className="surface-paper border-t border-line py-10" />
+
+      <NewsGlobe articles={latest.items} />
+
+      <div className="bg-ink">
+        <ContourRule seed={3} />
+      </div>
 
       <Intelligence items={intelItems} />
 

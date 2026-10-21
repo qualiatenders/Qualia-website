@@ -18,6 +18,7 @@ import { Trending } from '@/components/Trending';
 import { FeatureCard } from '@/components/Cards';
 import { NewsletterForm } from '@/components/NewsletterForm';
 import { Icon } from '@/components/Icon';
+import { Coordinates } from '@/components/Coordinates';
 
 export const revalidate = 300;
 export const dynamicParams = true;
@@ -81,7 +82,8 @@ export default async function ArticlePage({ params }: Props) {
                 {a.kind !== 'news' && <span className="kicker text-fog">{kindLabel[a.kind]}</span>}
               </p>
               <h1 className="mt-5 font-display text-h1 leading-[1.02] font-semibold tracking-[-0.02em]">{a.title}</h1>
-              <p className="mt-6 max-w-3xl text-lead leading-relaxed text-fog">{a.excerpt}</p>
+              <p className="mt-6 max-w-3xl font-display text-[clamp(1.2rem,1.05rem+0.6vw,1.5rem)] leading-relaxed text-fog">{a.excerpt}</p>
+              {a.location && <Coordinates point={a.location} className="mt-5" />}
             </div>
             <div className="mt-10 flex flex-col gap-6 border-t border-white/15 pt-6 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center gap-4">
@@ -125,7 +127,11 @@ export default async function ArticlePage({ params }: Props) {
 
         <figure className="bg-ink">
           <div className="shell">
-            <div className="relative aspect-[16/9] overflow-hidden bg-anthracite lg:aspect-[21/9]">
+            <div
+              className="relative aspect-[16/9] overflow-hidden bg-anthracite lg:aspect-[21/9]"
+              data-tiles
+              data-geo-cursor={a.location ? `${a.location.lat},${a.location.lon}` : undefined}
+            >
               {a.image ? (
                 <Image src={a.image.src} alt={a.image.alt} fill priority sizes="(min-width: 1472px) 1392px, 100vw" quality={85} className="object-cover" />
               ) : (
