@@ -12,6 +12,7 @@ const platform = [
   { href: '/deals/', label: 'Deals & Partnerships' },
   { href: '/news-map/', label: 'News Map' },
   { href: '/topics/', label: 'Topics A–Z' },
+  { href: '/industries/', label: 'All industries' },
   { href: '/events/', label: 'Events calendar' },
   { href: '/organizations/', label: 'Organizations' },
   { href: '/newsletter/', label: 'Newsletter' },
