@@ -6,10 +6,12 @@ import { NewsletterForm } from './NewsletterForm';
 import { BrandIcon } from './Icon';
 
 const platform = [
-  { href: '/latest/', label: 'Latest news' },
-  { href: '/analysis/', label: 'Intelligence' },
-  { href: '/news-map/', label: 'Live news map' },
-  { href: '/industries/', label: 'All industries' },
+  { href: '/latest/', label: 'Latest News' },
+  { href: '/analysis/', label: 'Analysis' },
+  { href: '/products/', label: 'Product Radar' },
+  { href: '/deals/', label: 'Deals & Partnerships' },
+  { href: '/news-map/', label: 'News Map' },
+  { href: '/topics/', label: 'Topics A–Z' },
   { href: '/events/', label: 'Events calendar' },
   { href: '/organizations/', label: 'Organizations' },
   { href: '/newsletter/', label: 'Newsletter' },
@@ -17,7 +19,7 @@ const platform = [
 ];
 const company = [
   { href: '/about/', label: 'About GeoInformatics' },
-  { href: '/advertise/', label: 'Advertise' },
+  { href: '/advertise/', label: 'Advertising' },
   { href: '/media-kit.pdf', label: 'Media kit (PDF)' },
   { href: '/contact/', label: 'Contact' },
 ];
@@ -65,11 +67,6 @@ export function Footer({ preview }: { preview: boolean }) {
             <List items={company} />
           </FooterCol>
         </div>
-      </div>
-
-      {/* Oversized wordmark as a closing typographic gesture */}
-      <div aria-hidden="true" className="shell overflow-hidden select-none">
-        <p className="font-display text-[clamp(3rem,13.4vw,13rem)] whitespace-nowrap leading-[0.8] font-semibold tracking-[-0.02em] text-transparent [-webkit-text-stroke:1px_rgb(255_255_255)]">GeoInformatics</p>
       </div>
 
       <div className="border-t border-white/10">

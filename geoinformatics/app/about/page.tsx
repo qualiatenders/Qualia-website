@@ -25,7 +25,7 @@ export default function AboutPage() {
       <section className="surface-white py-16 lg:py-24">
         <div className="shell grid gap-14 lg:grid-cols-12">
           <div className="lg:col-span-5">
-            <Logo className="mb-10 scale-125 origin-left" />
+            <Logo tone="light" className="mb-10 h-12 lg:h-14" />
             <h2 className="font-sans text-3xl leading-tight font-extrabold tracking-[-0.01em] uppercase">Our mission</h2>
           </div>
           <div className="space-y-6 text-lg leading-relaxed text-fg-muted lg:col-span-7">

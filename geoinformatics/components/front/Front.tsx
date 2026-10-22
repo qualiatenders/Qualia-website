@@ -279,8 +279,8 @@ export function RadarRow({ launches, deals }: { launches: Article[]; deals: Arti
   return (
     <section aria-label="Products and deals" className="surface-white py-12 lg:py-16">
       <div className="shell grid gap-10 md:grid-cols-2 lg:grid-cols-3">
-        <ListBox title="Product radar" items={launches} href="/latest/" />
-        <ListBox title="Deals & partnerships" items={deals} href="/category/business-industry/" />
+        <ListBox title="Product radar" items={launches} href="/products/" />
+        <ListBox title="Deals & partnerships" items={deals} href="/deals/" />
         <div className="space-y-6">
           <AdSlot placement="sidebar-rectangle" />
         </div>

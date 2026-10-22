@@ -6,12 +6,10 @@ import { TopStories, DeskGrid, MostReadRow, AnalysisRow, RadarRow, ModulesRow } 
 import { NewsGlobe } from '@/components/home/NewsGlobe';
 import { sortEvents } from '@/components/EventList';
 import { AdSlot } from '@/components/ads/AdSlot';
+import { briefing } from '@/lib/briefings';
 
 export const revalidate = 300;
 
-// Editorial lists on the front are derived from headlines until WordPress tags drive them.
-const LAUNCH = /\b(launch|launches|introduces|unveils|releases|debuts|new\b|preview|available)/i;
-const DEAL = /\b(acquire|acquires|acquisition|partner|partnership|contract|agreement|collaborat|selects|awarded|joins|integrat)/i;
 
 /**
  * The homepage is a newspaper front: top stories with a live newswire, then
@@ -49,8 +47,7 @@ export default async function HomePage() {
   blocks.sort((a, b) => b.items.length - a.items.length);
 
   const analysis = intel.items.filter((a) => a.id !== lead.id).slice(0, 4);
-  const launches = editorial.filter((a) => LAUNCH.test(a.title) && !DEAL.test(a.title)).slice(0, 5);
-  const deals = editorial.filter((a) => DEAL.test(a.title) && !launches.includes(a)).slice(0, 5);
+  const [launches, deals] = await Promise.all([briefing('products', 5), briefing('deals', 5)]);
 
   const located = latest.items.filter((a) => a.location);
   const ticker = breaking.length

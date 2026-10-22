@@ -10,7 +10,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isPreviewContent) return [];
   const articles = await content.allPaths();
   const now = new Date();
-  const statics = ['/', '/latest/', '/analysis/', '/news-map/', '/industries/', '/events/', '/organizations/', '/newsletter/', '/advertise/', '/about/', '/contact/'].map((p) => ({
+  const statics = ['/', '/latest/', '/analysis/', '/news-map/', '/industries/', '/products/', '/deals/', '/topics/', '/events/', '/organizations/', '/newsletter/', '/advertise/', '/about/', '/contact/'].map((p) => ({
     url: absoluteUrl(p),
     lastModified: now,
     changeFrequency: p === '/' || p === '/latest/' ? ('hourly' as const) : ('weekly' as const),

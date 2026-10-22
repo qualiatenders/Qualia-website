@@ -116,6 +116,7 @@ for (const href of cssHrefs) {
   cssMap.set(href, name);
 }
 fs.cpSync(new URL('../public/preview', import.meta.url), path.join(out, 'preview'), { recursive: true });
+fs.cpSync(new URL('../public/brand', import.meta.url), path.join(out, 'brand'), { recursive: true });
 for (const a of ASSETS) {
   const r = await fetch(new URL(a, base));
   if (r.ok) fs.writeFileSync(path.join(out, a.slice(1)), Buffer.from(await r.arrayBuffer()));
@@ -160,7 +161,8 @@ for (const [key, { html }] of pages) {
     tag
       .replace(/\ssrcset="[^"]*\/_next\/image[^"]*"/g, '')
       .replace(/\ssizes="[^"]*"/g, '')
-      .replace(/\ssrc="\/_next\/image\/?\?url=([^&"]+)[^"]*"/, (m, u) => ` src="${root}${decodeURIComponent(u).replace(/^\//, '')}"`),
+      .replace(/\ssrc="\/_next\/image\/?\?url=([^&"]+)[^"]*"/, (m, u) => ` src="${root}${decodeURIComponent(u).replace(/^\//, '')}"`)
+      .replace(/\ssrc="\/(brand\/[^"]+)"/, (m, f) => ` src="${root}${f}"`),
   );
   h = h.replace(/\bis-visible\b/g, '');
   h = h.replace(

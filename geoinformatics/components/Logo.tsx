@@ -1,29 +1,18 @@
 /**
- * GeoInformatics logo. Single-colour by design: it takes `currentColor`, so it
- * is white on dark planes and black on white planes without separate files.
- *
- * To use the official artwork, put the logo's SVG markup in OFFICIAL_LOGO_SVG
- * below with fills set to "currentColor" (or remove the fill attributes).
- * Until then a typographic placeholder is shown.
+ * The official GeoInformatics logo (vectorised from the current artwork).
+ * "GEO" stays red; "Informatics" is white on dark planes and black on white
+ * planes. Served as two cached SVG files rather than inlined on every page.
  */
-const OFFICIAL_LOGO_SVG = '';
-
-export function Logo({ className = '', compact = false }: { className?: string; compact?: boolean }) {
-  if (OFFICIAL_LOGO_SVG) {
-    return (
-      <span className={`inline-flex h-7 items-center text-current lg:h-8 [&_svg]:h-full [&_svg]:w-auto ${className}`} role="img" aria-label="GeoInformatics" dangerouslySetInnerHTML={{ __html: OFFICIAL_LOGO_SVG }} />
-    );
-  }
+export function Logo({ className = '', tone = 'dark' }: { className?: string; /** Background the logo sits on. */ tone?: 'dark' | 'light' }) {
   return (
-    <span className={`inline-flex items-center gap-2.5 text-current ${className}`}>
-      <svg viewBox="0 0 32 32" className="size-7 flex-none lg:size-8" aria-hidden="true">
-        <path d="M16 3.5 29 27H3z" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinejoin="miter" />
-        <circle cx="16" cy="19" r="3" fill="currentColor" />
-      </svg>
-      <span className="font-sans text-[1.25rem] leading-none font-black tracking-[-0.03em] lg:text-[1.45rem]">
-        Geo<span className="font-medium">Informatics</span>
-        {!compact && <span className="sr-only"> — geospatial news</span>}
-      </span>
-    </span>
+    // eslint-disable-next-line @next/next/no-img-element -- static SVG, no optimisation needed
+    <img
+      src={tone === 'dark' ? '/brand/geoinformatics-logo-white.svg' : '/brand/geoinformatics-logo-black.svg'}
+      alt="GeoInformatics"
+      width={553}
+      height={114}
+      decoding="async"
+      className={`block h-8 w-auto lg:h-9 ${className}`}
+    />
   );
 }
