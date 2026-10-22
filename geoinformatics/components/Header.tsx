@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { categories, deskShort } from '@/lib/taxonomy';
+import { categories } from '@/lib/taxonomy';
 import { Logo } from './Logo';
 import { Icon } from './Icon';
 
@@ -69,92 +69,64 @@ export function Header({ dateLine }: { dateLine: string }) {
   const isActive = (href: string) => pathname === href || pathname.startsWith(href);
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50">
-      {/* Utility line: scrolls away; the main bar stays */}
-      <div className={`hidden overflow-hidden border-b border-white/10 bg-ink transition-[max-height,opacity] duration-500 ease-[var(--ease-editorial)] lg:block ${scrolled ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100'}`}>
-        <div className="shell flex h-9 items-center justify-between">
-          <p className="meta flex items-center gap-3 text-fog">
+    <header ref={headerRef} className="sticky top-0 z-50" data-scrolled={scrolled ? '' : undefined}>
+      {/* Brand row: the logo, big. On desktop it folds away on scroll and the menu bar takes over. */}
+      <div className={`overflow-hidden bg-ink transition-[max-height,opacity] duration-500 ease-[var(--ease-editorial)] ${scrolled ? 'lg:max-h-0 lg:opacity-0' : 'max-h-24 opacity-100'}`}>
+        <div className="shell flex h-[var(--header-h)] items-center gap-6">
+          <Link href="/" aria-label="GeoInformatics — home" className="flex-none">
+            <Logo className="h-8 sm:h-9 lg:h-11" />
+          </Link>
+          <p className="meta ml-auto hidden items-center gap-3 lg:flex">
             <span>{dateLine}</span>
-            <span aria-hidden="true" className="h-3 w-px bg-white/20" />
+            <span aria-hidden="true" className="h-3 w-px bg-white/30" />
             <LiveClock />
-            <span aria-hidden="true" className="h-3 w-px bg-white/20" />
-            <span className="inline-flex items-center gap-1.5">
-              <Icon name="globe" className="size-3.5" />
-              International edition
-            </span>
           </p>
-          <nav aria-label="Utility" className="meta flex items-center gap-5 text-fog">
+          <nav aria-label="Utility" className="hidden items-center gap-5 text-sm font-semibold lg:flex">
             <Link href="/advertise/" className="hover:underline">Advertising</Link>
-            <a href="/media-kit.pdf" className="hover:underline">Media kit</a>
             <Link href="/contact/" className="hover:underline">Contact</Link>
-            <Link href="/about/" className="hover:underline">About</Link>
           </nav>
+          <button type="button" onClick={() => toggle('mobile')} aria-expanded={panel === 'mobile'} aria-label="Menu" className="-mr-2 ml-auto grid size-11 place-items-center lg:hidden">
+            <Icon name={panel === 'mobile' ? 'close' : 'menu'} />
+          </button>
         </div>
       </div>
 
-      <div className={`border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${scrolled || panel ? 'border-white/10 bg-ink/92 backdrop-blur-xl backdrop-saturate-150' : 'border-transparent bg-ink'}`}>
-        <div className="shell flex h-[var(--header-h)] items-center gap-6">
-          <Link href="/" aria-label="GeoInformatics — home" className="flex-none">
-            <Logo />
+      {/* Menu bar: white, bold, always visible */}
+      <div className="border-b border-ink/15 bg-white text-ink shadow-[0_10px_30px_-18px_rgb(0_0_0/0.6)]">
+        <div className="shell flex h-12 items-stretch lg:h-14">
+          <Link href="/" aria-label="GeoInformatics — home" tabIndex={scrolled ? 0 : -1} className="nav-mini hidden flex-none items-center lg:flex">
+            <Logo tone="light" className="h-7 lg:h-7" />
           </Link>
-
-          <nav aria-label="Main" className="ml-2 hidden flex-1 items-center gap-6 text-[0.9375rem] font-semibold lg:flex xl:ml-6 xl:gap-7">
-            <Link href="/latest/" className="nav-link" aria-current={isActive('/latest/') ? 'page' : undefined}>
+          <nav aria-label="Main" className="no-scrollbar -ml-3 flex min-w-0 flex-1 items-stretch overflow-x-auto text-[0.8125rem] font-extrabold tracking-[0.03em] whitespace-nowrap uppercase lg:ml-0 lg:overflow-visible lg:text-[0.875rem]">
+            <Link href="/latest/" className="menu-item" aria-current={isActive('/latest/') ? 'page' : undefined}>
               Latest News
             </Link>
-            <button
-              type="button"
-              className="nav-link inline-flex items-center gap-1.5"
-              aria-expanded={panel === 'industries'}
-              aria-controls={megaId}
-              onClick={() => toggle('industries')}
-            >
+            <button type="button" className="menu-item hidden gap-1.5 lg:flex" aria-expanded={panel === 'industries'} aria-controls={megaId} onClick={() => toggle('industries')}>
               Industries
               <Icon name="chevron" className={`size-4 transition-transform duration-300 ${panel === 'industries' ? 'rotate-180' : ''}`} />
             </button>
+            <Link href="/industries/" className="menu-item lg:hidden" aria-current={isActive('/industries/') ? 'page' : undefined}>
+              Industries
+            </Link>
             {mainNav.slice(1).map((n) => (
-              <Link key={n.href} href={n.href} className={`nav-link ${n.wide ? 'hidden xl:inline' : ''}`} aria-current={isActive(n.href) ? 'page' : undefined}>
+              <Link key={n.href} href={n.href} className={`menu-item ${n.wide ? 'lg:hidden xl:flex' : ''}`} aria-current={isActive(n.href) ? 'page' : undefined}>
                 {n.label}
               </Link>
             ))}
           </nav>
-
-          <div className="ml-auto flex items-center gap-1 lg:gap-3">
-            <button type="button" onClick={() => toggle('search')} aria-expanded={panel === 'search'} aria-label="Search" className="grid size-11 place-items-center text-white">
+          {/* Fade hints that the bar scrolls sideways on small screens */}
+          <span aria-hidden="true" className="pointer-events-none relative -ml-8 w-8 flex-none bg-gradient-to-r from-white/0 to-white lg:hidden" />
+          <div className="ml-0 flex flex-none items-center gap-2 border-l border-ink/15 pl-2 lg:ml-4 lg:gap-3 lg:pl-4">
+            <button type="button" onClick={() => toggle('search')} aria-expanded={panel === 'search'} aria-label="Search" className="grid size-10 place-items-center hover:bg-ink/[0.06]">
               <Icon name={panel === 'search' ? 'close' : 'search'} />
             </button>
             <Link href="/newsletter/" className="btn btn-red hidden min-h-10 px-4 text-sm sm:inline-flex">
               <Icon name="mail" className="size-4" />
               Newsletter
             </Link>
-            <button type="button" onClick={() => toggle('mobile')} aria-expanded={panel === 'mobile'} aria-label="Menu" className="grid size-11 place-items-center lg:hidden">
-              <Icon name={panel === 'mobile' ? 'close' : 'menu'} />
-            </button>
           </div>
         </div>
       </div>
-
-      {/* Industry bar: every desk one tap away, like a newspaper's section index */}
-      <nav aria-label="Industries" className="border-b border-white/10 bg-anthracite">
-        <div className="shell flex h-11 items-stretch">
-          <ul className="no-scrollbar flex min-w-0 flex-1 items-stretch overflow-x-auto text-[0.8125rem] font-semibold whitespace-nowrap">
-            {categories.map((c, i) => {
-              const active = pathname.startsWith(c.path);
-              return (
-                <li key={c.slug} className="flex">
-                  <Link href={c.path} aria-current={active ? 'page' : undefined} className={`relative flex items-center px-3 text-white transition-colors hover:bg-white/[0.06] ${i === 0 ? 'pl-0' : ''}`}>
-                    {deskShort[c.slug] ?? c.name}
-                    <span aria-hidden="true" className={`absolute right-3 bottom-0 h-[3px] bg-red transition-transform duration-300 ${i === 0 ? 'left-0' : 'left-3'} ${active ? 'scale-x-100' : 'scale-x-0'}`} />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-          <Link href="/topics/" className="ml-2 hidden flex-none items-center gap-1.5 border-l border-white/15 pl-4 text-[0.8125rem] font-bold text-white hover:underline md:flex" aria-current={pathname.startsWith('/topics/') ? 'page' : undefined}>
-            Topics A–Z <Icon name="arrow" className="size-3.5" />
-          </Link>
-        </div>
-      </nav>
 
       <AnimatePresence>
         {panel === 'industries' && (

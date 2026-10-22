@@ -51,7 +51,6 @@
   /* ── Header ─────────────────────────────────────────────────────────── */
   const header = document.querySelector('header');
   const util = header?.children[0];
-  const bar = header?.children[1];
   let open = null;
   const btn = {
     industries: [...(header?.querySelectorAll('button') ?? [])].find((b) => b.textContent.trim() === 'Industries'),
@@ -61,17 +60,14 @@
   const original = { search: btn.search?.innerHTML, mobile: btn.mobile?.innerHTML };
 
   function paintBar() {
-    if (!bar) return;
-    const solid = scrollY > 24 || open;
-    ['border-white/10', 'bg-ink/92', 'backdrop-blur-xl', 'backdrop-saturate-150'].forEach((c) => bar.classList.toggle(c, !!solid));
-    ['border-transparent', 'bg-ink'].forEach((c) => bar.classList.toggle(c, !solid));
-    if (util) {
-      const s = scrollY > 24;
-      util.classList.toggle('max-h-0', s);
-      util.classList.toggle('opacity-0', s);
-      util.classList.toggle('max-h-10', !s);
-      util.classList.toggle('opacity-100', !s);
-    }
+    if (!util) return;
+    const s = scrollY > 24;
+    // Mirrors the Header component: the brand row folds away on desktop, the menu bar gains the small logo.
+    util.classList.toggle('lg:max-h-0', s);
+    util.classList.toggle('lg:opacity-0', s);
+    util.classList.toggle('max-h-24', !s);
+    util.classList.toggle('opacity-100', !s);
+    header.toggleAttribute('data-scrolled', s);
   }
   addEventListener('scroll', paintBar, { passive: true });
 

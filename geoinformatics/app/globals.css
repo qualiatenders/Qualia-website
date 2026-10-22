@@ -61,9 +61,9 @@
 @layer base {
   :root {
     color-scheme: dark;
-    --header-h: 4rem;
-    /* Main bar + section bar */
-    --header-total: calc(var(--header-h) + 2.75rem);
+    --header-h: 3.75rem;
+    /* Brand row + white menu bar */
+    --header-total: calc(var(--header-h) + 3rem);
     /* Surface tokens; .surface-paper flips them for the white planes. */
     --surface: var(--color-ink);
     --surface-raised: var(--color-anthracite);
@@ -76,7 +76,8 @@
   }
   @media (min-width: 64rem) {
     :root {
-      --header-h: 4.5rem;
+      --header-h: 5rem;
+      --header-total: calc(var(--header-h) + 3.5rem);
     }
   }
 
@@ -299,6 +300,50 @@
   .nav-link[aria-expanded='true']::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+
+  /* White menu bar */
+  .menu-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding-inline: 0.75rem;
+    color: var(--color-ink);
+    font: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+  }
+  .menu-item::after {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0;
+    height: 4px;
+    background: var(--color-red);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s var(--ease-editorial);
+  }
+  .menu-item:hover::after,
+  .menu-item[aria-current='page']::after,
+  .menu-item[aria-expanded='true']::after {
+    transform: scaleY(1);
+  }
+  .menu-item:hover {
+    background: rgb(11 13 16 / 0.04);
+  }
+  /* Small logo slides into the menu bar once the brand row has folded away */
+  .nav-mini {
+    max-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-width 0.5s var(--ease-editorial), opacity 0.4s, margin 0.5s var(--ease-editorial);
+  }
+  header[data-scrolled] .nav-mini {
+    max-width: 10rem;
+    opacity: 1;
+    margin-right: 1rem;
   }
 
   .btn {
