@@ -13,6 +13,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { ReadingProgress } from '@/components/Motion';
 import { ShareBar } from '@/components/article/ShareBar';
 import { ViewBeacon } from '@/components/article/ViewBeacon';
+import { LatestList } from '@/components/front/Front';
 import { AdSlot } from '@/components/ads/AdSlot';
 import { Trending } from '@/components/Trending';
 import { FeatureCard } from '@/components/Cards';
@@ -51,7 +52,7 @@ export default async function ArticlePage({ params }: Props) {
   // Same slug under an old permalink structure → one canonical URL.
   if (a.path !== requested) permanentRedirect(a.path);
 
-  const [related, mostRead] = await Promise.all([content.related(a, 5), content.mostRead(5)]);
+  const [related, mostRead, latest] = await Promise.all([content.related(a, 5), content.mostRead(5), content.list({ perPage: 7 })]);
   const [before, after] = splitForAd(a.html ?? '');
   const url = absoluteUrl(a.path);
   const updated = new Date(a.updatedAt).getTime() - new Date(a.publishedAt).getTime() > 30 * 60_000;
@@ -150,7 +151,7 @@ export default async function ArticlePage({ params }: Props) {
         <div className="surface-paper pb-16 lg:pb-24">
           <div className="shell grid gap-12 pt-10 lg:grid-cols-[3.5rem_minmax(0,1fr)_300px] lg:gap-10 lg:pt-14 xl:grid-cols-[5rem_minmax(0,1fr)_300px] xl:gap-16">
             <aside className="hidden lg:block" aria-label="Share">
-              <div className="sticky top-[calc(var(--header-h)+2rem)]">
+              <div className="sticky top-[calc(var(--header-total)+2rem)]">
                 <ShareBar url={url} title={a.title} vertical />
               </div>
             </aside>
@@ -205,7 +206,8 @@ export default async function ArticlePage({ params }: Props) {
 
             <aside className="space-y-10" aria-label="More from GeoInformatics">
               <AdSlot placement="sidebar-rectangle" category={a.category.slug} />
-              <div className="lg:sticky lg:top-[calc(var(--header-h)+2rem)] lg:space-y-10">
+              <LatestList items={latest.items.filter((l) => l.id !== a.id).slice(0, 6)} />
+              <div className="lg:sticky lg:top-[calc(var(--header-total)+2rem)] lg:space-y-10">
                 <AdSlot placement="article-halfpage" category={a.category.slug} />
                 <Trending items={mostRead.filter((m) => m.id !== a.id).slice(0, 5)} tone="light" />
               </div>

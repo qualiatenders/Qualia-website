@@ -17,6 +17,16 @@ type Props = {
   showFilters?: boolean;
   /** Two large cards before the rows: gives the feed an editorial rhythm. */
   leadPair?: boolean;
+  /** Newswire mode: a date heading wherever the day changes. */
+  dateHeaders?: boolean;
+};
+
+// Built by hand: Intl output differs between Node and browsers (comma or not), which breaks hydration.
+const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const dayOf = (iso: string) => {
+  const d = new Date(iso);
+  return `${DAYS[d.getUTCDay()]} ${d.getUTCDate()} ${MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 };
 
 /**
@@ -24,7 +34,7 @@ type Props = {
  * short crossfade; "Load more" appends the next page. Works as a plain list
  * without JavaScript (the first page is server-rendered and links to /latest).
  */
-export function LatestFeed({ initial, totalPages, categories, perPage, query = {}, exclude = [], leadPair = true, showFilters = true }: Props) {
+export function LatestFeed({ initial, totalPages, categories, perPage, query = {}, exclude = [], leadPair = true, showFilters = true, dateHeaders = false }: Props) {
   const [items, setItems] = useState(initial);
   const [desk, setDesk] = useState<string>(query.category ?? '');
   const [page, setPage] = useState(1);
@@ -121,7 +131,12 @@ export function LatestFeed({ initial, totalPages, categories, perPage, query = {
                   </motion.div>
                 )}
                 <ul>
-                  {rows.map((a, i) => (
+                  {rows.map((a, i) => [
+                    dateHeaders && (i === 0 || dayOf(a.publishedAt) !== dayOf(rows[i - 1]!.publishedAt)) && (
+                      <li key={`d-${a.id}`} className="sticky top-[var(--header-total)] z-10 -mx-1 border-b-2 border-ink bg-[var(--surface)] px-1 pt-8 pb-2">
+                        <h2 className="font-sans text-[0.8125rem] font-extrabold tracking-[0.04em] uppercase">{dayOf(a.publishedAt)}</h2>
+                      </li>
+                    ),
                     <motion.li
                       key={a.id}
                       layout={reduce ? false : 'position'}
@@ -131,8 +146,8 @@ export function LatestFeed({ initial, totalPages, categories, perPage, query = {
                       className="border-b border-line py-6"
                     >
                       <RowCard article={a} />
-                    </motion.li>
-                  ))}
+                    </motion.li>,
+                  ])}
                 </ul>
               </motion.div>
             )}

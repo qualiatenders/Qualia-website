@@ -25,7 +25,7 @@ export default async function LegalPage({ params }: Props) {
       <section className="surface-white py-14 lg:py-20">
         <div className="shell grid gap-12 lg:grid-cols-12">
           <nav aria-label="Legal" className="lg:col-span-3">
-            <ul className="space-y-1 lg:sticky lg:top-[calc(var(--header-h)+2rem)]">
+            <ul className="space-y-1 lg:sticky lg:top-[calc(var(--header-total)+2rem)]">
               {legalDocs().map((x) => (
                 <li key={x.slug}>
                   <Link href={`/legal/${x.slug}/`} aria-current={x.slug === d.slug ? 'page' : undefined} className={`block border-l-2 py-2 pl-4 ${x.slug === d.slug ? 'border-red font-semibold' : 'border-transparent text-fg-muted hover:text-fg'}`}>

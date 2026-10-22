@@ -366,7 +366,9 @@ if __name__ == "__main__":
         ("relief-1", "relief", 11), ("relief-2", "relief", 23), ("satellite-1", "satellite", 31), ("satellite-2", "satellite", 47), ("satellite-3", "satellite", 59),
         ("pointcloud-1", "pointcloud", 61), ("pointcloud-2", "pointcloud", 73), ("pointcloud-3", "pointcloud", 89), ("bathymetry-1", "bathymetry", 97), ("bathymetry-2", "bathymetry", 101),
         ("insar-1", "insar", 113), ("nightlights-1", "nightlights", 127), ("ndvi-1", "ndvi", 131), ("topomap-1", "topomap", 137), ("topomap-2", "topomap", 149),
-        ("city-1", "city", 151), ("city-2", "city", 163), ("earth-1", "earth", 167), ("earth-2", "earth", 173), ("glacier-1", "glacier", 179),
+        ("city-1", "city", 151), ("city-2", "city", 163), ("city-3", "city", 181),
+        ("relief-3", "relief", 191), ("satellite-4", "satellite", 193), ("satellite-5", "satellite", 197), ("pointcloud-4", "pointcloud", 199), ("pointcloud-5", "pointcloud", 211),
+        ("bathymetry-3", "bathymetry", 223), ("topomap-3", "topomap", 227), ("insar-2", "insar", 229), ("nightlights-2", "nightlights", 233), ("ndvi-2", "ndvi", 239), ("glacier-2", "glacier", 241), ("earth-3", "earth", 251), ("earth-1", "earth", 167), ("earth-2", "earth", 173), ("glacier-1", "glacier", 179),
     ]
     only = sys.argv[2:] if len(sys.argv) > 2 else None
     for name, kind, seed in plan:

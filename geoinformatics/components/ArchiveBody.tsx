@@ -22,6 +22,7 @@ export async function ArchiveBody({
   author,
   filters = true,
   aside,
+  newswire = false,
 }: {
   list: ArticleList;
   base: string;
@@ -33,6 +34,8 @@ export async function ArchiveBody({
   author?: string;
   filters?: boolean;
   aside?: React.ReactNode;
+  /** Chronological wire with day headings instead of the editorial lead pair. */
+  newswire?: boolean;
 }) {
   const mostRead = await content.mostRead(5);
   return (
@@ -49,7 +52,8 @@ export async function ArchiveBody({
               perPage={PER_PAGE}
               query={{ category, kinds: kinds?.join(','), tag, author }}
               showFilters={filters}
-              leadPair
+              leadPair={!newswire}
+              dateHeaders={newswire}
             />
           ) : (
             <ul>
@@ -63,7 +67,7 @@ export async function ArchiveBody({
           <Pagination base={base} page={page} totalPages={list.totalPages} hideWithJs={page === 1} />
         </div>
         <div className="lg:col-span-4">
-          <div className="space-y-10 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]">
+          <div className="space-y-10 lg:sticky lg:top-[calc(var(--header-total)+1.5rem)]">
             {aside}
             <Trending items={mostRead} />
             <AdSlot placement="sidebar-rectangle" category={category} />

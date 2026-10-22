@@ -21,9 +21,9 @@ export default async function LatestPage({ searchParams }: Props) {
   const [list, desks] = await Promise.all([content.list({ page, perPage: PER_PAGE }), content.categories()]);
   return (
     <>
-      <PageHero kicker="All desks · Newest first" title="Latest news" intro="The full GeoInformatics newswire. Filter by industry to follow your field." crumbs={[{ name: 'Home', path: '/' }, { name: 'Latest news', path: '/latest/' }]} visual="contours" />
+      <PageHero kicker="All desks · Newest first" title="Newswire" intro="Every GeoInformatics story as it is published, newest first. Filter by industry to follow your field." crumbs={[{ name: 'Home', path: '/' }, { name: 'Latest news', path: '/latest/' }]} visual="contours" />
       <AdSlot placement="site-leaderboard" className="surface-paper shell pt-10" />
-      <ArchiveBody list={list} base="/latest/" page={page} desks={desks} />
+      <ArchiveBody list={list} base="/latest/" page={page} desks={desks} newswire />
     </>
   );
 }

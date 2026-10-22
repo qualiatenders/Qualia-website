@@ -13,7 +13,8 @@ for (const [name, viewport] of [['desktop', { width: 1440, height: 900 }], ['mob
   for (const p of paths) {
     await page.goto(base + p, { waitUntil: 'networkidle' });
     await page.evaluate(() => document.querySelectorAll('[data-reveal]').forEach((e) => e.classList.add('is-visible')));
-    await page.waitForTimeout(300);
+    await page.evaluate(async () => { for (let y = 0; y < document.body.scrollHeight; y += 600) { window.scrollTo(0, y); await new Promise((r) => setTimeout(r, 60)); } window.scrollTo(0, 0); });
+    await page.waitForTimeout(600);
     const file = `preview/${name}${p.replace(/\W+/g, '_') || '_'}.png`;
     await page.screenshot({ path: file, fullPage: true });
     console.log(file);

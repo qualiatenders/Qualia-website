@@ -62,6 +62,8 @@
   :root {
     color-scheme: dark;
     --header-h: 4rem;
+    /* Main bar + section bar */
+    --header-total: calc(var(--header-h) + 2.75rem);
     /* Surface tokens; .surface-paper flips them for the white planes. */
     --surface: var(--color-ink);
     --surface-raised: var(--color-anthracite);
@@ -85,7 +87,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scroll-padding-top: calc(var(--header-h) + 3rem);
+    scroll-padding-top: calc(var(--header-total) + 1.5rem);
   }
 
   body {

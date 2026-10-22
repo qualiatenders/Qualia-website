@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
-import { categories } from '@/lib/taxonomy';
+import { categories, deskShort } from '@/lib/taxonomy';
 import { Logo } from './Logo';
 import { Icon } from './Icon';
 
@@ -121,6 +121,23 @@ export function Header({ dateLine }: { dateLine: string }) {
         </div>
       </div>
 
+      {/* Section bar: every desk one tap away, like a newspaper's section index */}
+      <nav aria-label="Sections" className="border-b border-white/10 bg-anthracite">
+        <ul className="shell no-scrollbar flex h-11 items-stretch gap-1 overflow-x-auto text-[0.8125rem] font-semibold whitespace-nowrap">
+          {[{ href: '/latest/', label: 'Latest' }, ...categories.map((c) => ({ href: c.path, label: deskShort[c.slug] ?? c.name })), { href: '/analysis/', label: 'Analysis' }, { href: '/news-map/', label: 'News map' }, { href: '/events/', label: 'Events' }].map((n, i) => {
+            const active = pathname === n.href || (n.href !== '/' && pathname.startsWith(n.href));
+            return (
+              <li key={n.href} className="flex">
+                <Link href={n.href} aria-current={active ? 'page' : undefined} className={`relative flex items-center px-3 text-white transition-colors hover:bg-white/[0.06] ${i === 0 ? 'pl-0 sm:pl-3' : ''}`}>
+                  {n.label}
+                  <span aria-hidden="true" className={`absolute inset-x-3 bottom-0 h-[3px] bg-red transition-transform duration-300 ${active ? 'scale-x-100' : 'scale-x-0'}`} />
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+
       <AnimatePresence>
         {panel === 'industries' && (
           <motion.div
@@ -222,7 +239,7 @@ function MobileMenu({ pathname }: { pathname: string }) {
       animate={reduce ? { opacity: 1 } : { opacity: 1, clipPath: 'inset(0 0 0% 0)' }}
       exit={reduce ? { opacity: 0 } : { opacity: 0, clipPath: 'inset(0 0 100% 0)' }}
       transition={{ duration: 0.5, ease }}
-      className="fixed inset-x-0 top-[var(--header-h)] bottom-0 overflow-y-auto overscroll-contain bg-ink lg:hidden"
+      className="fixed inset-x-0 top-[var(--header-total)] bottom-0 overflow-y-auto overscroll-contain bg-ink lg:hidden"
       role="dialog"
       aria-modal="true"
       aria-label="Menu"

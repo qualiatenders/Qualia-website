@@ -1,100 +1,78 @@
-import Link from 'next/link';
 import { content } from '@/lib/content';
 import { intelligenceKinds } from '@/lib/taxonomy';
 import type { Article } from '@/lib/types';
 import { Ticker } from '@/components/Ticker';
-import { Hero } from '@/components/home/Hero';
-import { LatestTeaser } from '@/components/home/LatestTeaser';
+import { TopStories, DeskGrid, MostReadRow, AnalysisRow, RadarRow, ModulesRow } from '@/components/front/Front';
 import { NewsGlobe } from '@/components/home/NewsGlobe';
-import { Intelligence } from '@/components/home/Intelligence';
-import { IndustriesStrip } from '@/components/home/IndustriesStrip';
-import { NewsletterBand } from '@/components/home/NewsletterBand';
-import { AdvertiseBand } from '@/components/home/AdvertiseBand';
-import { EventList, sortEvents } from '@/components/EventList';
+import { sortEvents } from '@/components/EventList';
 import { AdSlot } from '@/components/ads/AdSlot';
-import { Icon } from '@/components/Icon';
 
 export const revalidate = 300;
 
+// Editorial lists on the front are derived from headlines until WordPress tags drive them.
+const LAUNCH = /\b(launch|launches|introduces|unveils|releases|debuts|new\b|preview|available)/i;
+const DEAL = /\b(acquire|acquires|acquisition|partner|partnership|contract|agreement|collaborat|selects|awarded|joins|integrat)/i;
+
 /**
- * The homepage is a front page, not an archive: every block is a short,
- * curiosity-driven teaser with one clear way through to its own page
- * (latest, news map, analysis, industries, events). Three ad positions only:
- * billboard under the hero, rectangle beside Most read, one leaderboard
- * between Intelligence and the industries.
+ * The homepage is a newspaper front: top stories with a live newswire, then
+ * every desk with its own block, most read, analysis, products and deals.
+ * Ads sit between sections, never inside the news blocks: a billboard after
+ * the top stories, a leaderboard mid-page and a rectangle beside the lists.
  */
 export default async function HomePage() {
   const [featured, latest, breaking, mostRead, intel, events, desks] = await Promise.all([
     content.featured(),
-    content.list({ perPage: 40 }),
+    content.list({ perPage: 60 }),
     content.breaking(),
     content.mostRead(5),
-    content.list({ perPage: 4, kinds: intelligenceKinds }),
+    content.list({ perPage: 8, kinds: intelligenceKinds }),
     content.events(),
     content.categories(),
   ]);
 
-  // Lead and secondaries come from the editors' choices; the newest editorial stories fill any gap.
   const editorial = latest.items.filter((a) => !a.sponsored);
   const used = new Set<string>();
   const take = (a: Article | undefined) => (a && !used.has(a.id) ? (used.add(a.id), a) : undefined);
   const lead = take(featured.find((a) => a.featured === 'lead')) ?? take(editorial[0])!;
-  const secondary = [...featured.filter((a) => a.featured === 'secondary').map(take), ...editorial.map((a) => (used.size < 3 ? take(a) : undefined))]
-    .filter((a): a is Article => Boolean(a))
-    .slice(0, 2);
-  const headlines = latest.items.filter((a) => !used.has(a.id)).slice(0, 5);
-  headlines.forEach((a) => used.add(a.id));
-  const teaser = latest.items.filter((a) => !used.has(a.id)).slice(0, 6);
-  const intelItems = intel.items.filter((a) => a.id !== lead.id).slice(0, 3);
+  const side: Article[] = [];
+  for (const a of [...featured.filter((f) => f.featured === 'secondary'), ...editorial]) {
+    if (side.length === 2) break;
+    const t = take(a);
+    if (t) side.push(t);
+  }
+  const related = editorial.filter((a) => !used.has(a.id) && a.category.slug === lead.category.slug).slice(0, 2);
+  related.forEach((a) => used.add(a.id));
+  // The newswire is strictly chronological and may repeat a top story: it is the clock of the site.
+  const river = latest.items.slice(0, 9);
 
-  const counts = Object.fromEntries(await Promise.all(desks.map(async (c) => [c.slug, (await content.list({ category: c.slug, perPage: 1 })).total] as const)));
+  const blocks = desks.map((desk) => ({ desk, items: latest.items.filter((a) => a.category.slug === desk.slug && !used.has(a.id)).slice(0, 4) }));
+  blocks.sort((a, b) => b.items.length - a.items.length);
 
+  const analysis = intel.items.filter((a) => a.id !== lead.id).slice(0, 4);
+  const launches = editorial.filter((a) => LAUNCH.test(a.title) && !DEAL.test(a.title)).slice(0, 5);
+  const deals = editorial.filter((a) => DEAL.test(a.title) && !launches.includes(a)).slice(0, 5);
+
+  const located = latest.items.filter((a) => a.location);
   const ticker = breaking.length
     ? { mode: 'breaking' as const, items: breaking }
     : { mode: 'latest' as const, items: latest.items.slice(0, 8).map((a) => ({ id: a.id, title: a.title, path: a.path, live: false })) };
-  const upcoming = sortEvents(events).slice(0, 3);
 
   return (
     <>
       <Ticker items={ticker.items} mode={ticker.mode} />
-      {lead && <Hero lead={lead} secondary={secondary} headlines={headlines} desks={desks} />}
-
+      <TopStories lead={lead} side={side} related={related} river={river} />
       <AdSlot placement="home-takeover" className="bg-ink pb-10" />
-
-      <LatestTeaser items={teaser} total={latest.total} mostRead={mostRead} />
-
-      <NewsGlobe articles={latest.items} variant="teaser" />
-
-      <Intelligence items={intelItems} compact />
-
-      <AdSlot placement="home-leaderboard" className="surface-white border-b border-line py-10" />
-
-      <IndustriesStrip desks={desks} counts={counts} />
-
-      {upcoming.length > 0 && (
-        <section aria-labelledby="events-title" className="surface-paper py-14 lg:py-20">
-          <div className="shell grid gap-10 lg:grid-cols-12">
-            <div className="lg:col-span-4">
-              <p className="kicker text-accent">Industry calendar</p>
-              <h2 id="events-title" className="mt-2 font-sans text-[clamp(1.6rem,1.2rem+1.4vw,2.5rem)] font-extrabold tracking-[-0.01em] uppercase">
-                Where to be next
-              </h2>
-              <p className="mt-4 max-w-sm">Conferences, expos and summits where the geospatial industry meets.</p>
-              <Link href="/events/" className="group btn btn-dark mt-6">
-                Full events calendar <Icon name="arrow" className="arrow size-4" />
-              </Link>
-            </div>
-            <div className="lg:col-span-8">
-              <div className="[&_li:nth-child(3)]:max-sm:hidden">
-                <EventList events={upcoming} compact />
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <NewsletterBand />
-      <AdvertiseBand />
+      <MostReadRow items={mostRead} />
+      <DeskGrid blocks={blocks} />
+      <AdSlot placement="home-leaderboard" className="surface-paper border-y border-line py-10" />
+      <AnalysisRow items={analysis} />
+      <RadarRow launches={launches} deals={deals} />
+      <ModulesRow
+        mapCount={Math.min(located.length, 20)}
+        places={new Set(located.slice(0, 20).map((a) => a.location!.name)).size}
+        events={sortEvents(events).slice(0, 3)}
+        mapSlot={<NewsGlobe articles={latest.items} variant="mini" />}
+      />
     </>
   );
 }

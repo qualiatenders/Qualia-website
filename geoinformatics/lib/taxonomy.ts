@@ -35,3 +35,6 @@ export const kindLabel: Record<ArticleKind, string> = {
 
 /** Kinds that belong to the Intelligence (long-read) layer. */
 export const intelligenceKinds: ArticleKind[] = ['analysis', 'interview', 'feature', 'opinion'];
+
+/** Short desk names for the section bar. */
+export const deskShort: Record<string, string> = {"surveying-reality-capture": "Surveying", "gis-mapping": "GIS & Mapping", "earth-observation": "Earth Observation", "lidar-3d-scanning": "LiDAR", "digital-twins-bim": "Digital Twins", "hydrography": "Hydrography", "gnss-positioning": "GNSS", "geoai": "GeoAI", "geospatial-technology": "Technology", "business-industry": "Business"};

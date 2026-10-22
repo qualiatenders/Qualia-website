@@ -22,7 +22,7 @@ function toArticle(a: PreviewArticle, i: number): Article {
   const category = categoryBySlug(a.category) ?? desks[0]!;
   const published = a.date;
   const words = a.body.join(' ').split(/\s+/).length;
-  const source = `${SOURCE_BASE}/${a.slug}/`;
+  const source = a.sourceUrl ?? `${SOURCE_BASE}/${a.slug}/`;
   return {
     id: String(i + 1),
     slug: a.slug,
