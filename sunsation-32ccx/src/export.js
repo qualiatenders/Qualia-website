@@ -47,6 +47,7 @@ export async function exportPNG(studio, { view, longSide, aspect, background }) 
   const prevSize = renderer.getSize(new THREE.Vector2());
   const prevRatio = renderer.getPixelRatio();
   try {
+    studio.aimHeadlight(camera);
     renderer.setPixelRatio(1);
     renderer.setSize(tile, tile, false);
     for (let y = 0; y < H; y += tile) {
@@ -216,12 +217,14 @@ export async function exportSVG(studio, { view, detail, scale }, onStatus) {
 
   onStatus?.('Contour traceren…');
   await new Promise((r) => setTimeout(r, 0));
-  const loops = traceContours(cov, W, H).map((l) => simplify(l.concat(l.slice(0, 2)), 0.35));
+  const loops = traceContours(cov, W, H).map((l) => simplify(l, 0.35));
   const n1 = (x) => (Math.round(x * 10) / 10).toString();
   const toMM = (x) => n1(x * mmPerPx);
+  // rasterpunt i ligt op pixelmidden i + 0,5
+  const c = (x) => toMM(x + 0.5);
   const silhouettePath = loops.map((l) => {
-    let d = `M${toMM(l[0])} ${toMM(l[1])}`;
-    for (let i = 2; i < l.length; i += 2) d += `L${toMM(l[i])} ${toMM(l[i + 1])}`;
+    let d = `M${c(l[0])} ${c(l[1])}`;
+    for (let i = 2; i < l.length; i += 2) d += `L${c(l[i])} ${c(l[i + 1])}`;
     return `${d}Z`;
   }).join('');
 

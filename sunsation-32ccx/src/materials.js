@@ -31,7 +31,7 @@ function baseLibrary() {
 export const ZONES = [
   {
     id: 'hull', label: 'Romp', match: (n) => n === 'Boat_Hull_Hull_Hull_0',
-    base: 'white', default: 'white',
+    default: 'white',
     options: [
       { id: 'white', label: 'Wit', hex: '#f1f4f5' },
       { id: 'silver', label: 'Zilvergrijs', hex: '#9aa3a9', metallic: true },
@@ -43,7 +43,7 @@ export const ZONES = [
   },
   {
     id: 'bottom', label: 'Onderwaterschip', match: (n) => n === 'Boat_Hull_Hull_Bottom_Color_0',
-    base: 'white', default: 'white',
+    default: 'white',
     options: [
       { id: 'white', label: 'Wit', hex: '#f1f4f5' },
       { id: 'charcoal', label: 'Antraciet', hex: '#3b434b' },
@@ -53,7 +53,7 @@ export const ZONES = [
   },
   {
     id: 'hardtop', label: 'Hardtop', match: (n) => n.startsWith('Hardtop_Hardtop_Hardtop_Top') || n.startsWith('Hardtop_Hardtop_Hardtop_Bottom'),
-    base: 'white', default: 'white',
+    default: 'white',
     options: [
       { id: 'white', label: 'Wit', hex: '#f1f4f5' },
       { id: 'charcoal', label: 'Antraciet', hex: '#3b434b' },
@@ -62,7 +62,7 @@ export const ZONES = [
     ],
   },
   {
-    id: 'accent', label: 'Accenten & stiksel', base: 'accent_red', default: 'red',
+    id: 'accent', label: 'Accenten & stiksel', default: 'red',
     match: (n, m) => m === 'accent_red' && !n.startsWith('engine_') && !n.includes('Red_Light'),
     options: [
       { id: 'red', label: 'Rood', hex: '#b8212b' },
@@ -72,7 +72,7 @@ export const ZONES = [
     ],
   },
   {
-    id: 'upholstery', label: 'Bekleding', base: 'upholstery', default: 'white',
+    id: 'upholstery', label: 'Bekleding', default: 'white',
     match: (n, m) => m === 'upholstery',
     options: [
       { id: 'white', label: 'Wit', hex: '#e6e5df' },

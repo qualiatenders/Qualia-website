@@ -68,7 +68,7 @@ export function framePerspective(camera, box, aspect, dir = VIEWS.iso.dir) {
   const vfov = THREE.MathUtils.degToRad(camera.fov);
   const hfov = 2 * Math.atan(Math.tan(vfov / 2) * aspect);
   const fov = Math.min(vfov, hfov);
-  const distance = sphere.radius / Math.sin(fov / 2) * 0.92;
+  const distance = sphere.radius / Math.sin(fov / 2) * 0.76;
   camera.up.set(0, 1, 0);
   camera.position.copy(sphere.center).addScaledVector(dir, distance);
   camera.near = Math.max(0.02, distance / 400);

@@ -253,7 +253,8 @@ kbd { font: 700 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 
   .sidebar-bottom { padding: 20px 18px calc(24px + var(--safe-b)); }
   .viewport-top { left: 16px; right: 16px; top: 18px; }
   .model-label h1 { font-size: 22px; margin: 7px 0 5px; }
-  .eyebrow, .subline { font-size: 9px; }
+  .eyebrow { display: none; }
+  .subline { font-size: 9px; }
   .view-tag { font-size: 8.5px; padding: 8px; }
   .view-controls { left: 12px; right: 12px; bottom: calc(14px + var(--safe-b)); gap: 5px; flex-wrap: nowrap; }
   .view-btn { padding: 12px 4px; min-width: 0; flex: 1; font-size: 9px; }
