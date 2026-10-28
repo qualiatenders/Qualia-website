@@ -18,7 +18,9 @@ export function meshBox(meshes) {
 // Welke maatlijnen per aanzicht: as van de wereld + welke box.
 const PLAN = {
   side:  [{ along: 'z', box: 'hull', label: 'romp' }, { along: 'z', box: 'all', label: 'over alles' }, { along: 'y', box: 'all', label: 'hoogte' }],
+  side2: [{ along: 'z', box: 'hull', label: 'romp' }, { along: 'z', box: 'all', label: 'over alles' }, { along: 'y', box: 'all', label: 'hoogte' }],
   top:   [{ along: 'z', box: 'hull', label: 'romp' }, { along: 'z', box: 'all', label: 'over alles' }, { along: 'x', box: 'all', label: 'breedte' }],
+  bottom: [{ along: 'z', box: 'hull', label: 'romp' }, { along: 'z', box: 'all', label: 'over alles' }, { along: 'x', box: 'all', label: 'breedte' }],
   bow:   [{ along: 'x', box: 'all', label: 'breedte' }, { along: 'y', box: 'all', label: 'hoogte' }],
   stern: [{ along: 'x', box: 'all', label: 'breedte' }, { along: 'y', box: 'all', label: 'hoogte' }],
 };

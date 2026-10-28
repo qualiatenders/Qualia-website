@@ -4,7 +4,9 @@ import * as THREE from 'three';
 export const VIEWS = {
   iso:   { label: 'PERSPECTIEF', name: '3D-perspectief', ortho: false, dir: new THREE.Vector3(-0.60, 0.41, 0.69).normalize(), up: new THREE.Vector3(0, 1, 0) },
   top:   { label: 'ORTHOGRAFISCH · BOVEN', name: 'bovenaanzicht', ortho: true, dir: new THREE.Vector3(0, 1, 0), up: new THREE.Vector3(1, 0, 0), upPortrait: new THREE.Vector3(0, 0, 1) },
+  bottom: { label: 'ORTHOGRAFISCH · ONDER', name: 'onderaanzicht', ortho: true, dir: new THREE.Vector3(0, -1, 0), up: new THREE.Vector3(-1, 0, 0), upPortrait: new THREE.Vector3(0, 0, 1) },
   side:  { label: 'ORTHOGRAFISCH · ZIJ', name: 'zijaanzicht', ortho: true, dir: new THREE.Vector3(-1, 0, 0), up: new THREE.Vector3(0, 1, 0) },
+  side2: { label: 'ORTHOGRAFISCH · ZIJ (ANDERE KANT)', name: 'zijaanzicht, andere kant', ortho: true, dir: new THREE.Vector3(1, 0, 0), up: new THREE.Vector3(0, 1, 0) },
   bow:   { label: 'ORTHOGRAFISCH · VOOR', name: 'vooraanzicht', ortho: true, dir: new THREE.Vector3(0, 0, 1), up: new THREE.Vector3(0, 1, 0) },
   stern: { label: 'ORTHOGRAFISCH · ACHTER', name: 'achteraanzicht', ortho: true, dir: new THREE.Vector3(0, 0, -1), up: new THREE.Vector3(0, 1, 0) },
 };

@@ -513,7 +513,7 @@ function zoom(f) {
 window.addEventListener('keydown', (e) => {
   if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
   if (!$('helpDialog').classList.contains('hidden')) { if (e.key === 'Escape' || e.key === '?') toggleHelp(false); return; }
-  const views = { 1: 'iso', 2: 'top', 3: 'side', 4: 'bow', 5: 'stern' };
+  const views = { 1: 'iso', 2: 'top', 3: 'side', 4: 'bow', 5: 'stern', 6: 'bottom', 7: 'side2' };
   const k = e.key.toLowerCase();
   if (views[e.key]) setView(views[e.key]);
   else if (k === 'r') setView('iso');

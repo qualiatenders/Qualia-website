@@ -47,6 +47,7 @@ het laden van de GLB. Om op een telefoon in hetzelfde netwerk te testen start je
 | Rechts slepen / twee vingers | Pannen |
 | Scroll / knijpen | Zoomen |
 | `1` – `5` | 3D · boven · zij · voor · achter |
+| `6` / `7` | Onder · zij (andere kant) |
 | `←` `↑` `→` `↓` | Draaien |
 | `+` / `−` | Zoomen |
 | `R` | Camera resetten |
