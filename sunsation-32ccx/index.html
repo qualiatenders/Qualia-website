@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b1220">
+  <meta name="robots" content="noindex, nofollow">
+  <title>32CCX Studio — 3D configurator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">
+    { "imports": { "three": "./vendor/three/build/three.module.min.js", "three/addons/": "./vendor/three/examples/jsm/" } }
+  </script>
+  <script type="module" src="src/main.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true"><span class="mark-line"></span><span class="mark-line short"></span></div>
+      <div class="brand-text"><b>32CCX <span>STUDIO</span></b><small>3D CONFIGURATOR</small></div>
+    </div>
+    <div class="topbar-right">
+      <span class="source-label">BRON: PRODUCTION MESH · VISUALISATIE</span>
+      <button id="helpButton" class="icon-button" type="button" aria-label="Sneltoetsen tonen" title="Sneltoetsen (?)">?</button>
+      <span id="statusBadge" class="status status-loading" role="status"><i></i> LADEN</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <section id="viewport" class="viewport" aria-label="Interactieve 3D-bootviewer">
+      <canvas id="viewerCanvas" tabindex="0" aria-label="Draai de boot door te slepen of te vegen. Zoom met het scrollwiel of twee vingers. Pannen met rechtermuisknop of twee vingers."></canvas>
+      <canvas id="overlayCanvas" class="overlay-canvas" aria-hidden="true"></canvas>
+      <div class="canvas-gradient"></div>
+
+      <div class="viewport-top">
+        <div class="model-label">
+          <div class="eyebrow">SUNSATION BOATS <span class="sep">/</span> CENTER CONSOLE</div>
+          <h1>32CCX <span>PRODUCTION</span></h1>
+          <div class="subline">ORIGINELE MESH <span>·</span> <b id="engineLabel">400 PK · ZWART</b></div>
+        </div>
+        <div class="viewport-actions">
+          <div class="view-tag" id="viewTag">PERSPECTIEF</div>
+          <button id="fullscreenButton" class="icon-button" type="button" aria-label="Volledig scherm" title="Volledig scherm (F)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div id="loading" class="loading">
+        <div class="loading-icon">32<span>CCX</span></div>
+        <div class="loading-title" id="loadTitle">3D-model voorbereiden…</div>
+        <div class="load-meter"><div id="loadFill"></div></div>
+        <div class="load-detail" id="loadDetail">Originele geometrie · geen aanpassingen aan de vorm</div>
+      </div>
+      <div id="busy" class="busy hidden" role="status"><span class="spinner"></span><span id="busyText">Bezig…</span></div>
+      <div id="errorBox" class="error hidden" role="alert">
+        <h2>Viewer kan niet laden</h2>
+        <p id="errorText"></p>
+        <p>Open deze map via een lokale webserver, zie <b>README.md</b>.</p>
+      </div>
+
+      <div class="axis-help"><span class="axis-dot"></span><span id="helpText">Sleep om te draaien · scroll of knijp om te zoomen</span></div>
+      <div class="view-controls" role="toolbar" aria-label="Camera-aanzichten">
+        <button data-view="iso" class="view-btn active" type="button" title="Perspectief (1)">3D</button>
+        <button data-view="top" class="view-btn" type="button" title="Bovenaanzicht, orthografisch (2)">BOVEN</button>
+        <button data-view="side" class="view-btn" type="button" title="Zijaanzicht, orthografisch (3)">ZIJ</button>
+        <button data-view="bow" class="view-btn" type="button" title="Vooraanzicht, orthografisch (4)">VOOR</button>
+        <button data-view="stern" class="view-btn" type="button" title="Achteraanzicht, orthografisch (5)">ACHTER</button>
+      </div>
+      <div class="watermark">32CCX <span>/</span> VISUALISATIE</div>
+    </section>
+
+    <aside class="sidebar" aria-label="Configuratie">
+      <div class="sidebar-intro">
+        <div class="label">CONFIGURATIE</div>
+        <h2>Modelinstellingen</h2>
+        <p>Bekijk de originele 3D-geometrie vanuit elke hoek. Kleuren en materialen zijn een visualisatie; geen enkele optie verandert de vorm van het model.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-index">01 <span>MOTOREN</span></div>
+        <label for="engineSelect">Motoruitvoering</label>
+        <div class="select-wrap">
+          <select id="engineSelect">
+            <option value="300_black">300 pk · zwart</option>
+            <option value="400_black" selected>400 pk · zwart (standaard)</option>
+            <option value="500_black">500 pk · zwart</option>
+            <option value="300_white">300 pk · wit</option>
+            <option value="400_white">400 pk · wit</option>
+            <option value="500_white">500 pk · wit</option>
+            <option value="none">Zonder motoren</option>
+          </select>
+        </div>
+        <p class="hint">De bronmesh bevat zes motorvarianten; alleen de gekozen variant wordt getoond.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-index">02 <span>WEERGAVE</span></div>
+        <div class="setting-row">
+          <div><b>Hardtop</b><small>Dak, poten en verlichting</small></div>
+          <label class="switch"><input id="hardtopToggle" type="checkbox" checked><span></span><em class="sr-only">Hardtop tonen</em></label>
+        </div>
+        <div class="setting-row">
+          <div><b>Maatlijnen</b><small>Meshmeting in de orthografische aanzichten</small></div>
+          <label class="switch"><input id="dimsToggle" type="checkbox" checked><span></span><em class="sr-only">Maatlijnen tonen</em></label>
+        </div>
+        <div class="setting-row">
+          <div><b>Lijntekening</b><small>Contouren berekend uit de mesh</small></div>
+          <label class="switch"><input id="linesToggle" type="checkbox"><span></span><em class="sr-only">Lijntekening tonen</em></label>
+        </div>
+        <div class="setting-row">
+          <div><b>Schaduw</b><small>Zachte studioschaduw op de vloer</small></div>
+          <label class="switch"><input id="shadowToggle" type="checkbox" checked><span></span><em class="sr-only">Schaduw tonen</em></label>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-index">03 <span>KLEUR &amp; MATERIAAL</span><em class="badge">VISUALISATIE</em></div>
+        <div id="colorZones" class="color-zones"></div>
+        <p class="hint">Het aangeleverde model had geen originele materiaaltextures. Deze materialen zijn een geloofwaardige weergave, geen fabriekskleuren.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-index">04 <span>MAATVOERING</span><em class="badge">MESHMETING</em></div>
+        <dl id="measureList" class="measure-list"><div><dt>Meten…</dt><dd>—</dd></div></dl>
+        <p class="hint">Gemeten uit de vertexposities van de bronmesh, met 1 mesh-eenheid = 1 cm. Deze schaal is niet fabrieksmatig geverifieerd; dit zijn geen gecertificeerde maten.</p>
+      </div>
+
+      <div class="section">
+        <div class="section-index">05 <span>EXPORT</span></div>
+        <div class="field-grid">
+          <label for="exportView">Aanzicht
+            <div class="select-wrap"><select id="exportView">
+              <option value="current">Huidige camera</option>
+              <option value="iso">3D perspectief</option>
+              <option value="top">Boven</option>
+              <option value="side">Zij</option>
+              <option value="bow">Voor</option>
+              <option value="stern">Achter</option>
+            </select></div>
+          </label>
+          <label for="exportSize">Resolutie
+            <div class="select-wrap"><select id="exportSize">
+              <option value="1920">Full HD · 1920 px</option>
+              <option value="3840" selected>4K · 3840 px</option>
+              <option value="7680">8K · 7680 px</option>
+            </select></div>
+          </label>
+          <label for="exportBg">Achtergrond
+            <div class="select-wrap"><select id="exportBg">
+              <option value="studio">Studio (donker)</option>
+              <option value="light">Licht</option>
+              <option value="transparent">Transparant</option>
+            </select></div>
+          </label>
+          <label for="exportAspect">Formaat
+            <div class="select-wrap"><select id="exportAspect">
+              <option value="16:9">16 : 9</option>
+              <option value="3:2">3 : 2</option>
+              <option value="1:1">1 : 1</option>
+              <option value="screen">Zoals scherm</option>
+            </select></div>
+          </label>
+        </div>
+        <button id="pngButton" class="solid-button" type="button">↓ &nbsp; PNG EXPORTEREN</button>
+
+        <div class="subsection">
+          <b>Vectorexport (SVG)</b>
+          <p class="hint">Silhouet en zichtbare contourlijnen, berekend uit de echte mesh voor een orthografisch aanzicht. Bedoeld als referentie, géén industriële DXF: de nauwkeurigheid wordt in het bestand vermeld.</p>
+          <div class="field-grid">
+            <label for="svgView">Aanzicht
+              <div class="select-wrap"><select id="svgView">
+                <option value="side">Zij</option>
+                <option value="top">Boven</option>
+                <option value="bow">Voor</option>
+                <option value="stern">Achter</option>
+              </select></div>
+            </label>
+            <label for="svgDetail">Detail
+              <div class="select-wrap"><select id="svgDetail">
+                <option value="silhouette">Alleen silhouet</option>
+                <option value="main" selected>Silhouet + hoofdlijnen</option>
+                <option value="all">Alle kenmerkende randen</option>
+              </select></div>
+            </label>
+            <label for="svgScale">Schaal
+              <div class="select-wrap"><select id="svgScale">
+                <option value="1">1 : 1 (mm, voor CAD)</option>
+                <option value="20">1 : 20</option>
+                <option value="25" selected>1 : 25</option>
+                <option value="50">1 : 50</option>
+              </select></div>
+            </label>
+          </div>
+          <button id="svgButton" class="outline-button" type="button">↓ &nbsp; SVG EXPORTEREN</button>
+        </div>
+      </div>
+
+      <div class="sidebar-bottom">
+        <div class="button-row">
+          <button id="resetButton" class="outline-button" type="button">↺ &nbsp; CAMERA</button>
+          <button id="shareButton" class="outline-button" type="button">⧉ &nbsp; LINK KOPIËREN</button>
+        </div>
+        <p class="sidenote">Bron: Sketchfab-model <i>32ccx (Production)</i> van Aftershock Production. De geometrie is ongewijzigd overgenomen; dit is geen Sunsation-CAD of productietekening. Gebruik maten of contouren niet voor productie zonder validatie.</p>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    <span>32CCX 3D STUDIO <span class="dot">·</span> PRIVÉ REFERENTIEVIEWER</span>
+    <span>ORIGINELE MODELGEOMETRIE <span class="dot">·</span> NIET GEVALIDEERD ALS PRODUCTIE-CAD</span>
+  </footer>
+</div>
+
+<div id="helpDialog" class="dialog hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="dialog-card">
+    <div class="dialog-head"><h2 id="helpTitle">Bediening</h2><button class="icon-button" type="button" data-close aria-label="Sluiten">✕</button></div>
+    <div class="keys">
+      <div><kbd>Slepen</kbd><span>Draaien (één vinger)</span></div>
+      <div><kbd>Rechts slepen</kbd><span>Pannen (twee vingers)</span></div>
+      <div><kbd>Scroll</kbd><span>Zoomen (knijpen)</span></div>
+      <div><kbd>1</kbd>–<kbd>5</kbd><span>3D · boven · zij · voor · achter</span></div>
+      <div><kbd>← ↑ → ↓</kbd><span>Draaien met toetsenbord</span></div>
+      <div><kbd>+</kbd> <kbd>−</kbd><span>In- en uitzoomen</span></div>
+      <div><kbd>R</kbd><span>Camera resetten</span></div>
+      <div><kbd>F</kbd><span>Volledig scherm</span></div>
+      <div><kbd>H</kbd><span>Hardtop aan/uit</span></div>
+      <div><kbd>M</kbd><span>Maatlijnen aan/uit</span></div>
+      <div><kbd>L</kbd><span>Lijntekening aan/uit</span></div>
+      <div><kbd>E</kbd><span>Motorvariant wisselen</span></div>
+      <div><kbd>P</kbd><span>PNG exporteren</span></div>
+      <div><kbd>?</kbd><span>Dit overzicht</span></div>
+    </div>
+  </div>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+</body>
+</html>

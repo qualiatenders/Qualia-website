@@ -23,3 +23,6 @@ next-env.d.ts
 # lokale omgevingsvariabelen
 .env.local
 .env*.local
+
+# 3D-model van derden: niet online zetten zonder toestemming
+/sunsation-32ccx/model/*.glb
