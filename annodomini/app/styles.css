@@ -29,6 +29,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .ic{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:rgba(255,255,255,.4);flex:none}
 
 /* ---------- intro ---------- */
+.nojs{position:absolute;left:16px;right:16px;top:calc(16px + var(--st));z-index:50;background:var(--ivory);color:var(--ink);border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.45;text-align:center}
 .intro{background:var(--ink);color:var(--ivory);justify-content:flex-end;transform:none}
 .intro-pizza{position:absolute;left:50%;top:-12%;width:150%;transform:translateX(-50%);opacity:.55;filter:saturate(.9) brightness(.7);
   -webkit-mask:radial-gradient(circle at 50% 50%,#000 30%,transparent 68%);mask:radial-gradient(circle at 50% 50%,#000 30%,transparent 68%)}

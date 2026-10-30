@@ -20,6 +20,7 @@
 </head>
 <body>
 <div class="app" id="app">
+  <noscript><div class="nojs">Deze voorvertoning laat geen apps draaien.<br>Open het bestand in <b>Safari</b> of <b>Chrome</b>.</div></noscript>
 
   <!-- Intro -->
   <section class="screen intro is-active" id="s-intro" aria-label="Welkom">
@@ -30,7 +31,7 @@
       <p class="intro-sub">Pizzeria Napoletana · Kampen</p>
       <p class="intro-lead">Uw pizza, met de hand belegd.<br><em>Precies zoals u hem wilt.</em></p>
       <button class="btn-light" id="start">Stel uw pizza samen <span aria-hidden="true">→</span></button>
-      <p class="intro-meta">48 uur gerezen deeg · houtoven 485 °C</p>
+      <p class="intro-meta">48 uur gerezen deeg · met de hand gemaakt</p>
     </div>
   </section>
 
@@ -54,7 +55,7 @@
         </div>
       </div>
       <div class="chip chip-l"><i></i>Live belegd</div>
-      <div class="chip chip-r">Houtoven · 485 °C</div>
+      <div class="chip chip-r">32 cm · 48u gerezen</div>
     </div>
     <div class="sheet">
       <div class="grab"></div>
@@ -99,8 +100,8 @@
     </div>
     <div class="timer">
       <div class="timer-row">
-        <div><div class="eyebrow">In de houtoven</div><div class="timer-big" id="clock">01:30</div></div>
-        <div class="timer-sm">485 °C · beukenhout<br><span id="pickup-line">Afhalen om 18:45</span></div>
+        <div><div class="eyebrow">In de oven</div><div class="timer-big" id="clock">01:30</div></div>
+        <div class="timer-sm">Vers voor u gebakken<br><span id="pickup-line">Afhalen om 18:45</span></div>
       </div>
       <div class="track"><span id="progress"></span></div>
       <div class="stages"><span class="on" id="st-1">Ontvangen</span><span id="st-2">In de oven</span><span id="st-3">In de doos</span></div>

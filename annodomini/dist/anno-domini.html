@@ -46,6 +46,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .ic{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;background:rgba(255,255,255,.4);flex:none}
 
 /* ---------- intro ---------- */
+.nojs{position:absolute;left:16px;right:16px;top:calc(16px + var(--st));z-index:50;background:var(--ivory);color:var(--ink);border-radius:14px;padding:14px 16px;font-size:13px;line-height:1.45;text-align:center}
 .intro{background:var(--ink);color:var(--ivory);justify-content:flex-end;transform:none}
 .intro-pizza{position:absolute;left:50%;top:-12%;width:150%;transform:translateX(-50%);opacity:.55;filter:saturate(.9) brightness(.7);
   -webkit-mask:radial-gradient(circle at 50% 50%,#000 30%,transparent 68%);mask:radial-gradient(circle at 50% 50%,#000 30%,transparent 68%)}
@@ -211,6 +212,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 </head>
 <body>
 <div class="app" id="app">
+  <noscript><div class="nojs">Deze voorvertoning laat geen apps draaien.<br>Open het bestand in <b>Safari</b> of <b>Chrome</b>.</div></noscript>
 
   <!-- Intro -->
   <section class="screen intro is-active" id="s-intro" aria-label="Welkom">
@@ -221,7 +223,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
       <p class="intro-sub">Pizzeria Napoletana · Kampen</p>
       <p class="intro-lead">Uw pizza, met de hand belegd.<br><em>Precies zoals u hem wilt.</em></p>
       <button class="btn-light" id="start">Stel uw pizza samen <span aria-hidden="true">→</span></button>
-      <p class="intro-meta">48 uur gerezen deeg · houtoven 485 °C</p>
+      <p class="intro-meta">48 uur gerezen deeg · met de hand gemaakt</p>
     </div>
   </section>
 
@@ -245,7 +247,7 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
         </div>
       </div>
       <div class="chip chip-l"><i></i>Live belegd</div>
-      <div class="chip chip-r">Houtoven · 485 °C</div>
+      <div class="chip chip-r">32 cm · 48u gerezen</div>
     </div>
     <div class="sheet">
       <div class="grab"></div>
@@ -290,8 +292,8 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
     </div>
     <div class="timer">
       <div class="timer-row">
-        <div><div class="eyebrow">In de houtoven</div><div class="timer-big" id="clock">01:30</div></div>
-        <div class="timer-sm">485 °C · beukenhout<br><span id="pickup-line">Afhalen om 18:45</span></div>
+        <div><div class="eyebrow">In de oven</div><div class="timer-big" id="clock">01:30</div></div>
+        <div class="timer-sm">Vers voor u gebakken<br><span id="pickup-line">Afhalen om 18:45</span></div>
       </div>
       <div class="track"><span id="progress"></span></div>
       <div class="stages"><span class="on" id="st-1">Ontvangen</span><span id="st-2">In de oven</span><span id="st-3">In de doos</span></div>
@@ -749,7 +751,7 @@ window.ADFire = function (canvas, opts) {
     await wait(900);
     await movePizza('out', 'in', 2600);
     $('.peel').classList.add('away');
-    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'In de <i>houtoven</i>';
+    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'Uw pizza is <i>in de oven</i>';
     pc.style.transition = `filter ${90 / fast}s linear`; pc.style.filter = 'brightness(1.12) saturate(1.1) sepia(.06)';
     const BAKE = 90, t0 = Date.now();
     await new Promise(done => {

@@ -269,7 +269,7 @@
     await wait(900);
     await movePizza('out', 'in', 2600);
     $('.peel').classList.add('away');
-    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'In de <i>houtoven</i>';
+    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'Uw pizza is <i>in de oven</i>';
     pc.style.transition = `filter ${90 / fast}s linear`; pc.style.filter = 'brightness(1.12) saturate(1.1) sepia(.06)';
     const BAKE = 90, t0 = Date.now();
     await new Promise(done => {
