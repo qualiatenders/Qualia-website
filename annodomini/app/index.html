@@ -54,10 +54,31 @@
       <div class="list" id="list"></div>
     </div>
     <div class="bar">
-      <div class="bar-total"><small>Totaal</small><b id="total" aria-live="polite">€ 9,95</b></div>
+      <div class="bar-total"><small id="bar-label">Totaal</small><b id="total" aria-live="polite">€ 9,95</b></div>
       <button class="btn-go" id="to-pay">Bestellen <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 5h12M8 1l4 4-4 4"/></svg></button>
     </div>
   </section>
+
+  <!-- Added to order -->
+  <div class="modal" id="added" hidden>
+    <button class="modal-scrim" id="added-undo" aria-label="Pizza verder aanpassen"></button>
+    <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="added-title">
+      <div class="grab"></div>
+      <div class="added-head">
+        <img id="added-img" alt="">
+        <div>
+          <div class="eyebrow"><span class="tick">✓</span> Toegevoegd</div>
+          <h3 id="added-title">Pizza 1</h3>
+          <p id="added-desc"></p>
+        </div>
+        <b id="added-price">€ 9,95</b>
+      </div>
+      <div class="added-sum" id="added-sum">1 pizza in uw bestelling</div>
+      <button class="btn-more" id="add-more"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 1v12M1 7h12"/></svg> Nog een pizza toevoegen</button>
+      <button class="btn-checkout" id="checkout">Afrekenen <span id="checkout-total">€ 9,95</span></button>
+      <button class="btn-link" id="added-edit">Deze pizza nog aanpassen</button>
+    </div>
+  </div>
 
   <!-- Checkout -->
   <section class="screen pay" id="s-pay" aria-label="Afrekenen">
@@ -68,7 +89,7 @@
     </header>
     <div class="pay-scroll">
       <div class="card">
-        <div class="sum"><img id="sum-img" alt=""><div><div class="sum-n">Uw pizza</div><div class="sum-d" id="sum-desc"></div></div></div>
+        <div id="cart-list"></div>
         <div class="rows" id="rows"></div>
       </div>
       <div class="sec"><div class="eyebrow">Afhalen vandaag</div><div class="times" id="times"></div></div>

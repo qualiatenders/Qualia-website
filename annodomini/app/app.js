@@ -13,6 +13,7 @@
 
   const state = { active: new Set(), cat: C.categories[0].id, time: null, method: null };
   const anims = new Map();
+  const cart = [];   // pizzas already added to the order: { toppings: [ids], price, img }
   const ready = {}, loading = {};
   let manifest, dpr = 1;
 
@@ -48,12 +49,12 @@
   let raf = 0;
   const kick = () => { if (!raf) raf = requestAnimationFrame(t => { raf = 0; draw(t) }) };
 
-  function composite(c, W, now, animate) {
+  function composite(c, W, now, animate, set = state.active) {
     const k = W / manifest.size, PR = manifest.pr * k, mid = W / 2;
     c.clearRect(0, 0, W, W);
     c.drawImage(ready[manifest.base], 0, 0, W, W);
     let busy = false;
-    const list = C.toppings.filter(t => state.active.has(t.id) || (animate && anims.has(t.id))).sort((a, b) => a.z - b.z);
+    const list = C.toppings.filter(t => set.has(t.id) || (animate && anims.has(t.id))).sort((a, b) => a.z - b.z);
     for (const t of list) {
       const m = manifest.toppings[t.id], a = animate ? anims.get(t.id) : null;
       if (m.overlay) {
@@ -94,14 +95,14 @@
     if (composite(ctx, cv.width, now, true)) kick();
   }
   // a still of the finished pizza at any resolution
-  function still(size) {
+  function still(size, set = state.active) {
     const c = document.createElement('canvas'); c.width = c.height = size;
-    composite(c.getContext('2d'), size, performance.now(), false);
+    composite(c.getContext('2d'), size, performance.now(), false, set);
     return c;
   }
   // the same still with a dough rim, so it reads as a real pizza when seen at an angle
-  function extruded(size) {
-    const top = still(size), depth = Math.round(size * .075);
+  function extruded(size, set) {
+    const top = still(size, set), depth = Math.round(size * .075);
     const rim = document.createElement('canvas'); rim.width = size; rim.height = size + depth;
     const r = rim.getContext('2d');
     for (let k = depth; k > 0; k--) r.drawImage(top, 0, k);
@@ -114,7 +115,11 @@
   }
 
   // ---------- build screen ----------
-  const total = () => C.base.price + [...state.active].reduce((s, id) => s + byId[id].price, 0);
+  const priceOf = set => C.base.price + [...set].reduce((s, id) => s + byId[id].price, 0);
+  const total = () => priceOf(state.active);
+  const cartTotal = () => cart.reduce((s, p) => s + p.price, 0);
+  const plural = n => n === 1 ? '1 pizza' : `${n} pizza's`;
+  const descOf = ids => ids.length ? C.toppings.filter(t => ids.includes(t.id)).map(t => t.name).join(' · ') : C.base.desc;
 
   let shownTotal = C.base.price;
   function animateTotal(to) {
@@ -138,6 +143,7 @@
   }
   function refresh() {
     animateTotal(total());
+    $('#bar-label').textContent = cart.length ? `Pizza ${cart.length + 1}` : 'Totaal';
     renderTabs();
     document.querySelectorAll('.item').forEach(b => b.setAttribute('aria-pressed', state.active.has(b.dataset.id)));
   }
@@ -160,14 +166,48 @@
     d.setMinutes(Math.ceil(d.getMinutes() / 5) * 5, 0, 0);
     return [0, 15, 30, 45].map(m => new Date(d.getTime() + m * 60e3)).map(t => t.toTimeString().slice(0, 5));
   }
-  function renderPay() {
+  function resetBuilder(ids = []) {
+    state.active = new Set(ids); anims.clear(); shownTotal = total();
+    $('#total').textContent = euro(total());
+    renderTabs(); renderList(); refresh(); draw(performance.now());
+  }
+  function addToCart() {
     anims.clear(); draw(performance.now());
-    const chosen = C.toppings.filter(t => state.active.has(t.id));
-    $('#sum-img').src = still(240).toDataURL('image/webp', .9);
-    $('#sum-desc').textContent = chosen.length ? chosen.map(t => t.name).join(' · ') : C.base.desc;
-    $('#rows').innerHTML = `<div class="r"><span>${C.base.name}</span><span>${euro(C.base.price)}</span></div>` +
-      chosen.map(t => `<div class="r"><span>${t.name}</span><span>+ ${t.price.toFixed(2).replace('.', ',')}</span></div>`).join('') +
-      `<div class="r t"><span>Totaal</span><span>${euro(total())}</span></div>`;
+    const ids = C.toppings.filter(t => state.active.has(t.id)).map(t => t.id);
+    cart.push({ toppings: ids, price: total(), img: still(220).toDataURL('image/webp', .9) });
+  }
+  function openAdded() {
+    addToCart();
+    const p = cart[cart.length - 1];
+    $('#added-img').src = p.img;
+    $('#added-title').textContent = `Pizza ${cart.length}`;
+    $('#added-desc').textContent = descOf(p.toppings);
+    $('#added-price').textContent = euro(p.price);
+    $('#added-sum').textContent = `${plural(cart.length)} in uw bestelling · ${euro(cartTotal())}`;
+    $('#checkout-total').textContent = euro(cartTotal());
+    const m = $('#added'); m.classList.remove('closing'); m.hidden = false;
+    navigator.vibrate?.(10);
+  }
+  function closeAdded() {
+    const m = $('#added'); m.classList.add('closing');
+    return wait(300).then(() => { m.hidden = true; m.classList.remove('closing') });
+  }
+  $('#to-pay').addEventListener('click', openAdded);
+  $('#add-more').addEventListener('click', () => { closeAdded(); resetBuilder() });
+  $('#checkout').addEventListener('click', () => { closeAdded(); renderPay(); show('s-pay') });
+  // back out of the sheet: the pizza returns to the bench to be edited
+  const undoAdd = () => { const p = cart.pop(); closeAdded(); resetBuilder(p.toppings) };
+  $('#added-undo').addEventListener('click', undoAdd);
+  $('#added-edit').addEventListener('click', undoAdd);
+
+  function renderPay() {
+    $('#cart-list').innerHTML = cart.map((p, i) => `
+      <div class="cart-item">
+        <img src="${p.img}" alt="">
+        <div><div class="n">Pizza ${i + 1}</div><div class="d">${descOf(p.toppings)}</div></div>
+        <div class="pr">${euro(p.price)}<button class="rm" data-rm="${i}">Verwijderen</button></div>
+      </div>`).join('') + `<button class="add-row" id="add-row"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg>Nog een pizza toevoegen</button>`;
+    $('#rows').innerHTML = `<div class="r t"><span>Totaal · ${plural(cart.length)}</span><span>${euro(cartTotal())}</span></div>`;
     const ts = slots(); state.time = state.time && ts.includes(state.time) ? state.time : ts[0];
     $('#times').innerHTML = ts.map((t, i) => `<button class="time" role="radio" aria-checked="${t === state.time}" data-t="${t}">${t}<small>${i ? '&nbsp;' : 'eerst'}</small></button>`).join('');
     const methods = P.methods.filter(m => P.available(m.id));
@@ -182,16 +222,23 @@
   function payButton() {
     const m = P.methods.find(x => x.id === state.method), b = $('#pay');
     b.className = 'btn-pay ' + (m.cls || ''); b.disabled = false;
-    b.innerHTML = `${m.button} <span style="opacity:.6;font-weight:400">· ${euro(total())}</span>`;
+    b.innerHTML = `${m.button} <span style="opacity:.6;font-weight:400">· ${euro(cartTotal())}</span>`;
   }
-  $('#to-pay').addEventListener('click', () => { renderPay(); show('s-pay') });
-  $('#back').addEventListener('click', () => show('s-build'));
+  // back to the bench with the last pizza, ready to edit
+  $('#back').addEventListener('click', () => { const p = cart.pop(); resetBuilder(p ? p.toppings : []); show('s-build') });
+  $('#cart-list').addEventListener('click', e => {
+    if (e.target.closest('#add-row')) { resetBuilder(); show('s-build'); return }
+    const b = e.target.closest('[data-rm]'); if (!b) return;
+    cart.splice(+b.dataset.rm, 1);
+    if (!cart.length) { resetBuilder(); show('s-build'); return }
+    renderPay();
+  });
   $('#times').addEventListener('click', e => { const b = e.target.closest('.time'); if (!b) return; state.time = b.dataset.t; document.querySelectorAll('.time').forEach(x => x.setAttribute('aria-checked', x === b)) });
   $('#methods').addEventListener('click', e => { const b = e.target.closest('.pm'); if (!b) return; state.method = b.dataset.m; document.querySelectorAll('.pm').forEach(x => x.setAttribute('aria-checked', x === b)); payButton() });
   $('#pay').addEventListener('click', async () => {
     const b = $('#pay'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Betaling verwerken…';
     const order = {
-      pizza: 'Eigen pizza', toppings: [...state.active], amount: +total().toFixed(2), method: state.method, pickup: state.time,
+      pizzas: cart.map(p => ({ toppings: p.toppings, price: p.price })), amount: +cartTotal().toFixed(2), method: state.method, pickup: state.time,
       no: '047·' + String(Math.floor(100 + Math.random() * 900)),
     };
     try { sessionStorage.setItem('ad-order', JSON.stringify(order)) } catch (_) {}
@@ -238,27 +285,26 @@
   }
   async function bake(order) {
     show('s-oven'); layoutOven();
-    const pc = $('#ov-img'), ex = extruded(Math.round(Math.min(1080, ovenGeo.W * 2.4)));
+    const n = order.pizzas.length, last = order.pizzas[n - 1].toppings;
+    const pc = $('#ov-img'), ex = extruded(Math.round(Math.min(1080, ovenGeo.W * 2.4)), new Set(last));
     pc.width = ex.width; pc.height = ex.height; pc.getContext('2d').drawImage(ex, 0, 0);
     $('#ov-pizza').getAnimations().forEach(a => a.cancel());
     $('.peel').classList.remove('away');
     placePizza('out');
     $('#order-no').textContent = `Bestelling #${order.no} · betaald`;
-    $('#oven-title').innerHTML = 'Uw pizza gaat<br><i>de oven in</i>';
+    $('#oven-title').innerHTML = n > 1 ? `Uw ${n} pizza's gaan<br><i>de oven in</i>` : 'Uw pizza gaat<br><i>de oven in</i>';
     $('#pickup-time').textContent = order.pickup;
     $('#ready').classList.remove('shown'); $('#again').hidden = true;
     fire?.start(); flicker();
     await wait(900);
     await movePizza('out', 'in', 2600);
     $('.peel').classList.add('away');
-    $('#oven-title').innerHTML = 'Uw pizza is<br><i>in de oven</i>';
+    $('#oven-title').innerHTML = n > 1 ? `Uw pizza's zijn<br><i>in de oven</i>` : 'Uw pizza is<br><i>in de oven</i>';
     $('#ready').classList.add('shown'); $('#again').hidden = false;
     navigator.vibrate?.(14);
   }
   $('#again').addEventListener('click', () => {
-    fire?.stop(); state.active.clear(); anims.clear(); shownTotal = C.base.price;
-    $('#total').textContent = euro(C.base.price);
-    renderTabs(); renderList(); show('s-build'); fit();
+    fire?.stop(); cart.length = 0; resetBuilder(); show('s-build'); fit();
   });
 
   // ---------- boot ----------
@@ -269,7 +315,7 @@
     const order = C.toppings.slice().sort((a, b) => (a.cat === state.cat ? -1 : 0) - (b.cat === state.cat ? -1 : 0));
     order.reduce((p, t) => p.then(() => ensure(t.id)).catch(() => {}), Promise.resolve());
     if (location.hash === '#oven') {
-      try { const o = JSON.parse(sessionStorage.getItem('ad-order')); if (o) { o.toppings.forEach(id => state.active.add(id)); Promise.all([load(m.base), ...o.toppings.map(ensure)]).then(() => { fit(); bake(o) }) } } catch (_) {}
+      try { const o = JSON.parse(sessionStorage.getItem('ad-order')); if (o && o.pizzas) { const ids = o.pizzas.flatMap(p => p.toppings); Promise.all([load(m.base), ...ids.map(ensure)]).then(() => { fit(); bake(o) }) } } catch (_) {}
     }
   });
   addEventListener('resize', () => { fit(); if (manifest && $('#s-oven').classList.contains('is-active')) layoutOven() });
