@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Anno Domini — Pizza Atelier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ivory:#F4F0E8; --ivory-2:#ECE6DA; --paper:#FAF8F3;
+    --ink:#1E1E1C; --ink-2:#2A2A27; --mute:#7A766D; --line:rgba(30,30,28,.10);
+    --gold:#B08D57;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ivory);color:var(--ink);font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .app{width:1600px;height:1000px;display:grid;grid-template-rows:84px 1fr;overflow:hidden}
+  header{display:flex;align-items:center;justify-content:space-between;padding:0 48px;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:16px}
+  .mark{width:44px;height:44px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;font-family:'Cormorant Garamond';font-size:19px;font-weight:600;letter-spacing:.02em}
+  .brand-name{font-family:'Cormorant Garamond';font-size:27px;font-weight:500;letter-spacing:.04em;line-height:1}
+  .brand-sub{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute);margin-top:5px}
+  .steps{display:flex;gap:36px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--mute)}
+  .steps span{display:flex;align-items:center;gap:10px}
+  .steps b{font-family:'Cormorant Garamond';font-weight:500;font-size:15px;letter-spacing:0;color:var(--mute)}
+  .steps .on{color:var(--ink)} .steps .on b{color:var(--ink)}
+  .steps .on::after{content:'';width:28px;height:1px;background:var(--ink);margin-left:4px}
+  .hdr-right{display:flex;gap:28px;align-items:center;font-size:12px;color:var(--mute);letter-spacing:.06em}
+  .hdr-right .pill{border:1px solid var(--line);padding:9px 16px;border-radius:40px;color:var(--ink)}
+
+  main{display:grid;grid-template-columns:420px 1fr 400px;min-height:0}
+  /* left: toppings */
+  .left{padding:36px 36px 0 48px;border-right:1px solid var(--line);overflow:hidden}
+  .eyebrow{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:var(--mute)}
+  h2{font-family:'Cormorant Garamond';font-weight:400;font-size:38px;line-height:1.05;margin:10px 0 22px;letter-spacing:-.005em}
+  h2 i{font-weight:400}
+  .tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .tabs span{font-size:12px;letter-spacing:.08em;padding:10px 0 12px;color:var(--mute)}
+  .tabs .on{color:var(--ink);box-shadow:inset 0 -1px 0 var(--ink)}
+  .item{display:grid;grid-template-columns:56px 1fr auto;gap:16px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+  .item canvas{width:56px;height:56px;border-radius:50%;background:#262624;box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+  .item .n{font-family:'Cormorant Garamond';font-size:21px;font-weight:500;line-height:1.1}
+  .item .d{font-size:11.5px;color:var(--mute);margin-top:3px;letter-spacing:.01em}
+  .item .p{font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--ink-2);display:flex;align-items:center;gap:12px}
+  .tog{width:26px;height:26px;border-radius:50%;border:1px solid rgba(30,30,28,.25);display:grid;place-items:center;font-size:15px;line-height:1;color:var(--ink)}
+  .item.sel .tog{background:var(--ink);border-color:var(--ink);color:var(--ivory)}
+  .item.sel{background:linear-gradient(90deg,rgba(176,141,87,.07),transparent 70%)}
+
+  /* center: stage */
+  .stage{position:relative;display:grid;place-items:center;background:
+    radial-gradient(ellipse 60% 55% at 50% 48%, #FBF9F4 0%, var(--ivory) 60%, #E9E3D6 100%)}
+  .stage canvas#pizza{width:740px;height:740px;filter:drop-shadow(0 34px 40px rgba(40,30,18,.28)) drop-shadow(0 8px 12px rgba(40,30,18,.18))}
+  .stage .cap{position:absolute;top:34px;left:0;right:0;text-align:center}
+  .stage .cap .t{font-family:'Cormorant Garamond';font-style:italic;font-size:30px;margin-top:6px}
+  .live{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;gap:10px;align-items:center;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--mute)}
+  .live i{width:6px;height:6px;border-radius:50%;background:#B5482F;box-shadow:0 0 0 4px rgba(181,72,47,.15)}
+  .meta{position:absolute;bottom:34px;font-size:11px;color:var(--mute);letter-spacing:.06em}
+  .meta.l{left:40px}.meta.r{right:40px;text-align:right}
+  .meta b{display:block;font-family:'Cormorant Garamond';font-size:22px;font-weight:500;color:var(--ink);letter-spacing:0;margin-bottom:2px}
+
+  /* right: summary */
+  .right{background:var(--ink);color:var(--ivory);padding:40px 44px;display:flex;flex-direction:column}
+  .right .eyebrow{color:rgba(244,240,232,.5)}
+  .right h3{font-family:'Cormorant Garamond';font-weight:400;font-size:34px;margin:10px 0 26px;line-height:1.05}
+  .row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(244,240,232,.09);font-size:13px}
+  .row span:first-child{color:rgba(244,240,232,.82)}
+  .row small{display:block;font-size:10.5px;color:rgba(244,240,232,.42);margin-top:3px;letter-spacing:.02em}
+  .row .v{font-variant-numeric:tabular-nums;color:rgba(244,240,232,.9)}
+  .total{margin-top:auto;padding-top:22px}
+  .total .lbl{font-size:10px;letter-spacing:.32em;text-transform:uppercase;color:rgba(244,240,232,.5)}
+  .total .amt{font-family:'Cormorant Garamond';font-size:64px;font-weight:400;line-height:1;margin:8px 0 4px;font-variant-numeric:lining-nums}
+  .total .amt sup{font-size:26px;vertical-align:28px;margin-right:4px}
+  .total .incl{font-size:11px;color:rgba(244,240,232,.45)}
+  .pay{display:flex;gap:8px;margin:24px 0 16px}
+  .pay span{flex:1;height:44px;border:1px solid rgba(244,240,232,.16);border-radius:10px;display:grid;place-items:center;font-size:13px;font-weight:500;letter-spacing:.01em;color:rgba(244,240,232,.85)}
+  .pay span.on{border-color:rgba(244,240,232,.75);background:rgba(244,240,232,.05)}
+  .cta{height:62px;border-radius:14px;background:var(--ivory);color:var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 26px;font-size:12px;letter-spacing:.26em;text-transform:uppercase;font-weight:500}
+  .cta em{font-family:'Cormorant Garamond';font-style:italic;font-size:20px;letter-spacing:0;text-transform:none}
+  .fine{text-align:center;font-size:10.5px;color:rgba(244,240,232,.38);margin-top:14px;letter-spacing:.04em}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark">47</div>
+      <div><div class="brand-name">Anno Domini</div><div class="brand-sub">Pizzeria Napoletana · Kampen</div></div>
+    </div>
+    <nav class="steps">
+      <span><b>I</b>Deeg</span>
+      <span class="on"><b>II</b>Beleg</span>
+      <span><b>III</b>Afrekenen</span>
+      <span><b>IV</b>In de oven</span>
+    </nav>
+    <div class="hdr-right"><span>Afhalen · 18:45</span><span class="pill">Mijn bestelling · 1</span></div>
+  </header>
+
+  <main>
+    <section class="left">
+      <div class="eyebrow">Stap II — Beleg</div>
+      <h2>Stel uw pizza<br><i>samen</i></h2>
+      <div class="tabs"><span>Formaggi</span><span class="on">Salumi</span><span>Verdure</span><span>Finitura</span></div>
+      <div id="list"></div>
+    </section>
+
+    <section class="stage">
+      <div class="cap"><div class="eyebrow">Uw creatie</div><div class="t">Diavola di Kampen</div></div>
+      <canvas id="pizza" width="1440" height="1440"></canvas>
+      <div class="meta l"><b>32 cm</b>Napolitaans · 48u gerezen</div>
+      <div class="live"><i></i>Live belegd</div>
+      <div class="meta r"><b>90 sec</b>Houtoven · 485 °C</div>
+    </section>
+
+    <aside class="right">
+      <div class="eyebrow">Uw bestelling</div>
+      <h3>Overzicht</h3>
+      <div class="row"><span>Pizza Margherita<small>San Marzano DOP, fior di latte, basilicum</small></span><span class="v">€ 9,95</span></div>
+      <div class="row"><span>Salame piccante</span><span class="v">+ 2,50</span></div>
+      <div class="row"><span>Mozzarella di bufala</span><span class="v">+ 3,50</span></div>
+      <div class="row"><span>Basilico fresco</span><span class="v">+ 0,75</span></div>
+      <div class="row"><span>Olio extravergine</span><span class="v">inbegrepen</span></div>
+      <div class="total">
+        <div class="lbl">Totaal</div>
+        <div class="amt"><sup>€</sup>16,70</div>
+        <div class="incl">Incl. btw · klaar in ± 12 minuten</div>
+        <div class="pay"><span class="on">iDEAL</span><span>Apple Pay</span><span>PayPal</span></div>
+        <div class="cta"><span>Bestellen</span><em>naar de oven →</em></div>
+        <div class="fine">Veilig afrekenen · Ambachtelijk bereid in Kampen</div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<script src="pizza-engine.js"></script>
+</body>
+</html>
