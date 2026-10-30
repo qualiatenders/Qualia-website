@@ -3,8 +3,7 @@
 Klanten stellen zelf hun Napolitaanse pizza samen: basis Margherita € 9,95, elk
 beleg wordt live op de pizza gelegd, daarna afrekenen (Apple Pay, iDEAL, PayPal),
 met desserts en drankjes als aanvulling. Na het betalen volgt een bedankscherm
-met afhaaltijd, stempelkaart (10e pizza gratis) en 'Bestel opnieuw' bij het
-volgende bezoek.
+met afhaaltijd en stempelkaart (10e pizza gratis).
 
 ```
 annodomini/
@@ -79,8 +78,8 @@ fotorealistisch resultaat vervang je de sprites in `assets/pizza/` door
 uitgeknipte foto's van bovenaf (zelfde bestandsnamen, transparante webp).
 
 
-## Stempelkaart en 'Bestel opnieuw'
+## Stempelkaart
 
-Beide worden nu per toestel in de browser bewaard (localStorage). Voor een
+De stempels worden nu per toestel in de browser bewaard (localStorage). Voor een
 stempelkaart die over toestellen heen werkt en niet te omzeilen is, moeten de
 stempels later aan een klantaccount of telefoonnummer op de server hangen.

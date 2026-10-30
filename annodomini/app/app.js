@@ -284,15 +284,10 @@
 
   // ---------- thank you ----------
   const STAMPS = 10;
-  function orderLine(o) {
-    const parts = [plural(o.pizzas.length), ...Object.entries(o.extras || {}).map(([id, q]) => `${q > 1 ? q + '× ' : ''}${exById[id].name.toLowerCase()}`)];
-    return parts.join(', ');
-  }
   function finish(order) {
     // loyalty: one stamp per pizza, the tenth pizza is on the house
     const before = store.get('ad-stamps') || 0, after = before + order.pizzas.length;
     store.set('ad-stamps', after);
-    store.set('ad-last', { pizzas: order.pizzas, extras: order.extras, amount: order.amount });
     const n = order.pizzas.length, onCard = after % STAMPS || (after ? STAMPS : 0), fresh = Math.min(n, onCard);
     $('#thanks-no').textContent = `Bestelling #${order.no} · betaald`;
     $('#thanks-sub').textContent = n > 1 ? `Uw ${n} pizza's worden nu met de hand gemaakt.` : 'Uw pizza wordt nu met de hand gemaakt.';
@@ -311,28 +306,11 @@
     navigator.vibrate?.(14);
   }
   $('#again').addEventListener('click', () => {
-    cart.length = 0; extras.clear(); resetBuilder(); renderWelcome(); show('s-build'); fit();
-  });
-
-  // ---------- welcome back: one-tap reorder ----------
-  function renderWelcome() {
-    const last = store.get('ad-last');
-    $('#again-card').hidden = !last;
-    if (!last) return;
-    $('#again-desc').textContent = `Uw vorige bestelling: ${orderLine(last)}.`;
-    $('#again-price').textContent = euro(last.amount);
-  }
-  $('#reorder').addEventListener('click', async () => {
-    const last = store.get('ad-last'); if (!last) return;
-    await Promise.all([load(manifest.base), ...last.pizzas.flatMap(p => p.toppings).map(ensure)]);
-    cart.length = 0; extras.clear();
-    last.pizzas.forEach(p => cart.push({ toppings: p.toppings, price: priceOf(new Set(p.toppings)), img: still(220, new Set(p.toppings)).toDataURL('image/webp', .9) }));
-    Object.entries(last.extras || {}).forEach(([id, q]) => exById[id] && extras.set(id, q));
-    renderExtras(); renderPay(); show('s-pay');
+    cart.length = 0; extras.clear(); resetBuilder(); show('s-build'); fit();
   });
 
   // ---------- boot ----------
-  renderTabs(); renderList(); renderExtras(); renderWelcome();
+  renderTabs(); renderList(); renderExtras();
   (window.AD_MANIFEST ? Promise.resolve(AD_MANIFEST) : fetch('assets/pizza/manifest.json').then(r => r.json())).then(m => {
     manifest = m;
     load(m.base).then(fit);

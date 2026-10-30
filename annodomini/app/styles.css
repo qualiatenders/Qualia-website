@@ -174,13 +174,6 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .upsell-h span{font-size:11px;color:var(--mute)}
 .modal .xcard{background:var(--ivory)}
 
-/* ---------- welcome back ---------- */
-.again-card{width:100%;max-width:340px;background:rgba(244,240,232,.07);border:1px solid rgba(244,240,232,.14);border-radius:18px;padding:14px 16px;margin:-12px 0 18px;text-align:left;animation:rise 1.4s .4s both}
-.again-card .eyebrow{color:var(--ember)}
-.again-card p{font-size:12px;color:rgba(244,240,232,.7);margin:6px 0 10px;line-height:1.45}
-.btn-again-order{width:100%;height:44px;border-radius:12px;border:1px solid rgba(244,240,232,.4);color:var(--ivory);display:flex;align-items:center;justify-content:space-between;padding:0 14px;font-size:13px;font-weight:500}
-.btn-again-order span{font-family:var(--serif);font-size:17px;font-weight:400}
-
 /* ---------- thank you ---------- */
 .thanks{background:var(--ivory);transform:none;overflow-y:auto}
 .thanks-hero{position:relative;flex:none;height:42%;min-height:260px;background:#4A3324 no-repeat center/cover;display:grid;place-items:center;overflow:hidden}
@@ -210,8 +203,6 @@ button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
 .stamp.new{animation:stamp .6s cubic-bezier(.3,1.6,.5,1) both}
 .stamp.gift{border-color:var(--gold);color:var(--gold);font-weight:600}
 @keyframes stamp{from{transform:scale(1.8);opacity:0}}
-.saved{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--mute);line-height:1.45}
-.saved svg{flex:none;margin-top:1px;color:var(--gold)}
 .btn-outline{height:54px;border-radius:16px;border:1.5px solid var(--ink);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;font-weight:500}
 
 @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
