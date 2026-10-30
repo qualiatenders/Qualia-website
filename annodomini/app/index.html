@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<title>Anno Domini — Pizza Atelier</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Stel uw eigen Napolitaanse pizza samen bij 47 Anno Domini in Kampen.">
+<meta name="theme-color" content="#1E1E1C">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Anno Domini">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icons/icon-192.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+SC:wght@500&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="preload" as="image" href="assets/pizza/base.webp">
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- Intro -->
+  <section class="screen intro is-active" id="s-intro" aria-label="Welkom">
+    <div class="intro-pizza"><img src="assets/pizza/base.webp" alt=""></div>
+    <div class="intro-inner">
+      <div class="mark mark-xl" aria-hidden="true"></div>
+      <h1 class="wordmark">Anno Domini</h1>
+      <p class="intro-sub">Pizzeria Napoletana · Kampen</p>
+      <p class="intro-lead">Uw pizza, met de hand belegd.<br><em>Precies zoals u hem wilt.</em></p>
+      <button class="btn-light" id="start">Stel uw pizza samen <span aria-hidden="true">→</span></button>
+      <p class="intro-meta">48 uur gerezen deeg · houtoven 485 °C</p>
+    </div>
+  </section>
+
+  <!-- Build -->
+  <section class="screen build" id="s-build" aria-label="Pizza samenstellen">
+    <header class="top">
+      <div class="brand-row"><span class="mark mark-sm" aria-hidden="true"></span><span class="brand-sc">Anno Domini</span></div>
+      <button class="ic" id="reset" aria-label="Opnieuw beginnen">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9M2.5 2.5v2.8h2.8"/></svg>
+      </button>
+    </header>
+    <div class="title">
+      <div class="eyebrow">Uw creatie</div>
+      <h2 id="pizza-name">Margherita</h2>
+    </div>
+    <div class="stage" id="stage">
+      <canvas id="pizza" aria-label="Uw pizza"></canvas>
+      <div class="chip chip-l"><i></i>Live belegd</div>
+      <div class="chip chip-r">32 cm · 48u gerezen</div>
+    </div>
+    <div class="sheet">
+      <div class="grab"></div>
+      <nav class="tabs" id="tabs" role="tablist"></nav>
+      <div class="list" id="list"></div>
+    </div>
+    <div class="bar">
+      <div class="bar-total"><small>Totaal</small><b id="total" aria-live="polite">€ 9,95</b></div>
+      <button class="btn-go" id="to-pay">Bestellen <svg width="14" height="10" viewBox="0 0 14 10" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M0 5h12M8 1l4 4-4 4"/></svg></button>
+    </div>
+  </section>
+
+  <!-- Checkout -->
+  <section class="screen pay" id="s-pay" aria-label="Afrekenen">
+    <header class="hd">
+      <button class="ic" id="back" aria-label="Terug"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 3 5 8l5 5"/></svg></button>
+      <div><div class="eyebrow">Laatste stap</div><h2>Afrekenen</h2></div>
+      <span class="mark mark-sm hd-mark" aria-hidden="true"></span>
+    </header>
+    <div class="pay-scroll">
+      <div class="card">
+        <div class="sum"><img id="sum-img" alt=""><div><div class="sum-n" id="sum-name">Margherita</div><div class="sum-d" id="sum-desc"></div></div></div>
+        <div class="rows" id="rows"></div>
+      </div>
+      <div class="sec"><div class="eyebrow">Afhalen vandaag</div><div class="times" id="times"></div></div>
+      <div class="sec"><div class="eyebrow">Betaalmethode</div><div id="methods"></div></div>
+      <p class="secure">Veilig betalen · versleuteld via Mollie</p>
+    </div>
+    <div class="pay-foot"><button class="btn-pay" id="pay"></button></div>
+  </section>
+
+  <!-- Oven -->
+  <section class="screen oven" id="s-oven" aria-label="In de oven">
+    <canvas class="oven-back" id="oven-back"></canvas>
+    <div class="oven-pizza" id="oven-pizza"><div class="peel"></div><img id="oven-img" alt=""></div>
+    <canvas class="oven-front" id="oven-front"></canvas>
+    <div class="oven-glow"></div>
+    <div class="oven-txt">
+      <div class="eyebrow" id="order-no">Bestelling · betaald</div>
+      <h2 id="oven-title">Uw pizza gaat<br><i>de oven in</i></h2>
+    </div>
+    <div class="timer">
+      <div class="timer-row">
+        <div><div class="eyebrow">In de houtoven</div><div class="timer-big" id="clock">01:30</div></div>
+        <div class="timer-sm">485 °C · beukenhout<br><span id="pickup-line">Afhalen om 18:45</span></div>
+      </div>
+      <div class="track"><span id="progress"></span></div>
+      <div class="stages"><span class="on" id="st-1">Ontvangen</span><span id="st-2">In de oven</span><span id="st-3">Klaar</span></div>
+      <button class="btn-light btn-again" id="again" hidden>Nieuwe pizza samenstellen</button>
+    </div>
+  </section>
+
+</div>
+<script src="catalog.js"></script>
+<script src="payments.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
