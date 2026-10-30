@@ -1,7 +1,7 @@
 # Anno Domini — Pizza Atelier (mobiele web-app)
 
 Klanten stellen zelf hun Napolitaanse pizza samen: basis Margherita € 9,95, elk
-beleg wordt live op de pizza gelegd, daarna afrekenen (Apple Pay, iDEAL, PayPal)
+beleg wordt live op de pizza gelegd, daarna afrekenen (Apple Pay, iDEAL, PayPal),
 de pizza schuift de houtoven in en gaat daarna in de Anno Domini-doos, waarvan
 het deksel dichtklapt.
 
