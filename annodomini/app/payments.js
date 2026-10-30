@@ -24,7 +24,7 @@ window.ADPay = {
     const res = await fetch(this.endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(order) });
     if (!res.ok) throw new Error('Betaling kon niet worden gestart');
     const { checkoutUrl } = await res.json();
-    location.href = checkoutUrl; // Mollie returns the customer to redirectUrl (…#oven)
+    location.href = checkoutUrl; // Mollie returns the customer to redirectUrl
     return new Promise(() => {});
   },
 };

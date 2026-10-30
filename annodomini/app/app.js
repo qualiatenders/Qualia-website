@@ -14,6 +14,9 @@
   const state = { active: new Set(), cat: C.categories[0].id, time: null, method: null };
   const anims = new Map();
   const cart = [];   // pizzas already added to the order: { toppings: [ids], price, img }
+  const extras = new Map();   // dessert/drink id → quantity
+  const exById = Object.fromEntries(C.extras.map(e => [e.id, e]));
+  const store = { get(k) { try { return JSON.parse(localStorage.getItem(k)) } catch (_) { return null } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)) } catch (_) {} } };
   const ready = {}, loading = {};
   let manifest, dpr = 1;
 
@@ -117,7 +120,8 @@
   // ---------- build screen ----------
   const priceOf = set => C.base.price + [...set].reduce((s, id) => s + byId[id].price, 0);
   const total = () => priceOf(state.active);
-  const cartTotal = () => cart.reduce((s, p) => s + p.price, 0);
+  const extrasTotal = () => [...extras].reduce((s, [id, q]) => s + exById[id].price * q, 0);
+  const cartTotal = () => cart.reduce((s, p) => s + p.price, 0) + extrasTotal();
   const plural = n => n === 1 ? '1 pizza' : `${n} pizza's`;
   const descOf = ids => ids.length ? C.toppings.filter(t => ids.includes(t.id)).map(t => t.name).join(' · ') : C.base.desc;
 
@@ -166,6 +170,34 @@
     d.setMinutes(Math.ceil(d.getMinutes() / 5) * 5, 0, 0);
     return [0, 15, 30, 45].map(m => new Date(d.getTime() + m * 60e3)).map(t => t.toTimeString().slice(0, 5));
   }
+  function renderExtras() {
+    const html = C.extras.map(e => {
+      const q = extras.get(e.id) || 0;
+      return `<div class="xcard${q ? ' on' : ''}">
+        <img src="${asset(`assets/extras/${e.id}.webp`)}" alt="">
+        <div class="n">${e.name}</div>
+        <div class="pz">${euro(e.price)}</div>
+        ${q
+          ? `<span class="xstep"><button data-x="${e.id}" data-d="-1" aria-label="${e.name} minder">−</button><b>${q}</b><button data-x="${e.id}" data-d="1" aria-label="${e.name} meer">+</button></span>`
+          : `<button class="xadd" data-x="${e.id}" data-d="1">Toevoegen</button>`}
+      </div>`;
+    }).join('');
+    document.querySelectorAll('.extras').forEach(el => { const x = el.scrollLeft; el.innerHTML = html; el.scrollLeft = x });
+  }
+  function bumpExtra(id, d) {
+    const q = Math.max(0, (extras.get(id) || 0) + d);
+    q ? extras.set(id, q) : extras.delete(id);
+    navigator.vibrate?.(6);
+    renderExtras(); updateSums();
+  }
+  document.addEventListener('click', e => { const b = e.target.closest('[data-x]'); if (b) bumpExtra(b.dataset.x, +b.dataset.d) });
+  function updateSums() {
+    const n = cart.length, x = [...extras.values()].reduce((a, b) => a + b, 0);
+    $('#added-sum').textContent = `${plural(n)}${x ? ` + ${x} extra` : ''} in uw bestelling · ${euro(cartTotal())}`;
+    $('#checkout-total').textContent = euro(cartTotal());
+    if ($('#s-pay').classList.contains('is-active')) renderPay();
+  }
+
   function resetBuilder(ids = []) {
     state.active = new Set(ids); anims.clear(); shownTotal = total();
     $('#total').textContent = euro(total());
@@ -183,8 +215,7 @@
     $('#added-title').textContent = `Pizza ${cart.length}`;
     $('#added-desc').textContent = descOf(p.toppings);
     $('#added-price').textContent = euro(p.price);
-    $('#added-sum').textContent = `${plural(cart.length)} in uw bestelling · ${euro(cartTotal())}`;
-    $('#checkout-total').textContent = euro(cartTotal());
+    renderExtras(); updateSums();
     const m = $('#added'); m.classList.remove('closing'); m.hidden = false;
     navigator.vibrate?.(10);
   }
@@ -194,7 +225,7 @@
   }
   $('#to-pay').addEventListener('click', openAdded);
   $('#add-more').addEventListener('click', () => { closeAdded(); resetBuilder() });
-  $('#checkout').addEventListener('click', () => { closeAdded(); renderPay(); show('s-pay') });
+  $('#checkout').addEventListener('click', () => { closeAdded(); renderExtras(); renderPay(); show('s-pay') });
   // back out of the sheet: the pizza returns to the bench to be edited
   const undoAdd = () => { const p = cart.pop(); closeAdded(); resetBuilder(p.toppings) };
   $('#added-undo').addEventListener('click', undoAdd);
@@ -206,8 +237,13 @@
         <img src="${p.img}" alt="">
         <div><div class="n">Pizza ${i + 1}</div><div class="d">${descOf(p.toppings)}</div></div>
         <div class="pr">${euro(p.price)}<button class="rm" data-rm="${i}">Verwijderen</button></div>
+      </div>`).join('') + [...extras].map(([id, q]) => `
+      <div class="cart-item">
+        <img src="${asset(`assets/extras/${id}.webp`)}" alt="">
+        <div><div class="n">${exById[id].name}</div><div class="d">${q} × ${euro(exById[id].price)}</div></div>
+        <div class="pr">${euro(exById[id].price * q)}<button class="rm" data-x="${id}" data-d="-${q}">Verwijderen</button></div>
       </div>`).join('') + `<button class="add-row" id="add-row"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 1v10M1 6h10"/></svg>Nog een pizza toevoegen</button>`;
-    $('#rows').innerHTML = `<div class="r t"><span>Totaal · ${plural(cart.length)}</span><span>${euro(cartTotal())}</span></div>`;
+    $('#rows').innerHTML = `<div class="r t"><span>Totaal</span><span>${euro(cartTotal())}</span></div>`;
     const ts = slots(); state.time = state.time && ts.includes(state.time) ? state.time : ts[0];
     $('#times').innerHTML = ts.map((t, i) => `<button class="time" role="radio" aria-checked="${t === state.time}" data-t="${t}">${t}<small>${i ? '&nbsp;' : 'eerst'}</small></button>`).join('');
     const methods = P.methods.filter(m => P.available(m.id));
@@ -238,85 +274,70 @@
   $('#pay').addEventListener('click', async () => {
     const b = $('#pay'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Betaling verwerken…';
     const order = {
-      pizzas: cart.map(p => ({ toppings: p.toppings, price: p.price })), amount: +cartTotal().toFixed(2), method: state.method, pickup: state.time,
+      pizzas: cart.map(p => ({ toppings: p.toppings, price: p.price })), extras: Object.fromEntries(extras), amount: +cartTotal().toFixed(2), method: state.method, pickup: state.time,
       no: '047·' + String(Math.floor(100 + Math.random() * 900)),
     };
     try { sessionStorage.setItem('ad-order', JSON.stringify(order)) } catch (_) {}
-    try { await P.start(order); bake(order) }
+    try { await P.start(order); finish(order) }
     catch (err) { b.disabled = false; b.textContent = err.message; setTimeout(payButton, 2400) }
   });
 
-  // ---------- oven ----------
-  let fire, flick = 0, ovenGeo;
-  function layoutOven() {
-    const g = manifest.oven, r = $('#s-oven').getBoundingClientRect(), W = r.width, H = r.height;
-    const s = Math.max(W / g.W, H / g.H), iw = g.W * s, ih = g.H * s, ox = (W - iw) / 2, oy = Math.min(0, (H - ih) * .35);
-    ['#ov-back', '#ov-front'].forEach(q => Object.assign($(q).style, { width: iw + 'px', height: ih + 'px', left: ox + 'px', top: oy + 'px' }));
-    const fc = $('#ov-fire'), fd = Math.min(2, window.devicePixelRatio || 1);
-    Object.assign(fc.style, { width: W + 'px', height: H + 'px' }); fc.width = Math.round(W * fd); fc.height = Math.round(H * fd);
-    const px = v => ox + v * iw, py = v => oy + v * ih;
-    ovenGeo = { W, H, floor: py(g.floor), fireX: px(g.fireX), fireY: py(g.fireY), mouthW: (g.mouthR - g.mouthL) * iw };
-    $('#ov-light').style.setProperty('--fx', (ovenGeo.fireX / W * 100) + '%');
-    $('#ov-light').style.setProperty('--fy', (ovenGeo.fireY / H * 100) + '%');
-    if (!fire) fire = window.ADFire && ADFire(fc);
-    if (fire) { fire.state.seat = [ovenGeo.fireX / W, 1 - ovenGeo.fireY / H]; fire.state.spread = .26 * ih / H * (2556 / g.H) }
+  // ---------- thank you ----------
+  const STAMPS = 10;
+  function orderLine(o) {
+    const parts = [plural(o.pizzas.length), ...Object.entries(o.extras || {}).map(([id, q]) => `${q > 1 ? q + '× ' : ''}${exById[id].name.toLowerCase()}`)];
+    return parts.join(', ');
   }
-  // pizza positions: on the peel in front of the oven / on the hearth inside
-  const baseW = () => ovenGeo.W * .84;
-  function poseT(where, w) {
-    const g = ovenGeo, out = where === 'out', target = out ? g.W * .84 : g.mouthW * .5;
-    const cx = g.W / 2 - (out ? 0 : g.W * .06), cy = out ? g.floor + (g.H - g.floor) * .32 : g.floor - g.W * .02;
-    return `translate(${cx - w / 2}px,${cy - w / 2}px) perspective(${g.W * 2}px) rotateX(${out ? 58 : 74}deg) scale(${target / w})`;
-  }
-  function placePizza(where) {
-    const el = $('#ov-pizza'); el.style.setProperty('--pw', baseW() + 'px'); el.style.transform = poseT(where, baseW());
-  }
-  function movePizza(from, to, ms) {
-    const w = baseW();
-    return $('#ov-pizza').animate([{ transform: poseT(from, w) }, { transform: poseT(to, w) }], { duration: ms, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' }).finished;
-  }
-  function flicker() {
-    if (!$('#s-oven').classList.contains('is-active')) return;
-    flick += (Math.random() - .5) * .25; flick *= .86;
-    const heat = 1 + flick;
-    if (fire) fire.state.heat = heat;
-    $('#ov-light').style.opacity = (.45 + flick * .6).toFixed(3);
-    setTimeout(flicker, 70);
-  }
-  async function bake(order) {
-    show('s-oven'); layoutOven();
-    const n = order.pizzas.length, last = order.pizzas[n - 1].toppings;
-    const pc = $('#ov-img'), ex = extruded(Math.round(Math.min(1080, ovenGeo.W * 2.4)), new Set(last));
-    pc.width = ex.width; pc.height = ex.height; pc.getContext('2d').drawImage(ex, 0, 0);
-    $('#ov-pizza').getAnimations().forEach(a => a.cancel());
-    $('.peel').classList.remove('away');
-    placePizza('out');
-    $('#order-no').textContent = `Bestelling #${order.no} · betaald`;
-    $('#oven-title').innerHTML = n > 1 ? `Uw ${n} pizza's gaan<br><i>de oven in</i>` : 'Uw pizza gaat<br><i>de oven in</i>';
-    $('#pickup-time').textContent = order.pickup;
-    $('#ready').classList.remove('shown'); $('#again').hidden = true;
-    fire?.start(); flicker();
-    await wait(900);
-    await movePizza('out', 'in', 2600);
-    $('.peel').classList.add('away');
-    $('#oven-title').innerHTML = n > 1 ? `Uw pizza's zijn<br><i>in de oven</i>` : 'Uw pizza is<br><i>in de oven</i>';
-    $('#ready').classList.add('shown'); $('#again').hidden = false;
+  function finish(order) {
+    // loyalty: one stamp per pizza, the tenth pizza is on the house
+    const before = store.get('ad-stamps') || 0, after = before + order.pizzas.length;
+    store.set('ad-stamps', after);
+    store.set('ad-last', { pizzas: order.pizzas, extras: order.extras, amount: order.amount });
+    const n = order.pizzas.length, onCard = after % STAMPS || (after ? STAMPS : 0), fresh = Math.min(n, onCard);
+    $('#thanks-no').textContent = `Bestelling #${order.no} · betaald`;
+    $('#thanks-sub').textContent = n > 1 ? `Uw ${n} pizza's worden nu met de hand gemaakt.` : 'Uw pizza wordt nu met de hand gemaakt.';
+    $('#thanks-time').textContent = order.pickup;
+    $('#thanks-img').src = still(720, new Set(order.pizzas[n - 1].toppings)).toDataURL('image/webp', .9);
+    $('#thanks-hero').style.backgroundImage = `url("${asset('assets/bench.webp')}")`;
+    $('#thanks-order').innerHTML = cart.map((p, i) => `<div class="r"><span>Pizza ${i + 1}</span><span>${euro(p.price)}</span></div>`).join('') +
+      [...extras].map(([id, q]) => `<div class="r"><span>${q} × ${exById[id].name}</span><span>${euro(exById[id].price * q)}</span></div>`).join('') +
+      `<div class="r t"><span>Betaald</span><span>${euro(order.amount)}</span></div>`;
+    $('#stamp-row').innerHTML = [...Array(STAMPS)].map((_, i) => i < onCard
+      ? `<span class="stamp on${i >= onCard - fresh ? ' new' : ''}" style="animation-delay:${.6 + (i - (onCard - fresh)) * .15}s"><span class="mark"></span></span>`
+      : `<span class="stamp${i === STAMPS - 1 ? ' gift' : ''}">${i === STAMPS - 1 ? 'gratis' : i + 1}</span>`).join('');
+    const left = STAMPS - onCard;
+    $('#stamps-note').textContent = left ? `Nog ${left} tot een gratis pizza` : 'Uw volgende pizza is gratis!';
+    show('s-thanks'); $('#s-thanks').scrollTop = 0;
     navigator.vibrate?.(14);
   }
   $('#again').addEventListener('click', () => {
-    fire?.stop(); cart.length = 0; resetBuilder(); show('s-build'); fit();
+    cart.length = 0; extras.clear(); resetBuilder(); renderWelcome(); show('s-build'); fit();
+  });
+
+  // ---------- welcome back: one-tap reorder ----------
+  function renderWelcome() {
+    const last = store.get('ad-last');
+    $('#again-card').hidden = !last;
+    if (!last) return;
+    $('#again-desc').textContent = `Uw vorige bestelling: ${orderLine(last)}.`;
+    $('#again-price').textContent = euro(last.amount);
+  }
+  $('#reorder').addEventListener('click', async () => {
+    const last = store.get('ad-last'); if (!last) return;
+    await Promise.all([load(manifest.base), ...last.pizzas.flatMap(p => p.toppings).map(ensure)]);
+    cart.length = 0; extras.clear();
+    last.pizzas.forEach(p => cart.push({ toppings: p.toppings, price: priceOf(new Set(p.toppings)), img: still(220, new Set(p.toppings)).toDataURL('image/webp', .9) }));
+    Object.entries(last.extras || {}).forEach(([id, q]) => exById[id] && extras.set(id, q));
+    renderExtras(); renderPay(); show('s-pay');
   });
 
   // ---------- boot ----------
-  renderTabs(); renderList();
+  renderTabs(); renderList(); renderExtras(); renderWelcome();
   (window.AD_MANIFEST ? Promise.resolve(AD_MANIFEST) : fetch('assets/pizza/manifest.json').then(r => r.json())).then(m => {
     manifest = m;
     load(m.base).then(fit);
     const order = C.toppings.slice().sort((a, b) => (a.cat === state.cat ? -1 : 0) - (b.cat === state.cat ? -1 : 0));
     order.reduce((p, t) => p.then(() => ensure(t.id)).catch(() => {}), Promise.resolve());
-    if (location.hash === '#oven') {
-      try { const o = JSON.parse(sessionStorage.getItem('ad-order')); if (o && o.pizzas) { const ids = o.pizzas.flatMap(p => p.toppings); Promise.all([load(m.base), ...ids.map(ensure)]).then(() => { fit(); bake(o) }) } } catch (_) {}
-    }
   });
-  addEventListener('resize', () => { fit(); if (manifest && $('#s-oven').classList.contains('is-active')) layoutOven() });
+  addEventListener('resize', fit);
 })();

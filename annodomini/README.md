@@ -2,18 +2,18 @@
 
 Klanten stellen zelf hun Napolitaanse pizza samen: basis Margherita € 9,95, elk
 beleg wordt live op de pizza gelegd, daarna afrekenen (Apple Pay, iDEAL, PayPal),
-de pizza schuift de houtoven in en gaat daarna in de Anno Domini-doos, waarvan
-het deksel dichtklapt.
+met desserts en drankjes als aanvulling. Na het betalen volgt een bedankscherm
+met afhaaltijd, stempelkaart (10e pizza gratis) en 'Bestel opnieuw' bij het
+volgende bezoek.
 
 ```
 annodomini/
   app/                 de app (statisch, geen build-stap nodig)
-    index.html         schermen: intro · samenstellen · afrekenen · oven
+    index.html         schermen: intro · samenstellen · afrekenen · bedankt
     styles.css
-    app.js             compositor, prijs, flow, oven-animatie
+    app.js             compositor, bestelling, desserts/dranken, stempelkaart
     catalog.js         menu: beleg, prijzen, categorieën (hier prijzen aanpassen)
     payments.js        betaal-adapter (demo / Mollie)
-    fire.js            live vuur in de oven (WebGL)
     manifest.webmanifest  installeerbaar op het beginscherm (PWA)
     assets/
       logo/mark.svg    gevectoriseerd 47-logo
@@ -22,7 +22,9 @@ annodomini/
       icons/           app-iconen
   tools/
     engine.js          pizza-renderer (heightmap, licht, schaduw)
-    oven.js            houtoven-scène (achtergrond + stenen boog)
+    extras.js          desserts en dranken
+    bench.js           bebloemde werkbank
+    bundle.js          alles in één HTML-bestand (dist/)
     build-assets.js    rendert alle HD-afbeeldingen opnieuw
   preview/             eerdere ontwerp-previews
 ```
@@ -76,6 +78,9 @@ De pizza en het beleg worden nu door de computer gerenderd. Voor een
 fotorealistisch resultaat vervang je de sprites in `assets/pizza/` door
 uitgeknipte foto's van bovenaf (zelfde bestandsnamen, transparante webp).
 
-De oven (`assets/oven/back.webp` + `front.webp`) kan ook vervangen worden door
-een echte foto van jullie eigen oven: `back` = de hele foto, `front` = alleen de
-stenen boog rond de ovenmond, met een transparante opening.
+
+## Stempelkaart en 'Bestel opnieuw'
+
+Beide worden nu per toestel in de browser bewaard (localStorage). Voor een
+stempelkaart die over toestellen heen werkt en niet te omzeilen is, moeten de
+stempels later aan een klantaccount of telefoonnummer op de server hangen.

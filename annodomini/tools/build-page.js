@@ -54,11 +54,13 @@ window.buildAll = async function () {
     out(`thumbs/${t.id}.webp`, th);
     await tick();
   }
-  // wood-fired oven scene (phone portrait, 3x)
-  const oven = renderOven(1179, 2556);
-  files['oven/back.webp'] = oven.back.toDataURL('image/webp', .9);
-  files['oven/front.webp'] = oven.front.toDataURL('image/webp', .9);
-  manifest.oven = oven.geom;
+  // desserts & drinks on dark slate
+  for (const e of AD_CATALOG.extras) {
+    const c = cv(240);
+    PZ.render(c, { base: false, bg: [40, 38, 35], PRpx: 160, toppings: L => PZ.extras[e.art](L, 120, 120, 96) });
+    out(`extras/${e.id}.webp`, c);
+    await tick();
+  }
   files['bench.webp'] = renderBench(1179, 1500).toDataURL('image/webp', .88);
   return { files, manifest };
 };

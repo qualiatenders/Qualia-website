@@ -13,6 +13,17 @@ window.AD_CATALOG = {
     { id: 'groente', name: 'Groente' },
     { id: 'afwerking', name: 'Afwerking' },
   ],
+  // Desserts & drinks, offered after a pizza is added and again at checkout.
+  extras: [
+    { id: 'tiramisu', cat: 'Dessert', name: 'Tiramisu', desc: 'Huisgemaakt, met mascarpone en espresso', price: 6.5, art: 'tiramisu' },
+    { id: 'pannacotta', cat: 'Dessert', name: 'Panna cotta', desc: 'Met rood-fruitsaus', price: 5.95, art: 'pannacotta' },
+    { id: 'cannoli', cat: 'Dessert', name: 'Cannoli', desc: 'Krokant, gevuld met ricotta en pistache', price: 5.5, art: 'cannoli' },
+    { id: 'affogato', cat: 'Dessert', name: 'Affogato', desc: 'Vanille-ijs met een shot espresso', price: 4.95, art: 'affogato' },
+    { id: 'limonade', cat: 'Drank', name: 'Huisgemaakte limonade', desc: 'Citroen en munt', price: 3.95, art: 'limonade' },
+    { id: 'wijn', cat: 'Drank', name: 'Rode huiswijn', desc: 'Per glas', price: 5.5, art: 'wijn' },
+    { id: 'water', cat: 'Drank', name: 'Bruisend water', desc: 'Met citroen', price: 3.25, art: 'water' },
+    { id: 'espresso', cat: 'Drank', name: 'Espresso', desc: 'Italiaanse branding', price: 2.6, art: 'espresso' },
+  ],
   // `z` is the stacking order on the pizza; toppings added after baking sit on top.
   toppings: [
     { id: 'bufala', cat: 'kaas', name: 'Buffelmozzarella', desc: 'Romig, uit Campanië', price: 3.5, z: 10,

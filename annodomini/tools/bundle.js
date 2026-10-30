@@ -11,7 +11,8 @@ const dataUri = rel => `data:${mime[path.extname(rel)]};base64,${fs.readFileSync
 
 // every runtime image the app loads by path
 const assets = {};
-for (const dir of ['assets/pizza', 'assets/thumbs'])
+assets['assets/bench.webp'] = dataUri('assets/bench.webp');
+for (const dir of ['assets/pizza', 'assets/thumbs', 'assets/extras'])
   for (const f of fs.readdirSync(path.join(app, dir))) if (f.endsWith('.webp')) assets[`${dir}/${f}`] = dataUri(`${dir}/${f}`);
 const manifest = read('assets/pizza/manifest.json');
 
