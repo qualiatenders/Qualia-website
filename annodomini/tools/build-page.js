@@ -59,5 +59,6 @@ window.buildAll = async function () {
   files['oven/back.webp'] = oven.back.toDataURL('image/webp', .9);
   files['oven/front.webp'] = oven.front.toDataURL('image/webp', .9);
   manifest.oven = oven.geom;
+  files['bench.webp'] = renderBench(1179, 1500).toDataURL('image/webp', .88);
   return { files, manifest };
 };

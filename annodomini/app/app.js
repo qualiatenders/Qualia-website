@@ -34,16 +34,15 @@
   // ---------- pizza compositor ----------
   const cv = $('#pizza'), ctx = cv.getContext('2d');
   function fit() {
-    const r = $('#stage').getBoundingClientRect();
-    // open box: floor ≈ s·cos(tilt), standing lid ≈ s·0.45 above it
-    const s = Math.floor(Math.max(190, Math.min(r.width - 56, (r.height - 10) / 1.62)));
-    const scene = $('#box-build');
-    scene.style.setProperty('--s', s + 'px');
-    scene.style.marginTop = (s * .56) + 'px';
-    const css = Math.round(s * .9);
+    const r = $('#stage').getBoundingClientRect(), b = $('#s-build').getBoundingClientRect();
+    const css = Math.floor(Math.max(200, Math.min(r.width - 28, r.height - 36)));
     dpr = Math.min(3, window.devicePixelRatio || 1);
     cv.style.width = cv.style.height = css + 'px';
     cv.width = cv.height = Math.round(css * dpr);
+    // centre the floured bench (1179×1500) under the pizza
+    const mid = r.top - b.top + r.height / 2, bw = Math.max(b.width, css * 1.08, mid / .62);
+    $('#s-build').style.setProperty('--bw', bw + 'px');
+    $('#s-build').style.setProperty('--by', (mid - bw * 1500 / 1179 / 2) + 'px');
     draw(performance.now());
   }
   let raf = 0;
@@ -102,30 +101,19 @@
   }
   // the same still with a dough rim, so it reads as a real pizza when seen at an angle
   function extruded(size) {
-    const top = still(size), c = document.createElement('canvas'), depth = Math.round(size * .075);
-    c.width = size; c.height = size + depth;
-    const x = c.getContext('2d');
-    for (let k = depth; k > 0; k--) { x.filter = `brightness(${.42 + .4 * (1 - k / depth)}) saturate(.8)`; x.drawImage(top, 0, k) }
-    x.filter = 'none'; x.drawImage(top, 0, 0);
-    return c;
+    const top = still(size), depth = Math.round(size * .075);
+    const rim = document.createElement('canvas'); rim.width = size; rim.height = size + depth;
+    const r = rim.getContext('2d');
+    for (let k = depth; k > 0; k--) r.drawImage(top, 0, k);
+    r.globalCompositeOperation = 'source-atop';
+    const g = r.createLinearGradient(0, size * .5, 0, size + depth);
+    g.addColorStop(0, 'rgba(40,22,10,.35)'); g.addColorStop(1, 'rgba(25,12,5,.7)');
+    r.fillStyle = g; r.fillRect(0, 0, size, size + depth);
+    r.globalCompositeOperation = 'source-over'; r.drawImage(top, 0, 0);
+    return rim;
   }
 
   // ---------- build screen ----------
-  function pizzaName() {
-    const on = id => state.active.has(id), n = state.active.size;
-    if (!n) return 'Margherita';
-    if (on('tartufo')) return 'Tartufata';
-    if (on('prosciutto') && on('rucola')) return 'Parma e Rucola';
-    if (on('burrata') && on('prosciutto')) return 'Burrata e Crudo';
-    if (on('nduja') || on('salame')) return on('miele') ? 'Diavola al Miele' : 'Diavola';
-    if (on('salsiccia')) return on('funghi') ? 'Salsiccia e Funghi' : 'Salsiccia';
-    if (on('prosciutto')) return 'Crudo';
-    if (on('burrata')) return 'Burrata';
-    if (['bufala', 'parmigiano', 'gorgonzola'].filter(on).length >= 2) return 'Formaggi';
-    if (on('funghi')) return 'Funghi';
-    if ([...state.active].every(id => byId[id].cat === 'verdure')) return 'Ortolana';
-    return 'Margherita Speciale';
-  }
   const total = () => C.base.price + [...state.active].reduce((s, id) => s + byId[id].price, 0);
 
   let shownTotal = C.base.price;
@@ -149,8 +137,6 @@
       </button>`).join('');
   }
   function refresh() {
-    const name = pizzaName(), h = $('#pizza-name');
-    if (h.textContent !== name) { h.style.opacity = 0; setTimeout(() => { h.textContent = name; h.style.opacity = 1 }, 180) }
     animateTotal(total());
     renderTabs();
     document.querySelectorAll('.item').forEach(b => b.setAttribute('aria-pressed', state.active.has(b.dataset.id)));
@@ -178,9 +164,8 @@
     anims.clear(); draw(performance.now());
     const chosen = C.toppings.filter(t => state.active.has(t.id));
     $('#sum-img').src = still(240).toDataURL('image/webp', .9);
-    $('#sum-name').textContent = pizzaName();
     $('#sum-desc').textContent = chosen.length ? chosen.map(t => t.name).join(' · ') : C.base.desc;
-    $('#rows').innerHTML = `<div class="r"><span>Pizza ${C.base.name}</span><span>${euro(C.base.price)}</span></div>` +
+    $('#rows').innerHTML = `<div class="r"><span>${C.base.name}</span><span>${euro(C.base.price)}</span></div>` +
       chosen.map(t => `<div class="r"><span>${t.name}</span><span>+ ${t.price.toFixed(2).replace('.', ',')}</span></div>`).join('') +
       `<div class="r t"><span>Totaal</span><span>${euro(total())}</span></div>`;
     const ts = slots(); state.time = state.time && ts.includes(state.time) ? state.time : ts[0];
@@ -206,7 +191,7 @@
   $('#pay').addEventListener('click', async () => {
     const b = $('#pay'); b.disabled = true; b.innerHTML = '<span class="spin"></span> Betaling verwerken…';
     const order = {
-      pizza: pizzaName(), toppings: [...state.active], amount: +total().toFixed(2), method: state.method, pickup: state.time,
+      pizza: 'Eigen pizza', toppings: [...state.active], amount: +total().toFixed(2), method: state.method, pickup: state.time,
       no: '047·' + String(Math.floor(100 + Math.random() * 900)),
     };
     try { sessionStorage.setItem('ad-order', JSON.stringify(order)) } catch (_) {}
@@ -251,64 +236,28 @@
     $('#ov-light').style.opacity = (.45 + flick * .6).toFixed(3);
     setTimeout(flicker, 70);
   }
-  function setClock(left) { const s = Math.ceil(left); $('#clock').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` }
-
   async function bake(order) {
     show('s-oven'); layoutOven();
     const pc = $('#ov-img'), ex = extruded(Math.round(Math.min(1080, ovenGeo.W * 2.4)));
     pc.width = ex.width; pc.height = ex.height; pc.getContext('2d').drawImage(ex, 0, 0);
     $('#ov-pizza').getAnimations().forEach(a => a.cancel());
-    $('.peel').classList.remove('away'); pc.style.filter = '';
+    $('.peel').classList.remove('away');
     placePizza('out');
     $('#order-no').textContent = `Bestelling #${order.no} · betaald`;
     $('#oven-title').innerHTML = 'Uw pizza gaat<br><i>de oven in</i>';
-    $('#pickup-line').textContent = `Afhalen om ${order.pickup}`;
-    ['st-1', 'st-2', 'st-3'].forEach((s, i) => $('#' + s).classList.toggle('on', i === 0));
-    $('#progress').style.width = '0%'; setClock(90);
+    $('#pickup-time').textContent = order.pickup;
+    $('#ready').classList.remove('shown'); $('#again').hidden = true;
     fire?.start(); flicker();
     await wait(900);
     await movePizza('out', 'in', 2600);
     $('.peel').classList.add('away');
-    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'Uw pizza is <i>in de oven</i>';
-    pc.style.transition = `filter ${90 / fast}s linear`; pc.style.filter = 'brightness(1.12) saturate(1.1) sepia(.06)';
-    const BAKE = 90, t0 = Date.now();
-    await new Promise(done => {
-      const iv = setInterval(() => {
-        const el = clamp((Date.now() - t0) / 1000 * fast, 0, BAKE);
-        setClock(BAKE - el); $('#progress').style.width = (el / BAKE * 100) + '%';
-        if (el >= BAKE) { clearInterval(iv); done() }
-      }, 200);
-    });
-    $('#oven-title').innerHTML = 'Perfetto — <i>uit de oven</i>';
-    $('.peel').classList.remove('away');
-    await wait(600);
-    await movePizza('in', 'out', 1900);
-    $('#st-3').classList.add('on');
-    await wait(300);
-    boxUp(order);
-  }
-
-  // ---------- into the box ----------
-  async function boxUp(order) {
-    const scene = $('#box-done'), r = $('#s-done').getBoundingClientRect();
-    const s = Math.round(Math.min(r.width - 80, r.height * .34));
-    scene.style.setProperty('--s', s + 'px'); scene.style.marginTop = (s * .3) + 'px';
-    const dc = $('#done-pizza'), size = Math.round(s * .9 * Math.min(3, window.devicePixelRatio || 1));
-    dc.width = dc.height = size; dc.style.width = dc.style.height = Math.round(s * .9) + 'px';
-    const top = still(size), x = dc.getContext('2d'); x.filter = 'brightness(1.06) saturate(1.06)'; x.drawImage(top, 0, 0);
-    $('#done-no').textContent = `Bestelling #${order.no}`;
-    $('#done-line').textContent = `Afhalen om ${order.pickup} · Anno Domini, Kampen`;
-    const done = $('#s-done');
-    done.classList.remove('shown'); scene.classList.remove('closing');
-    show('s-done'); fire?.stop();
-    await wait(450); void scene.offsetWidth; scene.classList.add('closing');
-    navigator.vibrate?.([0, 1900, 14]);
-    await wait(2200); done.classList.add('shown');
+    $('#oven-title').innerHTML = 'Uw pizza is<br><i>in de oven</i>';
+    $('#ready').classList.add('shown'); $('#again').hidden = false;
+    navigator.vibrate?.(14);
   }
   $('#again').addEventListener('click', () => {
-    state.active.clear(); anims.clear(); shownTotal = C.base.price;
-    $('#total').textContent = euro(C.base.price); $('#pizza-name').textContent = 'Margherita';
-    $('#box-done').classList.remove('closing');
+    fire?.stop(); state.active.clear(); anims.clear(); shownTotal = C.base.price;
+    $('#total').textContent = euro(C.base.price);
     renderTabs(); renderList(); show('s-build'); fit();
   });
 

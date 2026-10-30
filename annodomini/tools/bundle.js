@@ -6,7 +6,7 @@ const path = require('path');
 const app = path.resolve(__dirname, '..', 'app');
 const out = path.resolve(__dirname, '..', 'dist', 'anno-domini.html');
 const read = f => fs.readFileSync(path.join(app, f), 'utf8');
-const mime = { '.webp': 'image/webp', '.png': 'image/png', '.svg': 'image/svg+xml' };
+const mime = { '.webp': 'image/webp', '.jpg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml' };
 const dataUri = rel => `data:${mime[path.extname(rel)]};base64,${fs.readFileSync(path.join(app, rel)).toString('base64')}`;
 
 // every runtime image the app loads by path
@@ -16,7 +16,7 @@ for (const dir of ['assets/pizza', 'assets/thumbs'])
 const manifest = read('assets/pizza/manifest.json');
 
 let html = read('index.html');
-let css = read('styles.css').replace(/url\(assets\/logo\/mark\.svg\)/g, `url("${dataUri('assets/logo/mark.svg')}")`);
+let css = read('styles.css').replace(/url\((assets\/[^)]+)\)/g, (_, p) => `url("${dataUri(p)}")`);
 html = html
   .replace(/<link rel="manifest"[^>]*>\n/, '')
   .replace(/<link rel="preload"[^>]*>\n/, '')

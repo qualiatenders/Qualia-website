@@ -13,7 +13,7 @@ const outDir = path.join(root, 'app', 'assets');
   const page = await browser.newPage();
   page.on('pageerror', e => { console.error(e); process.exitCode = 1; });
   await page.setContent('<!doctype html><body></body>');
-  for (const f of ['tools/engine.js', 'tools/oven.js', 'app/catalog.js', 'tools/build-page.js'])
+  for (const f of ['tools/engine.js', 'tools/oven.js', 'tools/bench.js', 'app/catalog.js', 'tools/build-page.js'])
     await page.addScriptTag({ path: path.join(root, f) });
 
   const t0 = Date.now();

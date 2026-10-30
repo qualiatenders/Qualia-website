@@ -28,7 +28,7 @@
     <div class="intro-inner">
       <div class="mark mark-xl" aria-hidden="true"></div>
       <h1 class="wordmark">Anno Domini</h1>
-      <p class="intro-sub">Pizzeria Napoletana · Kampen</p>
+      <p class="intro-sub">Napolitaanse pizzeria · Kampen</p>
       <p class="intro-lead">Uw pizza, met de hand belegd.<br><em>Precies zoals u hem wilt.</em></p>
       <button class="btn-light" id="start">Stel uw pizza samen <span aria-hidden="true">→</span></button>
       <p class="intro-meta">48 uur gerezen deeg · met de hand gemaakt</p>
@@ -44,16 +44,7 @@
       </button>
     </header>
     <div class="stage" id="stage">
-      <div class="box-scene" id="box-build">
-        <div class="box">
-          <div class="box-floor"><canvas id="pizza" aria-label="Uw pizza"></canvas></div>
-          <i class="wall w-s"></i><i class="wall w-n"></i><i class="wall w-e"></i><i class="wall w-w"></i>
-          <div class="box-lid">
-            <div class="lid-out"><span class="lid-line"></span><span class="mark"></span><b>Anno Domini</b><small>Pizzeria Napoletana · Kampen</small></div>
-            <div class="lid-in lid-name"><span class="eyebrow">Uw creatie</span><em id="pizza-name">Margherita</em><small>32 cm · 48 uur gerezen</small></div>
-          </div>
-        </div>
-      </div>
+      <canvas id="pizza" aria-label="Uw pizza"></canvas>
       <div class="chip chip-l"><i></i>Live belegd</div>
       <div class="chip chip-r">32 cm · 48u gerezen</div>
     </div>
@@ -77,7 +68,7 @@
     </header>
     <div class="pay-scroll">
       <div class="card">
-        <div class="sum"><img id="sum-img" alt=""><div><div class="sum-n" id="sum-name">Margherita</div><div class="sum-d" id="sum-desc"></div></div></div>
+        <div class="sum"><img id="sum-img" alt=""><div><div class="sum-n">Uw pizza</div><div class="sum-d" id="sum-desc"></div></div></div>
         <div class="rows" id="rows"></div>
       </div>
       <div class="sec"><div class="eyebrow">Afhalen vandaag</div><div class="times" id="times"></div></div>
@@ -98,38 +89,14 @@
       <div class="eyebrow" id="order-no">Bestelling · betaald</div>
       <h2 id="oven-title">Uw pizza gaat<br><i>de oven in</i></h2>
     </div>
-    <div class="timer">
-      <div class="timer-row">
-        <div><div class="eyebrow">In de oven</div><div class="timer-big" id="clock">01:30</div></div>
-        <div class="timer-sm">Vers voor u gebakken<br><span id="pickup-line">Afhalen om 18:45</span></div>
-      </div>
-      <div class="track"><span id="progress"></span></div>
-      <div class="stages"><span class="on" id="st-1">Ontvangen</span><span id="st-2">In de oven</span><span id="st-3">In de doos</span></div>
+    <div class="ready" id="ready">
+      <div class="eyebrow">Afhalen vandaag</div>
+      <div class="ready-time" id="pickup-time">18:45</div>
+      <p id="pickup-line">Anno Domini · Kampen</p>
+      <button class="btn-light btn-again" id="again" hidden>Nieuwe pizza samenstellen</button>
     </div>
   </section>
 
-  <!-- Boxed -->
-  <section class="screen done" id="s-done" aria-label="Klaar">
-    <div class="done-top"><span class="mark mark-sm" aria-hidden="true"></span></div>
-    <div class="done-stage">
-      <div class="box-scene" id="box-done">
-        <div class="box">
-          <div class="box-floor"><canvas id="done-pizza"></canvas></div>
-          <i class="wall w-s"></i><i class="wall w-n"></i><i class="wall w-e"></i><i class="wall w-w"></i>
-          <div class="box-lid">
-            <div class="lid-out"><span class="lid-line"></span><span class="mark"></span><b>Anno Domini</b><small>Pizzeria Napoletana · Kampen</small></div>
-            <div class="lid-in"><em>Buon appetito</em><small>Fatta a mano · 47 Anno Domini</small></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="done-txt">
-      <div class="eyebrow" id="done-no">Bestelling</div>
-      <h2>Klaar om<br><i>op te halen</i></h2>
-      <p id="done-line">Afhalen om 18:45 · Anno Domini, Kampen</p>
-      <button class="btn-light" id="again">Nieuwe pizza samenstellen</button>
-    </div>
-  </section>
 
 </div>
 <script src="catalog.js"></script>
