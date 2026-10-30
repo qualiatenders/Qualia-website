@@ -1,14 +1,13 @@
-// Anno Domini — heightmap pizza renderer (preview)
-// Each layer paints albedo (A), height (H) and gloss (S); one lighting pass
-// turns that into a shaded, shadow-casting, top-lit image.
-
+// Anno Domini — pizza renderer v2
+// Layers paint albedo (A), height (H) and material (M: r=gloss g=wrap b=sharpness a=coverage).
+// One lighting pass turns that into a shaded image with soft cast shadows and AO.
+const PZ=(()=>{
 function mulberry(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
 let R=mulberry(47);
 const rnd=(a,b)=>a+(b-a)*R();
 const clamp=(v,a=0,b=1)=>v<a?a:v>b?b:v;
 const sstep=(a,b,v)=>{const t=clamp((v-a)/(b-a));return t*t*(3-2*t)};
 const mix=(a,b,t)=>a+(b-a)*t;
-
 function makeNoise(seed){
   const p=new Uint16Array(512),r=mulberry(seed),g=new Float32Array(256);
   for(let i=0;i<256;i++){p[i]=i;g[i]=r()}
@@ -18,214 +17,182 @@ function makeNoise(seed){
     const a=g[p[p[X]+Y]],b=g[p[p[X+1]+Y]],c=g[p[p[X]+Y+1]],d=g[p[p[X+1]+Y+1]];
     const u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v}}
 function fbm(n,x,y,o){let s=0,a=.5,f=1,t=0;for(let i=0;i<o;i++){s+=a*n(x*f,y*f);t+=a;f*=2.03;a*=.5}return s/t}
-const N=[...Array(8)].map((_,i)=>makeNoise(101+i*17));
+const N=[...Array(10)].map((_,i)=>makeNoise(101+i*17));
 
-// smooth organic outline (low-frequency only)
 function blob(ctx,x,y,r,irr,seed,stretch=1,rot=0){
-  const n=makeNoise(seed);ctx.beginPath();
-  for(let i=0;i<=96;i++){const a=i/96*Math.PI*2;
-    const k=1+irr*((fbm(n,Math.cos(a)*1.3+4,Math.sin(a)*1.3+4,3)-.5)*2);
+  const n=makeNoise(seed),m=makeNoise(seed+3);ctx.beginPath();
+  for(let i=0;i<=120;i++){const a=i/120*Math.PI*2;
+    const k=1+irr*((fbm(n,Math.cos(a)*1.2+4,Math.sin(a)*1.2+4,2)-.5)*2)+irr*.25*((m(Math.cos(a)*4+9,Math.sin(a)*4+9))-.5);
     const lx=Math.cos(a)*r*k*stretch,ly=Math.sin(a)*r*k;
-    const px=x+lx*Math.cos(rot)-ly*Math.sin(rot),py=y+lx*Math.sin(rot)+ly*Math.cos(rot);
-    i?ctx.lineTo(px,py):ctx.moveTo(px,py)}
+    ctx.lineTo(x+lx*Math.cos(rot)-ly*Math.sin(rot),y+lx*Math.sin(rot)+ly*Math.cos(rot))}
   ctx.closePath()}
+const layer=(c,fn,{blur=0,op='source-over',alpha=1}={})=>{c.save();c.globalCompositeOperation=op;c.globalAlpha=alpha;if(blur)c.filter=`blur(${blur}px)`;fn(c);c.restore()};
 
-// ---------- scene ----------
-function renderScene(canvas,{base=true,toppings=()=>{},PRf=.43,light=[-.52,-.62,.72]}={}){
-  const W=canvas.width,cx=W/2,cy=W/2,PR=W*PRf,HS=PR*.11;
-  const mk=()=>{const c=document.createElement('canvas');c.width=c.height=W;return c};
-  const Ac=mk(),Hc=mk(),Sc=mk(),A=Ac.getContext('2d',{willReadFrequently:true}),H=Hc.getContext('2d',{willReadFrequently:true}),S=Sc.getContext('2d',{willReadFrequently:true});
-  H.fillStyle='#000';H.fillRect(0,0,W,W);S.fillStyle='#000';S.fillRect(0,0,W,W);
-  const Hb=new Float32Array(W*W),alpha=new Float32Array(W*W).fill(1);
+function render(canvas,{base=true,size=.46,toppings=()=>{},bg=null}={}){
+  const W=canvas.width,cx=W/2,cy=W/2,PR=W*size,HS=PR*.12,sc=1200/W;
+  const mk=()=>{const c=document.createElement('canvas');c.width=c.height=W;return c.getContext('2d',{willReadFrequently:true})};
+  const A=mk(),H=mk(),M=mk();H.fillStyle='#000';H.fillRect(0,0,W,W);
+  const n=W*W,Hb=new Float32Array(n),Gl=new Float32Array(n),Wr=new Float32Array(n),Ex=new Float32Array(n),alpha=new Float32Array(n);
 
-  // --- base pass: stone, dough, sauce ---
-  const img=A.createImageData(W,W),d=img.data,sc=1440/W;
-  const SR=base?1.075:1.6;
+  // blisters on the cornicione: raised domes, charred on top, browned halo
+  const BH=new Float32Array(n),CH=new Float32Array(n),BR=new Float32Array(n);
+  if(base){
+    for(let k=0;k<520;k++){const tiny=k>=260;
+      const a=rnd(0,Math.PI*2),big=!tiny&&R()<.35,d=rnd(.79,.985)*PR,br=PR*(tiny?rnd(.004,.009):big?rnd(.03,.065):rnd(.01,.028));
+      const bx=cx+Math.cos(a)*d,by=cy+Math.sin(a)*d*1.01,amp=tiny?.01:big?rnd(.12,.28):rnd(.05,.12),charred=tiny||R()<(big?.6:.45),cs=rnd(.25,.6);
+      const x0=Math.max(0,bx-br*2|0),x1=Math.min(W-1,bx+br*2|0),y0=Math.max(0,by-br*2|0),y1=Math.min(W-1,by+br*2|0);
+      for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++){const i=y*W+x,q=Math.hypot(x-bx,y-by)/br;if(q>2)continue;
+        BH[i]+=Math.exp(-q*q*2.4)*amp;BR[i]=Math.max(BR[i],Math.exp(-q*q*.9)*.75);
+        if(charred){const e=q+(N[8](x*sc*.15,y*sc*.15)-.5)*.6;CH[i]=Math.max(CH[i],sstep(cs+.18,cs-.08,e))}}
+    }
+  }
+
+  const img=A.createImageData(W,W),d=img.data;
   for(let y=0;y<W;y++)for(let x=0;x<W;x++){
-    const i=y*W+x,o=i*4,dx=(x-cx)/PR,dy=(y-cy)/PR,r=Math.hypot(dx,dy),ca=dx/(r||1),sa=dy/(r||1);
-    const X=x*sc,Y=y*sc;
-    // stone peel
-    const sn=fbm(N[6],X*.012,Y*.012,4),sf=N[7](X*.4,Y*.4);
-    let cr=30+sn*14+sf*5,cg=29+sn*13+sf*5,cb=27+sn*12+sf*5;
-    if(N[5](X*.7,Y*.7)>.93&&base){const f=N[4](X*.05,Y*.05);if(f>.45){cr=cg=cb=mix(cr,214,.35)}}
-    let h=0,spec=.06;
-    alpha[i]=base?sstep(SR+.006,SR-.004,r):1;
+    const i=y*W+x,o=i*4,dx=(x-cx)/PR,dy=(y-cy)/(PR*1.015),r=Math.hypot(dx,dy),ca=dx/(r||1),sa=dy/(r||1),X=x*sc,Y=y*sc;
+    let cr=0,cg=0,cb=0,h=0,gl=.05,wr=.1,ex=.2,al=base?0:1;
+    if(!base&&bg){const v=(N[6](X*.4,Y*.4)-.5)*6;cr=bg[0]+v;cg=bg[1]+v;cb=bg[2]+v}
     if(base){
-      const en=fbm(N[0],ca*1.4+5,sa*1.4+5,3)-.5,rr=r/(1+.075*en);
-      const rs=.775+.06*(fbm(N[1],ca*2.2+9,sa*2.2+9,3)-.5)+.012*(N[2](X*.03,Y*.03)-.5);
-      if(rr<1.015){
-        const bub=fbm(N[2],X*.011,Y*.011,4),bub2=fbm(N[3],X*.032,Y*.032,2);
-        const u=clamp((rr-rs+.07)/(1-rs+.07)),prof=Math.pow(Math.sin(Math.PI*Math.pow(u,.78)),.55)*sstep(1.012,.985,rr);
-        const lift=.13*sstep(1.01,.96,rr);
-        h=lift+prof*(.72+.6*(bub-.5));
-        // dough colour: pale → golden → baked
-        const bake=clamp(prof*.9+(bub-.5)*1.3+(1-rr)*-.2+.1);
-        let dr=mix(244,226,bake),dg=mix(214,160,bake),db=mix(160,82,bake);
-        if(bake>.72){const t=(bake-.72)/.28;dr=mix(dr,176,t);dg=mix(dg,98,t);db=mix(db,42,t)}
-        // leopard spotting on the raised rim
-        const ch=fbm(N[4],X*.03,Y*.03,4),ch2=N[5](X*.11,Y*.11);
-        const leo=sstep(.7,.76,ch)*sstep(.3,.7,prof)*.9+sstep(.84,.88,ch2)*sstep(.35,.75,prof)*.8;
-        const leoE=sstep(.6,.7,ch)*sstep(.2,.6,prof)*.55;
-        dr=mix(dr,150,leoE);dg=mix(dg,82,leoE);db=mix(db,32,leoE);
-        dr=mix(dr,34,leo);dg=mix(dg,22,leo);db=mix(db,16,leo);
-        // flour
-        if(N[6](X*.9,Y*.9)>.8&&prof>.2){dr=mix(dr,246,.3);dg=mix(dg,238,.3);db=mix(db,222,.3)}
-        const da=sstep(1.012,.995,rr);
-        cr=mix(cr,dr,da);cg=mix(cg,dg,da);cb=mix(cb,db,da);
-        spec=mix(spec,.08,da);
-        // San Marzano sauce
-        const m=sstep(rs+.012,rs-.01,rr);
+      const en=.055*(fbm(N[0],ca*1.1+5,sa*1.1+5,3)-.5)+.014*(N[9](ca*5+3,sa*5+3)-.5),rr=r/(1+en);
+      const rs=.765+.055*(fbm(N[1],ca*1.8+9,sa*1.8+9,3)-.5)+.02*(fbm(N[2],X*.025,Y*.025,2)-.5);
+      al=sstep(1.004,.992,rr);
+      if(al>0){
+        const lump=fbm(N[2],X*.006,Y*.006,3),mid=fbm(N[3],X*.02,Y*.02,4),fine=N[4](X*.22,Y*.22);
+        const u=clamp((rr-(rs-.06))/(1-(rs-.06))),prof=sstep(0,.42,u)*Math.pow(sstep(1.0,.6,u),.55);
+        h=.1*sstep(1,.95,rr)+prof*(.55+.5*(lump-.5)+.12*(mid-.5))+BH[i]*sstep(.2,.6,prof)+.006*fine;
+        let bake=clamp(.15+prof*.38+BR[i]*.45+(mid-.5)*.55+(lump-.5)*.3+sstep(.93,1,rr)*.3);
+        const ramp=[[240,220,182],[232,186,118],[204,134,66],[150,82,36],[96,50,24]];
+        const t=bake*3.2,k=Math.min(3,Math.floor(t)),f=clamp(t-k);
+        let dr=mix(ramp[k][0],ramp[k+1][0],f),dg=mix(ramp[k][1],ramp[k+1][1],f),db=mix(ramp[k][2],ramp[k+1][2],f);
+        // leopard char on blister tops, plus fine soot freckles
+        const freck=0;
+        const ch=Math.max(CH[i]*sstep(.15,.5,prof),freck);
+        const cv=N[7](X*.3,Y*.3)*18;
+        dr=mix(dr,30+cv,ch);dg=mix(dg,20+cv*.7,ch);db=mix(db,15+cv*.5,ch);
+        // flour dust on the outer rim
+        const fl=sstep(.62,.78,fbm(N[6],X*.018,Y*.018,3))*sstep(.86,.98,rr)*(1-ch)*.45+(N[6](X*.9,Y*.9)>.86?.25:0)*prof;
+        dr=mix(dr,244,fl);dg=mix(dg,236,fl);db=mix(db,220,fl);
+        cr=dr;cg=dg;cb=db;gl=.04+ch*.05;wr=.25;ex=.1;
+        // San Marzano sauce, thin & caramelised at the rim
+        const m=sstep(rs+.012,rs-.012,rr);
         if(m>0){
-          const v=fbm(N[1],X*.009,Y*.009,5),p=fbm(N[3],X*.08,Y*.08,3),th=sstep(rs,rs-.05,rr);
-          let sr=mix(112,188,v),sg=mix(14,40,v),sb=mix(8,24,v);
-          sr+=(p-.5)*30;sg+=(p-.5)*8;
-          // thin, caramelised sauce near the rim
-          sr=mix(mix(cr,140,.7),sr,th);sg=mix(mix(cg,48,.7),sg,th);sb=mix(mix(cb,22,.7),sb,th);
+          const v=fbm(N[1],X*.008,Y*.008,5),ck=fbm(N[3],X*.05,Y*.05,3),oilN=fbm(N[7],X*.012,Y*.012,3),th=sstep(rs,rs-.07,rr);
+          let sr=mix(118,192,v),sg=mix(14,40,v),sb=mix(9,22,v);
+          sr+=(ck-.5)*46;sg+=(ck-.5)*12;sb+=(ck-.5)*6;
+          const oz=sstep(.55,.72,oilN);sr=mix(sr,206,oz*.35);sg=mix(sg,78,oz*.35);sb=mix(sb,30,oz*.35);
+          sr=mix(mix(dr,132,.75),sr,th);sg=mix(mix(dg,40,.75),sg,th);sb=mix(mix(db,20,.75),sb,th);
           cr=mix(cr,sr,m);cg=mix(cg,sg,m);cb=mix(cb,sb,m);
-          h+=m*(.03+.018*(p-.5)+.03*(v-.5));spec=mix(spec,.42,m*th);
+          h+=m*(.028+.03*(ck-.5)+.02*(v-.5));
+          gl=mix(gl,.35+.4*oz,m*th);wr=mix(wr,.05,m);ex=mix(ex,.75,m);
         }
       }
     }
-    Hb[i]=h*HS;d[o]=cr;d[o+1]=cg;d[o+2]=cb;d[o+3]=255;S.globalAlpha=1;
-    sB[i]=spec;
+    Hb[i]=h*HS;Gl[i]=gl;Wr[i]=wr;Ex[i]=ex;alpha[i]=al;
+    d[o]=cr;d[o+1]=cg;d[o+2]=cb;d[o+3]=255;
   }
   A.putImageData(img,0,0);
+  toppings({A,H,M,cx,cy,PR,W});
 
-  // --- toppings paint into A/H/S ---
-  toppings({A,H,S,cx,cy,PR,W});
-
-  // --- lighting pass ---
-  const ad=A.getImageData(0,0,W,W).data,hd=H.getImageData(0,0,W,W).data,gd=S.getImageData(0,0,W,W).data;
-  const TS=PR*.045,Ht=new Float32Array(W*W);
-  for(let i=0;i<W*W;i++)Ht[i]=Hb[i]+hd[i*4]/255*TS;
-  // ambient occlusion from blurred height
-  const blur=boxBlur(Ht,W,Math.max(2,W/90|0));
-  const [lx0,ly0,lz0]=light,ll=Math.hypot(lx0,ly0,lz0),lx=lx0/ll,ly=ly0/ll,lz=lz0/ll,lxy=Math.hypot(lx,ly),sx=lx/lxy,sy=ly/lxy,slope=lz/lxy;
-  const hx0=lx,hy0=ly,hz0=lz+1,hl=Math.hypot(hx0,hy0,hz0),hx=hx0/hl,hy=hy0/hl,hz=hz0/hl;
-  const out=canvas.getContext('2d'),oi=out.createImageData(W,W),od=oi.data,steps=18,stepL=PR*.009;
+  // lighting
+  const ad=A.getImageData(0,0,W,W).data,hd=H.getImageData(0,0,W,W).data,md=M.getImageData(0,0,W,W).data;
+  const TS=PR*.05,Ht=new Float32Array(n);for(let i=0;i<n;i++)Ht[i]=Hb[i]+hd[i*4]/255*TS;
+  const blurH=boxBlur(Ht,W,Math.max(2,W/70|0)),blurS=boxBlur(Ht,W,Math.max(1,W/260|0));
+  const nrm=v=>{const l=Math.hypot(...v);return v.map(a=>a/l)};
+  const L1=nrm([-.5,-.62,.62]),L2=nrm([.65,.35,.7]),Hh=nrm([L1[0],L1[1],L1[2]+1]);
+  const lxy=Math.hypot(L1[0],L1[1]),sx=L1[0]/lxy,sy=L1[1]/lxy,slope=L1[2]/lxy;
+  const out=canvas.getContext('2d'),oi=out.createImageData(W,W),od=oi.data,steps=22,stepL=PR*.008;
   for(let y=1;y<W-1;y++)for(let x=1;x<W-1;x++){
-    const i=y*W+x,o=i*4,h=Ht[i];
+    const i=y*W+x,o=i*4;if(alpha[i]<=0)continue;const h=Ht[i];
     const gx=(Ht[i+1]-Ht[i-1])*.5,gy=(Ht[i+W]-Ht[i-W])*.5;
     let nx=-gx,ny=-gy,nz=1;const nl=Math.hypot(nx,ny,nz);nx/=nl;ny/=nl;nz/=nl;
-    const diff=Math.max(0,nx*lx+ny*ly+nz*lz);
+    const ca=md[o+3]/255,gl=mix(Gl[i],md[o]/255,ca),wr=mix(Wr[i],md[o+1]/255,ca),ex=mix(Ex[i],md[o+2]/255,ca);
+    const d1=Math.max(0,(nx*L1[0]+ny*L1[1]+nz*L1[2]+wr)/(1+wr)),d2=Math.max(0,(nx*L2[0]+ny*L2[1]+nz*L2[2]+wr)/(1+wr));
     let occ=0;
     for(let k=1;k<=steps;k++){const dd=k*stepL,px=(x+sx*dd)|0,py=(y+sy*dd)|0;if(px<0||py<0||px>=W||py>=W)break;
-      const s=Ht[py*W+px]-(h+dd*slope);if(s>0){occ=Math.max(occ,clamp(s/(PR*.012)))}}
-    const sh=1-.62*occ,ao=clamp(1-(blur[i]-h)/(PR*.05)*.55,.45,1.06);
-    const gl=sB[i]+gd[o]/255,sp=Math.pow(Math.max(0,nx*hx+ny*hy+nz*hz),48)*gl*sh*230+Math.pow(Math.max(0,nx*hx+ny*hy+nz*hz),8)*gl*sh*18;
-    const lit=(.42+.82*diff*sh)*ao;
-    od[o]=ad[o]*lit*1.02+sp;od[o+1]=ad[o+1]*lit+sp*.96;od[o+2]=ad[o+2]*lit*.96+sp*.88;od[o+3]=255*alpha[i];
+      const s=Ht[py*W+px]-(h+dd*slope);if(s>0)occ=Math.max(occ,clamp(s/(PR*.02))*(1-k/steps*.45))}
+    const sh=1-.7*occ,ao=clamp(1-(blurH[i]-h)/(PR*.06)*.6,.4,1.05)*clamp(1-(blurS[i]-h)/(PR*.012)*.35,.6,1.03);
+    const nh=Math.max(0,nx*Hh[0]+ny*Hh[1]+nz*Hh[2]),e=mix(6,160,ex);
+    const sp=(Math.pow(nh,e)*(e/40+.5)*.9+Math.pow(nh,6)*.06)*gl*sh*255;
+    const amb=.3*ao,k1=.9*d1*sh*mix(1,ao,.4),k2=.16*d2*ao;
+    od[o]=ad[o]*(amb+k1*1.04+k2*.9)+sp;od[o+1]=ad[o+1]*(amb+k1*.98+k2*.95)+sp*.97;od[o+2]=ad[o+2]*(amb+k1*.9+k2*1.05)+sp*.9;
+    od[o+3]=255*alpha[i];
   }
   out.putImageData(oi,0,0);
-  // warm key light + film grain
-  out.save();out.globalCompositeOperation='soft-light';
-  const lg=out.createRadialGradient(cx-PR*.5,cy-PR*.55,0,cx,cy,PR*1.3);lg.addColorStop(0,'rgba(255,236,200,.5)');lg.addColorStop(1,'rgba(30,15,5,.45)');
-  out.fillStyle=lg;out.globalCompositeOperation='source-atop';out.globalAlpha=.22;out.fillRect(0,0,W,W);out.restore();
-  function boxBlur(src,w,r){const a=new Float32Array(w*w),b=new Float32Array(w*w);
-    for(let y=0;y<w;y++){let s=0;for(let x=-r;x<=r;x++)s+=src[y*w+clamp(x,0,w-1)];for(let x=0;x<w;x++){a[y*w+x]=s/(2*r+1);s+=src[y*w+Math.min(w-1,x+r+1)]-src[y*w+Math.max(0,x-r)]}}
-    for(let x=0;x<w;x++){let s=0;for(let y=-r;y<=r;y++)s+=a[clamp(y,0,w-1)*w+x];for(let y=0;y<w;y++){b[y*w+x]=s/(2*r+1);s+=a[Math.min(w-1,y+r+1)*w+x]-a[Math.max(0,y-r)*w+x]}}
-    return b}
+  // photographic finish: warm falloff, slight contrast, grain
+  out.save();out.globalCompositeOperation='source-atop';
+  const lg=out.createRadialGradient(cx-PR*.35,cy-PR*.4,PR*.1,cx,cy,PR*1.15);lg.addColorStop(0,'rgba(255,240,215,.10)');lg.addColorStop(.6,'rgba(0,0,0,0)');lg.addColorStop(1,'rgba(30,12,4,.28)');
+  out.fillStyle=lg;out.fillRect(0,0,W,W);out.restore();
+  const tmp=document.createElement('canvas');tmp.width=tmp.height=W;const t=tmp.getContext('2d');t.filter='contrast(1.06) saturate(1.05)';t.drawImage(canvas,0,0);
+  out.clearRect(0,0,W,W);out.drawImage(tmp,0,0);
+  const gi=out.getImageData(0,0,W,W),g=gi.data,gr=mulberry(9);for(let i=0;i<g.length;i+=4){if(!g[i+3])continue;const v=(gr()-.5)*7;g[i]+=v;g[i+1]+=v;g[i+2]+=v}out.putImageData(gi,0,0);
 }
-let sB;
-const _render=renderScene;
-renderScene=(c,o)=>{sB=new Float32Array(c.width*c.width);return _render(c,o)};
+function boxBlur(src,w,r){const a=new Float32Array(w*w),b=new Float32Array(w*w),q=2*r+1;
+  for(let y=0;y<w;y++){let s=0;for(let x=-r;x<=r;x++)s+=src[y*w+clamp(x,0,w-1)];for(let x=0;x<w;x++){a[y*w+x]=s/q;s+=src[y*w+Math.min(w-1,x+r+1)]-src[y*w+Math.max(0,x-r)]}}
+  for(let x=0;x<w;x++){let s=0;for(let y=-r;y<=r;y++)s+=a[clamp(y,0,w-1)*w+x];for(let y=0;y<w;y++){b[y*w+x]=s/q;s+=a[Math.min(w-1,y+r+1)*w+x]-a[Math.max(0,y-r)*w+x]}}
+  return b}
 
-// ---------- ingredients (paint A = colour, H = height, S = gloss) ----------
-function mozzarella({A,H,S},x,y,s,seed,rot=0){
-  const st=1+R()*.35;
-  // fat & whey bleeding into the sauce
-  A.save();A.filter=`blur(${s*.22}px)`;blob(A,x,y,s*1.18,.32,seed,st,rot);A.fillStyle='rgba(222,120,64,.45)';A.fill();A.restore();
-  A.save();A.filter=`blur(${s*.05}px)`;blob(A,x,y,s,.3,seed,st,rot);
-  const g=A.createRadialGradient(x-s*.2,y-s*.2,s*.1,x,y,s*1.2);g.addColorStop(0,'#FAF5E6');g.addColorStop(.55,'#F0E4C8');g.addColorStop(.85,'#E6CC9C');g.addColorStop(1,'#D9A874');A.fillStyle=g;A.fill();
-  A.clip();A.filter=`blur(${s*.09}px)`;
-  for(let i=0;i<7;i++){A.fillStyle=`rgba(${rnd(180,205)|0},${rnd(118,140)|0},${rnd(55,75)|0},${rnd(.25,.55)})`;A.beginPath();A.ellipse(x+rnd(-.75,.75)*s,y+rnd(-.75,.75)*s,s*rnd(.07,.2),s*rnd(.05,.14),rnd(0,3),0,7);A.fill()}
-  A.restore();
-  H.save();H.filter=`blur(${s*.28}px)`;blob(H,x,y,s*.92,.3,seed,st,rot);const hg=H.createRadialGradient(x,y,0,x,y,s);hg.addColorStop(0,'#fff');hg.addColorStop(1,'#666');H.fillStyle=hg;H.globalCompositeOperation='lighten';H.fill();H.restore();
-  S.save();S.filter=`blur(${s*.1}px)`;blob(S,x,y,s,.3,seed,st,rot);S.fillStyle='rgba(120,120,120,1)';S.globalCompositeOperation='lighten';S.fill();S.restore();
+// ---------- ingredients ----------
+const mat=(gl,wr,sh,a=1)=>`rgba(${gl*255|0},${wr*255|0},${sh*255|0},${a})`;
+function mozzarella({A,H,M},x,y,s,seed,rot=rnd(0,3)){
+  const st=rnd(1,1.45),sd=seed;
+  layer(A,c=>{blob(c,x,y,s*1.32,.42,sd,st,rot);c.fillStyle='rgba(222,140,96,.3)';c.fill()},{blur:s*.2});
+  layer(A,c=>{blob(c,x,y,s*1.04,.4,sd,st,rot);c.fillStyle='rgba(238,214,178,.75)';c.fill()},{blur:s*.07});
+  layer(A,c=>{blob(c,x,y,s*.95,.38,sd,st,rot);const g=c.createRadialGradient(x-s*.2,y-s*.2,0,x,y,s);g.addColorStop(0,'#FCF8EE');g.addColorStop(.7,'#F4EAD3');g.addColorStop(1,'#EEDDBA');c.fillStyle=g;c.fill()},{blur:s*.025});
+  layer(A,c=>{blob(c,x,y,s*.95,.38,sd,st,rot);c.clip();
+    for(let i=0;i<160;i++){c.fillStyle=R()<.5?'rgba(255,255,255,.12)':'rgba(170,140,100,.07)';c.beginPath();c.arc(x+rnd(-1.4,1.4)*s,y+rnd(-1,1)*s,rnd(s*.02,s*.06),0,7);c.fill()}
+    for(let i=0;i<4;i++){const bx=x+rnd(-.55,.55)*s,by=y+rnd(-.55,.55)*s,bs=s*rnd(.08,.2);
+      c.filter=`blur(${bs*.5}px)`;c.fillStyle=`rgba(${rnd(196,214)|0},${rnd(140,160)|0},${rnd(78,96)|0},${rnd(.35,.6)})`;c.beginPath();c.arc(bx,by,bs,0,7);c.fill();
+      if(R()<.5){c.filter=`blur(${bs*.15}px)`;c.fillStyle='rgba(150,92,42,.55)';c.beginPath();c.arc(bx,by,bs*.35,0,7);c.fill()}}});
+  layer(H,c=>{blob(c,x,y,s*.98,.38,sd,st,rot);const g=c.createRadialGradient(x,y,0,x,y,s*1.1);g.addColorStop(0,'#f2f2f2');g.addColorStop(.6,'#aaa');g.addColorStop(1,'#444');c.fillStyle=g;c.fill()},{blur:s*.3,op:'lighten'});
+  layer(M,c=>{blob(c,x,y,s*1.05,.4,sd,st,rot);c.fillStyle=mat(.22,.55,.3);c.fill()},{blur:s*.08});
 }
-function salame({A,H,S},x,y,s,seed){
-  // orange chilli oil weeping out
-  A.save();A.filter=`blur(${s*.18}px)`;A.beginPath();A.arc(x+s*.05,y+s*.05,s*1.12,0,7);A.fillStyle='rgba(214,80,24,.38)';A.fill();A.restore();
-  A.save();blob(A,x,y,s,.035,seed);A.fillStyle='#3E0D08';A.fill();blob(A,x,y,s*.9,.035,seed);A.clip();
-  const g=A.createRadialGradient(x,y,s*.1,x,y,s);g.addColorStop(0,'#A9301F');g.addColorStop(.75,'#8C2115');g.addColorStop(1,'#561009');A.fillStyle=g;A.fillRect(x-s,y-s,s*2,s*2);
+function salame({A,H,M},x,y,s,seed){
   const r2=mulberry(seed);
-  for(let i=0;i<55;i++){const a=r2()*7,dd=Math.sqrt(r2())*s*.85;A.fillStyle=`rgba(${222+r2()*20|0},${160+r2()*30|0},${140+r2()*30|0},${.35+r2()*.35})`;A.beginPath();A.ellipse(x+Math.cos(a)*dd,y+Math.sin(a)*dd,s*(.025+r2()*.045),s*(.018+r2()*.03),r2()*3,0,7);A.fill()}
-  for(let i=0;i<40;i++){const a=r2()*7,dd=Math.sqrt(r2())*s*.85;A.fillStyle='rgba(50,8,4,.55)';A.beginPath();A.arc(x+Math.cos(a)*dd,y+Math.sin(a)*dd,s*.018,0,7);A.fill()}
-  const og=A.createRadialGradient(x,y,0,x,y,s*.6);og.addColorStop(0,'rgba(235,105,40,.4)');og.addColorStop(1,'rgba(235,105,40,0)');A.fillStyle=og;A.fillRect(x-s,y-s,s*2,s*2);
-  A.restore();
-  A.save();A.filter=`blur(${s*.04}px)`;A.lineWidth=s*.14;A.strokeStyle='rgba(28,6,3,.8)';blob(A,x,y,s*.93,.035,seed);A.stroke();A.restore();
-  // cupped: raised crisp rim, oil pooled in the centre
-  H.save();H.globalCompositeOperation='lighten';H.filter=`blur(${s*.12}px)`;blob(H,x,y,s*.95,.035,seed);H.fillStyle='#5a5a5a';H.fill();
-  H.lineWidth=s*.2;H.strokeStyle='#d8d8d8';blob(H,x,y,s*.86,.035,seed);H.stroke();H.restore();
-  S.save();S.globalCompositeOperation='lighten';S.filter=`blur(${s*.15}px)`;S.beginPath();S.arc(x,y,s*.7,0,7);S.fillStyle='#e0e0e0';S.fill();S.restore();
+  layer(A,c=>{c.beginPath();c.arc(x+s*.06,y+s*.06,s*1.18,0,7);c.fillStyle='rgba(196,66,20,.36)';c.fill()},{blur:s*.22});
+  layer(A,c=>{blob(c,x,y,s,.09,seed,1.08,seed);c.fillStyle='#3A0B06';c.fill();blob(c,x,y,s*.92,.09,seed,1.08,seed);c.clip();
+    const g=c.createRadialGradient(x+s*.1,y+s*.1,s*.05,x,y,s);g.addColorStop(0,'#8E2618');g.addColorStop(.7,'#7A1C10');g.addColorStop(1,'#4E0E08');c.fillStyle=g;c.fillRect(x-s,y-s,s*2,s*2);
+    for(let i=0;i<46;i++){const a=r2()*7,dd=Math.sqrt(r2())*s*.82;blob(c,x+Math.cos(a)*dd,y+Math.sin(a)*dd,s*(.025+r2()*.05),.5,seed*7+i);c.fillStyle=`rgba(${196+r2()*24|0},${118+r2()*30|0},${100+r2()*25|0},${.22+r2()*.3})`;c.fill()}
+    for(let i=0;i<36;i++){const a=r2()*7,dd=Math.sqrt(r2())*s*.82;c.fillStyle='rgba(40,6,3,.55)';c.beginPath();c.arc(x+Math.cos(a)*dd,y+Math.sin(a)*dd,s*(.01+r2()*.015),0,7);c.fill()}
+    const og=c.createRadialGradient(x,y,0,x,y,s*.62);og.addColorStop(0,'rgba(220,80,26,.5)');og.addColorStop(1,'rgba(220,80,26,0)');c.fillStyle=og;c.fillRect(x-s,y-s,s*2,s*2)});
+  layer(A,c=>{c.lineWidth=s*.08;c.strokeStyle='rgba(22,5,2,.7)';blob(c,x,y,s*.95,.09,seed,1.08,seed);c.stroke();
+    for(let i=0;i<5;i++){const a=r2()*7;c.fillStyle='rgba(20,5,2,.7)';c.beginPath();c.arc(x+Math.cos(a)*s*.86,y+Math.sin(a)*s*.86,s*(.08+r2()*.1),0,7);c.fill()}},{blur:s*.05});
+  layer(H,c=>{blob(c,x,y,s*.96,.09,seed,1.08,seed);c.fillStyle='#606060';c.fill();c.lineWidth=s*.2;c.strokeStyle='#b8b8b8';blob(c,x,y,s*.84,.09,seed,1.08,seed);c.stroke()},{blur:s*.12,op:'lighten'});
+  layer(M,c=>{blob(c,x,y,s,.09,seed,1.08,seed);c.fillStyle=mat(.3,.1,.5);c.fill();c.beginPath();c.arc(x,y,s*.62,0,7);c.fillStyle=mat(.95,.05,.9);c.fill()},{blur:s*.1});
 }
-function basil({A,H,S},x,y,s,rot,seed){
-  const leaf=(c,k=1)=>{c.beginPath();c.moveTo(-s*k,0);c.bezierCurveTo(-s*.45*k,-s*.66*k,s*.5*k,-s*.52*k,s*k,0);c.bezierCurveTo(s*.5*k,s*.5*k,-s*.45*k,s*.62*k,-s*k,0);c.closePath()};
-  const curl=1+((seed%3)-1)*.08;
-  [A,H,S].forEach(c=>{c.save();c.translate(x,y);c.rotate(rot);c.scale(1,curl)});
-  leaf(A);const g=A.createLinearGradient(0,-s*.5,0,s*.5);g.addColorStop(0,'#3E8233');g.addColorStop(.5,'#2A6624');g.addColorStop(1,'#184716');A.fillStyle=g;A.fill();
+function basil({A,H,M},x,y,s,rot,seed){
+  const r2=mulberry(seed),bend=(r2()-.5)*.5,w=.5+r2()*.15;
+  const leaf=(c,k=1)=>{c.beginPath();c.moveTo(-s*k,0);c.bezierCurveTo(-s*.45*k,-s*(w+.12+bend)*k,s*.5*k,-s*(w+bend*.5)*k,s*k,s*bend*.2);c.bezierCurveTo(s*.5*k,s*(w-bend*.4)*k,-s*.45*k,s*(w+.08-bend)*k,-s*k,0);c.closePath()};
+  [A,H,M].forEach(c=>{c.save();c.translate(x,y);c.rotate(rot)});
+  leaf(A);const g=A.createLinearGradient(0,-s*.5,0,s*.5);g.addColorStop(0,'#2F5F26');g.addColorStop(.5,'#21481B');g.addColorStop(1,'#122E0F');A.fillStyle=g;A.fill();
   A.save();leaf(A);A.clip();
-  A.strokeStyle='rgba(150,200,120,.55)';A.lineWidth=s*.04;A.beginPath();A.moveTo(-s*.95,0);A.quadraticCurveTo(0,-s*.06,s*.95,0);A.stroke();
-  A.lineWidth=s*.02;for(let i=-3;i<=3;i++){if(!i)continue;const px=i*s*.22;A.beginPath();A.moveTo(px,-s*.03);A.quadraticCurveTo(px+s*.12,-s*.2,px+s*.26,-s*.38);A.moveTo(px,0);A.quadraticCurveTo(px+s*.12,s*.2,px+s*.26,s*.36);A.stroke()}
-  A.filter=`blur(${s*.08}px)`;A.strokeStyle='rgba(10,30,8,.75)';A.lineWidth=s*.16;leaf(A);A.stroke();
+  for(let i=0;i<6;i++){A.filter=`blur(${s*.12}px)`;A.fillStyle=`rgba(${R()<.5?'14,34,10':'70,110,40'},${rnd(.25,.5)})`;A.beginPath();A.arc(rnd(-.8,.8)*s,rnd(-.4,.4)*s,s*rnd(.12,.28),0,7);A.fill()}
+  A.filter='none';A.strokeStyle='rgba(120,155,90,.35)';A.lineWidth=s*.03;A.beginPath();A.moveTo(-s*.95,0);A.quadraticCurveTo(0,-s*.06+s*bend*.1,s*.95,s*bend*.2);A.stroke();
+  A.lineWidth=s*.016;A.strokeStyle='rgba(120,165,90,.35)';for(let i=-3;i<=3;i++){if(!i)continue;const px=i*s*.22;A.beginPath();A.moveTo(px,-s*.03);A.quadraticCurveTo(px+s*.12,-s*.2,px+s*.27,-s*.4);A.moveTo(px,0);A.quadraticCurveTo(px+s*.12,s*.2,px+s*.27,s*.38);A.stroke()}
+  A.filter=`blur(${s*.1}px)`;A.strokeStyle='rgba(8,24,6,.8)';A.lineWidth=s*.18;leaf(A);A.stroke();
   A.restore();
-  H.globalCompositeOperation='lighten';H.filter=`blur(${s*.15}px)`;leaf(H,.9);H.fillStyle='#9a9a9a';H.fill();
-  S.globalCompositeOperation='lighten';S.filter=`blur(${s*.06}px)`;leaf(S,.9);S.fillStyle='#d0d0d0';S.fill();
-  [A,H,S].forEach(c=>c.restore());
+  H.globalCompositeOperation='lighten';H.filter=`blur(${s*.14}px)`;leaf(H,.92);H.fillStyle='#8a8a8a';H.fill();
+  M.filter=`blur(${s*.05}px)`;leaf(M,.95);M.fillStyle=mat(.55,.35,.6);M.fill();
+  [A,H,M].forEach(c=>c.restore());
 }
-function oliveOil({S,A},cx,cy,PR){
-  S.save();S.globalCompositeOperation='lighten';S.lineCap='round';
-  for(let k=0;k<6;k++){S.filter=`blur(${PR*.006}px)`;S.beginPath();let a=rnd(0,7),dd=PR*rnd(.12,.6);S.moveTo(cx+Math.cos(a)*dd,cy+Math.sin(a)*dd);
-    for(let j=0;j<8;j++){a+=rnd(.06,.16);dd+=rnd(-.04,.04)*PR;S.lineTo(cx+Math.cos(a)*dd,cy+Math.sin(a)*dd)}
-    S.strokeStyle='#ffffff';S.lineWidth=PR*rnd(.008,.018);S.stroke()}
-  S.restore();
+function oliveOil({A,M},cx,cy,PR){
+  for(let k=0;k<7;k++){let a=rnd(0,7),dd=PR*rnd(.1,.62);const pts=[[cx+Math.cos(a)*dd,cy+Math.sin(a)*dd]];
+    for(let j=0;j<9;j++){a+=rnd(.05,.14);dd+=rnd(-.04,.04)*PR;pts.push([cx+Math.cos(a)*dd,cy+Math.sin(a)*dd])}
+    const lw=PR*rnd(.008,.02),path=c=>{c.beginPath();pts.forEach(([px,py],j)=>j?c.lineTo(px,py):c.moveTo(px,py));c.lineCap='round';c.lineJoin='round';c.lineWidth=lw};
+    layer(A,c=>{path(c);c.strokeStyle='rgba(230,170,50,.16)';c.stroke()},{blur:lw*.4});
+    layer(M,c=>{path(c);c.strokeStyle=mat(1,.05,1);c.stroke()},{blur:lw*.25})}
 }
+function pepper({A},cx,cy,PR,count){for(let i=0;i<count;i++){const a=rnd(0,7),d=Math.sqrt(R())*PR*.74;A.fillStyle='rgba(25,15,10,.7)';A.beginPath();A.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,PR*rnd(.002,.005),0,7);A.fill()}}
 
-// ---------- hero pizza ----------
-const hero=document.getElementById('pizza');
-renderScene(hero,{toppings:(L)=>{
+// "Diavola di Kampen" — shared by all screens
+function diavola(L){
   const {cx,cy,PR}=L;
-  [[-.36,-.28,.12],[.16,-.44,.11],[.47,-.06,.1],[.3,.36,.12],[-.1,.47,.11],[-.5,.15,.1],[.03,.0,.13],[-.2,-.06,.08],[.18,.17,.09]]
-    .forEach(([a,b,s],i)=>mozzarella(L,cx+a*PR,cy+b*PR,PR*s,200+i*7,rnd(0,3)));
-  [[-.06,-.55],[.42,-.31],[.57,.2],[.1,.55],[-.38,.43],[-.6,-.1],[-.33,-.5],[.16,-.2],[-.2,.22],[.3,.06],[-.04,.3],[-.46,-.26]]
-    .forEach(([a,b],i)=>salame(L,cx+a*PR+rnd(-4,4),cy+b*PR+rnd(-4,4),PR*rnd(.088,.1),500+i));
+  [[-.36,-.27,.12],[.15,-.45,.11],[.47,-.05,.1],[.3,.37,.12],[-.1,.48,.1],[-.5,.16,.1],[.04,.01,.13],[-.2,-.05,.08],[.19,.18,.09],[-.05,-.62,.07]]
+    .forEach(([a,b,s],i)=>mozzarella(L,cx+(a+rnd(-.03,.03))*PR,cy+(b+rnd(-.03,.03))*PR,PR*s,200+i*7));
+  [[-.06,-.55],[.42,-.31],[.57,.2],[.1,.55],[-.38,.43],[-.6,-.1],[-.33,-.5],[.16,-.2],[-.2,.22],[.3,.06],[-.04,.3],[-.46,-.26],[.4,.48]]
+    .forEach(([a,b],i)=>salame(L,cx+(a+rnd(-.035,.035))*PR,cy+(b+rnd(-.035,.035))*PR,PR*rnd(.085,.11),500+i));
   [[-.04,-.32,.6],[.36,-.14,2.2],[.22,.3,-.7],[-.3,.26,1.4],[-.16,-.17,-1.9],[.54,-.42,.9],[-.55,.34,-.3],[.0,.14,2.7]]
-    .forEach(([a,b,r],i)=>basil(L,cx+a*PR,cy+b*PR,PR*rnd(.075,.1),r,700+i));
-  oliveOil(L,cx,cy,PR);
-}});
-
-// ---------- topping list with rendered thumbnails ----------
-const items=[
-  ['Salame piccante','Pikante Calabrische salami','2,50',1,'sal'],
-  ['Prosciutto di Parma','24 maanden gerijpt, na de oven','3,95',0,'pro'],
-  ["'Nduja di Spilinga",'Smeerbare, rokerige chilisalami','2,95',0,'ndu'],
-  ['Mozzarella di bufala','Campania DOP, romig','3,50',1,'moz'],
-  ['Burrata pugliese','Heel, met room, na de oven','4,50',0,'bur'],
-  ['Basilico fresco','Genovese basilicum','0,75',1,'bas'],
-  ['Funghi porcini','Eekhoorntjesbrood, tijm','2,95',0,'fun'],
-];
-const list=document.getElementById('list');
-items.forEach(([n,d,p,sel,k],i)=>{
-  const el=document.createElement('div');el.className='item'+(sel?' sel':'');
-  el.innerHTML=`<canvas width="168" height="168"></canvas><div><div class="n">${n}</div><div class="d">${d}</div></div><div class="p">+ € ${p}<span class="tog">${sel?'✓':'+'}</span></div>`;
-  list.appendChild(el);
-  renderScene(el.querySelector('canvas'),{base:false,toppings:(L)=>{
-    const c=84;
-    if(k==='sal'){salame(L,c-18,c-14,40,900);salame(L,c+22,c+20,38,901)}
-    if(k==='moz')mozzarella(L,c,c,50,910,.4);
-    if(k==='bas'){basil(L,c-6,c+10,54,-.5,920);basil(L,c+22,c-22,36,.9,921)}
-    if(k==='bur'){mozzarella(L,c,c,56,950,0);L.A.save();L.A.filter='blur(3px)';blob(L.A,c+4,c+4,24,.3,951);L.A.fillStyle='rgba(255,253,246,.95)';L.A.fill();L.A.restore();
-      L.S.save();L.S.globalCompositeOperation='lighten';blob(L.S,c+4,c+4,22,.3,951);L.S.fillStyle='#fff';L.S.fill();L.S.restore()}
-    if(k==='pro'){for(let j=0;j<3;j++){const x=58+j*20,y=64+j*16;L.A.save();L.A.filter='blur(.6px)';blob(L.A,x,y,40,.4,930+j,1.4,j);
-      const g=L.A.createLinearGradient(x-40,y-30,x+40,y+30);g.addColorStop(0,'#E9A39A');g.addColorStop(.45,'#C7564F');g.addColorStop(.75,'#D9817A');g.addColorStop(1,'#F4E1D6');L.A.fillStyle=g;L.A.fill();L.A.restore();
-      L.H.save();L.H.globalCompositeOperation='lighten';L.H.filter='blur(8px)';blob(L.H,x,y,36,.4,930+j,1.4,j);L.H.fillStyle=`rgb(${110+j*50},${110+j*50},${110+j*50})`;L.H.fill();L.H.restore();
-      L.S.save();L.S.globalCompositeOperation='lighten';blob(L.S,x,y,36,.4,930+j,1.4,j);L.S.fillStyle='#777';L.S.fill();L.S.restore()}}
-    if(k==='ndu'){for(let j=0;j<6;j++){const x=50+R()*68,y=50+R()*68,s=rnd(14,24);L.A.save();L.A.filter='blur(1.5px)';blob(L.A,x,y,s,.45,940+j);L.A.fillStyle=['#9A2414','#B23418','#7A1A0E'][j%3];L.A.fill();L.A.restore();
-      L.H.save();L.H.globalCompositeOperation='lighten';L.H.filter='blur(5px)';blob(L.H,x,y,s,.45,940+j);L.H.fillStyle='#bbb';L.H.fill();L.H.restore();
-      L.S.save();L.S.globalCompositeOperation='lighten';blob(L.S,x,y,s,.45,940+j);L.S.fillStyle='#ccc';L.S.fill();L.S.restore()}}
-    if(k==='fun'){[[62,70,.4,30],[104,100,-.5,26]].forEach(([x,y,r,s])=>{L.A.save();L.A.translate(x,y);L.A.rotate(r);
-      L.A.beginPath();L.A.ellipse(0,0,s,s*.95,0,0,7);const g=L.A.createRadialGradient(-s*.2,-s*.2,0,0,0,s);g.addColorStop(0,'#E9D9BF');g.addColorStop(.55,'#D4BE98');g.addColorStop(.8,'#8A5A33');g.addColorStop(1,'#5A361C');L.A.fillStyle=g;L.A.fill();
-      L.A.fillStyle='rgba(120,80,45,.5)';L.A.fillRect(-s*.22,-s*.1,s*.44,s*.9);L.A.restore();
-      L.H.save();L.H.globalCompositeOperation='lighten';L.H.filter='blur(6px)';L.H.beginPath();L.H.arc(x,y,s,0,7);L.H.fillStyle='#ccc';L.H.fill();L.H.restore()})}
-  },PRf:.43});
-});
+    .forEach(([a,b,r],i)=>basil(L,cx+a*PR,cy+b*PR,PR*rnd(.085,.115),r,700+i));
+  oliveOil(L,cx,cy,PR);pepper(L,cx,cy,PR,60);
+}
+return {render,mozzarella,salame,basil,oliveOil,blob,layer,diavola,rnd,mulberry,mat};
+})();
