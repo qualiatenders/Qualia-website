@@ -9,7 +9,7 @@ window.buildAll = async function () {
 
   // Margherita base
   const base = cv(SIZE);
-  PZ.render(base, { toppings: PZ.margherita });
+  PZ.render(base, { toppings: () => {} });   // dough + tomato sauce only
   out('pizza/base.webp', base);
   manifest.base = 'pizza/base.webp';
   await tick();

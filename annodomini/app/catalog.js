@@ -4,7 +4,7 @@
 window.AD_CATALOG = {
   base: {
     name: 'Basispizza',
-    desc: 'Tomatensaus, mozzarella, basilicum en olijfolie',
+    desc: 'Bodem met tomatensaus',
     price: 9.95,
   },
   categories: [
@@ -13,6 +13,7 @@ window.AD_CATALOG = {
     { id: 'groente', name: 'Groente' },
     { id: 'afwerking', name: 'Afwerking' },
   ],
+  // The pizza starts empty: dough and tomato sauce only.
   // Desserts & drinks, offered after a pizza is added and again at checkout.
   extras: [
     { id: 'tiramisu', cat: 'Dessert', name: 'Tiramisu', desc: 'Huisgemaakt, met mascarpone en espresso', price: 6.5, art: 'tiramisu' },
@@ -26,6 +27,8 @@ window.AD_CATALOG = {
   ],
   // `z` is the stacking order on the pizza; toppings added after baking sit on top.
   toppings: [
+    { id: 'mozzarella', cat: 'kaas', name: 'Mozzarella', desc: 'Verse fior di latte', price: 1.5, z: 9,
+      art: { painter: 'mozzarella', s: .115, count: 11, minD: .22, rMax: .62, variants: 8, thumb: { n: 2, s: 36 } } },
     { id: 'bufala', cat: 'kaas', name: 'Buffelmozzarella', desc: 'Romig, uit Campanië', price: 3.5, z: 10,
       art: { painter: 'mozzarella', s: .11, count: 7, minD: .26, rMax: .6, variants: 6, thumb: { n: 1, s: 46 } } },
     { id: 'burrata', cat: 'kaas', name: 'Burrata', desc: 'Hele bol, na het bakken erop', price: 4.5, z: 80,
@@ -69,7 +72,7 @@ window.AD_CATALOG = {
     { id: 'rucola', cat: 'groente', name: 'Rucola', desc: 'Vers, na het bakken', price: 1.25, z: 86,
       art: { painter: 'rucola', rot: true, s: .09, count: 22, minD: .1, rMax: .48, variants: 8, pad: 3.2, thumb: { n: 3, s: 34 } } },
 
-    { id: 'basilico', cat: 'afwerking', name: 'Extra basilicum', desc: 'Verse basilicumblaadjes', price: .5, z: 88,
+    { id: 'basilico', cat: 'afwerking', name: 'Basilicum', desc: 'Verse blaadjes', price: .5, z: 88,
       art: { painter: 'basil', rot: true, s: .085, count: 7, minD: .22, rMax: .6, variants: 6, pad: 2.8, thumb: { n: 2, s: 40 } } },
     { id: 'tartufo', cat: 'afwerking', name: 'Zwarte truffel', desc: 'Vers geschaafd', price: 4.95, z: 90,
       art: { painter: 'tartufo', s: .05, count: 9, minD: .2, rMax: .58, variants: 6, thumb: { n: 3, s: 24 } } },
