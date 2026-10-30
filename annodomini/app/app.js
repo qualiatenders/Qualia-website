@@ -71,7 +71,7 @@
         c.globalAlpha = 1;
         continue;
       }
-      const stagger = a && a.dir > 0 ? 45 : 16, dur = a && a.dir > 0 ? 520 : 260;
+      const stagger = a && a.dir > 0 ? Math.min(45, 720 / m.pieces.length) : 12, dur = a && a.dir > 0 ? 520 : 260;
       m.pieces.forEach((pc, i) => {
         const v = m.variants[pc.v], img = ready[v.src];
         if (!img) { busy = true; return }

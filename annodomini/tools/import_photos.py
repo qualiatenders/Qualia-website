@@ -98,7 +98,7 @@ def disc(rgba, size):
     return square(largest(rgba), size, pad=1 / .92)
 
 
-RINGS = {'cipolla', 'jalapeno'}   # the black background shows through the middle of a ring
+RINGS = {'cipolla', 'jalapeno', 'rucola'}   # black background shows through rings and between leaflets
 
 
 def key_black(rgba, lo=18, hi=48):
