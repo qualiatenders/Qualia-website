@@ -77,13 +77,21 @@ function render(canvas,{base=true,size=.46,toppings=()=>{},bg=null,PRpx=null}={}
         const m=sstep(rs+.012,rs-.012,rr);
         if(m>0){
           const v=fbm(N[1],X*.008,Y*.008,5),ck=fbm(N[3],X*.05,Y*.05,3),oilN=fbm(N[7],X*.012,Y*.012,3),th=sstep(rs,rs-.07,rr);
-          let sr=mix(118,192,v),sg=mix(14,40,v),sb=mix(9,22,v);
-          sr+=(ck-.5)*46;sg+=(ck-.5)*12;sb+=(ck-.5)*6;
+          const pulp=fbm(N[4],X*.11,Y*.11,3),grain=N[5](X*.45,Y*.45),chunk=sstep(.58,.72,fbm(N[8],X*.055,Y*.055,3));
+          let sr=mix(120,184,v),sg=mix(15,34,v),sb=mix(10,20,v);
+          sr+=(ck-.5)*36+(pulp-.5)*46+(grain-.5)*14;sg+=(ck-.5)*9+(pulp-.5)*11+(grain-.5)*3;sb+=(pulp-.5)*5;
+          // crushed tomato pieces sit brighter and more orange
+          sr=mix(sr,212,chunk*.5);sg=mix(sg,58,chunk*.5);sb=mix(sb,32,chunk*.45);
+          // darker, cooked-down streaks
+          const red=sstep(.6,.76,fbm(N[2],X*.02+5,Y*.02,4));sr=mix(sr,92,red*.38);sg=mix(sg,12,red*.38);sb=mix(sb,8,red*.3);
+          // dried oregano and the odd tomato seed
+          if(N[9](X*.62,Y*.62)>.885){sr=mix(sr,72,.75);sg=mix(sg,64,.75);sb=mix(sb,28,.75)}
+          if(N[6](X*.7+3,Y*.7)>.93){sr=mix(sr,228,.55);sg=mix(sg,186,.55);sb=mix(sb,92,.55)}
           const oz=sstep(.55,.72,oilN);sr=mix(sr,206,oz*.35);sg=mix(sg,78,oz*.35);sb=mix(sb,30,oz*.35);
           sr=mix(mix(dr,132,.75),sr,th);sg=mix(mix(dg,40,.75),sg,th);sb=mix(mix(db,20,.75),sb,th);
           cr=mix(cr,sr,m);cg=mix(cg,sg,m);cb=mix(cb,sb,m);
-          h+=m*(.028+.03*(ck-.5)+.02*(v-.5));
-          gl=mix(gl,.35+.4*oz,m*th);wr=mix(wr,.05,m);ex=mix(ex,.75,m);
+          h+=m*(.028+.026*(ck-.5)+.02*(v-.5)+.026*chunk+.012*(pulp-.5));
+          gl=mix(gl,.22+.45*oz+.3*sstep(.48,.62,pulp),m*th);wr=mix(wr,.05,m);ex=mix(ex,.75,m);
         }
       }
     }
@@ -135,17 +143,21 @@ function boxBlur(src,w,r){const a=new Float32Array(w*w),b=new Float32Array(w*w),
 // ---------- ingredients ----------
 const mat=(gl,wr,sh,a=1)=>`rgba(${gl*255|0},${wr*255|0},${sh*255|0},${a})`;
 function mozzarella({A,H,M},x,y,s,seed,rot=rnd(0,3)){
-  const st=rnd(1,1.45),sd=seed;
-  layer(A,c=>{blob(c,x,y,s*1.32,.42,sd,st,rot);c.fillStyle='rgba(222,140,96,.3)';c.fill()},{blur:s*.2});
-  layer(A,c=>{blob(c,x,y,s*1.04,.4,sd,st,rot);c.fillStyle='rgba(238,214,178,.75)';c.fill()},{blur:s*.07});
-  layer(A,c=>{blob(c,x,y,s*.95,.38,sd,st,rot);const g=c.createRadialGradient(x-s*.2,y-s*.2,0,x,y,s);g.addColorStop(0,'#FCF8EE');g.addColorStop(.7,'#F4EAD3');g.addColorStop(1,'#EEDDBA');c.fillStyle=g;c.fill()},{blur:s*.025});
-  layer(A,c=>{blob(c,x,y,s*.95,.38,sd,st,rot);c.clip();
-    for(let i=0;i<160;i++){c.fillStyle=R()<.5?'rgba(255,255,255,.12)':'rgba(170,140,100,.07)';c.beginPath();c.arc(x+rnd(-1.4,1.4)*s,y+rnd(-1,1)*s,rnd(s*.02,s*.06),0,7);c.fill()}
-    for(let i=0;i<4;i++){const bx=x+rnd(-.55,.55)*s,by=y+rnd(-.55,.55)*s,bs=s*rnd(.08,.2);
-      c.filter=`blur(${bs*.5}px)`;c.fillStyle=`rgba(${rnd(196,214)|0},${rnd(140,160)|0},${rnd(78,96)|0},${rnd(.35,.6)})`;c.beginPath();c.arc(bx,by,bs,0,7);c.fill();
-      if(R()<.5){c.filter=`blur(${bs*.15}px)`;c.fillStyle='rgba(150,92,42,.55)';c.beginPath();c.arc(bx,by,bs*.35,0,7);c.fill()}}});
-  layer(H,c=>{blob(c,x,y,s*.98,.38,sd,st,rot);const g=c.createRadialGradient(x,y,0,x,y,s*1.1);g.addColorStop(0,'#f2f2f2');g.addColorStop(.6,'#aaa');g.addColorStop(1,'#444');c.fillStyle=g;c.fill()},{blur:s*.3,op:'lighten'});
-  layer(M,c=>{blob(c,x,y,s*1.05,.4,sd,st,rot);c.fillStyle=mat(.22,.55,.3);c.fill()},{blur:s*.08});
+  const st=rnd(1,1.4),sd=seed,r2=mulberry(seed*7+1);
+  // whey and fat run into the sauce
+  layer(A,c=>{blob(c,x,y,s*1.22,.42,sd,st,rot);c.fillStyle='rgba(228,126,70,.36)';c.fill()},{blur:s*.12});
+  // thin, half-translucent melted edge
+  layer(A,c=>{blob(c,x,y,s*1.05,.4,sd,st,rot);c.fillStyle='rgba(244,226,192,.82)';c.fill()},{blur:s*.035});
+  layer(A,c=>{blob(c,x,y,s*.93,.38,sd,st,rot);const g=c.createRadialGradient(x-s*.25,y-s*.25,0,x,y,s*1.05);g.addColorStop(0,'#FFFBF1');g.addColorStop(.6,'#F7EBD2');g.addColorStop(1,'#EBD3A6');c.fillStyle=g;c.fill()},{blur:s*.012});
+  layer(A,c=>{blob(c,x,y,s*.93,.38,sd,st,rot);c.clip();
+    for(let i=0;i<260;i++){c.fillStyle=r2()<.55?`rgba(255,255,255,${.06+r2()*.1})`:`rgba(175,140,95,${.04+r2()*.07})`;c.beginPath();c.ellipse(x+(r2()-.5)*2.6*s,y+(r2()-.5)*2*s,s*(.015+r2()*.04),s*(.01+r2()*.025),r2()*3,0,7);c.fill()}
+    c.lineCap='round';for(let i=0;i<7;i++){c.strokeStyle='rgba(255,255,255,.22)';c.lineWidth=s*(.01+r2()*.015);c.beginPath();const a=r2()*3,px=x+(r2()-.5)*s,py=y+(r2()-.5)*s;c.moveTo(px,py);c.quadraticCurveTo(px+Math.cos(a)*s*.3,py+Math.sin(a)*s*.1,px+Math.cos(a)*s*.55,py+Math.sin(a)*s*.4);c.stroke()}
+    const nb=3+(r2()*4|0);
+    for(let i=0;i<nb;i++){const bx=x+(r2()-.5)*1.2*s,by=y+(r2()-.5)*1.2*s,bs=s*(.06+r2()*.13);
+      const g=c.createRadialGradient(bx,by,0,bx,by,bs);g.addColorStop(0,'rgba(150,88,36,.8)');g.addColorStop(.35,'rgba(196,132,62,.62)');g.addColorStop(.75,'rgba(222,178,110,.3)');g.addColorStop(1,'rgba(230,200,140,0)');
+      c.fillStyle=g;c.beginPath();c.ellipse(bx,by,bs*1.15,bs,r2()*3,0,7);c.fill()}});
+  layer(H,c=>{blob(c,x,y,s*.97,.38,sd,st,rot);const g=c.createRadialGradient(x,y,0,x,y,s*1.05);g.addColorStop(0,'#f6f6f6');g.addColorStop(.55,'#b8b8b8');g.addColorStop(1,'#4a4a4a');c.fillStyle=g;c.fill()},{blur:s*.16,op:'lighten'});
+  layer(M,c=>{blob(c,x,y,s*1.05,.4,sd,st,rot);c.fillStyle=mat(.42,.5,.55);c.fill()},{blur:s*.05});
 }
 function salame({A,H,M},x,y,s,seed){
   const r2=mulberry(seed);
@@ -256,12 +268,12 @@ function funghi({A,H,M},x,y,s,seed){
   const rot=rnd(0,7);
   const shape=c=>{c.save();c.translate(x,y);c.rotate(rot);c.beginPath();c.moveTo(-s,s*.05);c.bezierCurveTo(-s,-s*.9,s,-s*.9,s,s*.05);c.bezierCurveTo(s*.7,s*.25,s*.45,s*.15,s*.3,s*.2);
     c.lineTo(s*.34,s*.9);c.quadraticCurveTo(0,s*1.02,-s*.34,s*.9);c.lineTo(-s*.3,s*.2);c.bezierCurveTo(-s*.45,s*.15,-s*.7,s*.25,-s,s*.05);c.closePath();c.restore()};
-  layer(A,c=>{shape(c);c.fillStyle='#6E4A2E';c.fill()},{blur:s*.02});
-  layer(A,c=>{c.save();c.translate(x,y);c.rotate(rot);c.scale(.88,.86);c.translate(-x,-y);shape(c);c.restore();const g=c.createRadialGradient(x,y,0,x,y,s);g.addColorStop(0,'#E4D2B0');g.addColorStop(.7,'#CDB58C');g.addColorStop(1,'#A98858');c.fillStyle=g;c.fill();
-    c.clip();c.save();c.translate(x,y);c.rotate(rot);for(let i=0;i<14;i++){c.strokeStyle='rgba(120,90,55,.35)';c.lineWidth=s*.02;c.beginPath();const a=Math.PI+i/13*Math.PI;c.moveTo(Math.cos(a)*s*.25,Math.sin(a)*s*.1);c.lineTo(Math.cos(a)*s*.8,Math.sin(a)*s*.62);c.stroke()}
+  layer(A,c=>{shape(c);c.fillStyle='#4E3220';c.fill()},{blur:s*.015});
+  layer(A,c=>{c.save();c.translate(x,y);c.rotate(rot);c.scale(.88,.86);c.translate(-x,-y);shape(c);c.restore();const g=c.createRadialGradient(x,y,0,x,y,s);g.addColorStop(0,'#DCC6A0');g.addColorStop(.6,'#C4A676');g.addColorStop(1,'#8E6A40');c.fillStyle=g;c.fill();
+    c.clip();c.save();c.translate(x,y);c.rotate(rot);for(let i=0;i<14;i++){c.strokeStyle='rgba(96,64,34,.45)';c.lineWidth=s*.016;c.beginPath();const a=Math.PI+i/13*Math.PI;c.moveTo(Math.cos(a)*s*.25,Math.sin(a)*s*.1);c.lineTo(Math.cos(a)*s*.8,Math.sin(a)*s*.62);c.stroke()}
     c.fillStyle='rgba(150,100,50,.4)';c.filter=`blur(${s*.1}px)`;c.beginPath();c.arc(rnd(-.4,.4)*s,-s*.3,s*.25,0,7);c.fill();c.restore()},{blur:s*.01});
   layer(H,c=>{shape(c);c.fillStyle='#909090';c.fill();c.lineWidth=s*.12;c.strokeStyle='#cfcfcf';shape(c);c.stroke()},{blur:s*.1,op:'lighten'});
-  layer(M,c=>{shape(c);c.fillStyle=mat(.45,.25,.55);c.fill()});
+  layer(M,c=>{shape(c);c.fillStyle=mat(.6,.25,.65);c.fill()});
 }
 function pomodorino({A,H,M},x,y,s,seed){
   const rot=rnd(0,7),st=rnd(1.05,1.18);
@@ -332,12 +344,18 @@ function flakes({A,H,M},cx,cy,PR,count,seed){
 }
 
 function ham({A,H,M},x,y,s,seed){
-  const rot=rnd(0,3),st=rnd(1.2,1.45);
-  layer(A,c=>{blob(c,x,y,s,.22,seed,st,rot);const g=c.createRadialGradient(x-s*.2,y-s*.2,0,x,y,s*1.2);g.addColorStop(0,'#F0B3AE');g.addColorStop(.6,'#E39A95');g.addColorStop(1,'#D58580');c.fillStyle=g;c.fill();
-    c.clip();c.lineWidth=s*.16;c.strokeStyle='rgba(250,236,230,.9)';blob(c,x,y,s*.98,.22,seed,st,rot);c.stroke();
-    for(let i=0;i<20;i++){c.fillStyle=R()<.5?'rgba(255,220,215,.25)':'rgba(190,100,95,.15)';c.beginPath();c.arc(x+rnd(-1.3,1.3)*s,y+rnd(-1,1)*s,s*rnd(.05,.14),0,7);c.fill()}},{blur:s*.015});
-  layer(H,c=>{blob(c,x,y,s,.22,seed,st,rot);c.fillStyle='#7a7a7a';c.fill();c.lineWidth=s*.3;c.strokeStyle='#d0d0d0';c.beginPath();c.moveTo(x-s*st,y+rnd(-.3,.3)*s);c.quadraticCurveTo(x,y+rnd(-.5,.5)*s,x+s*st,y+rnd(-.3,.3)*s);c.stroke()},{blur:s*.2,op:'lighten'});
-  layer(M,c=>{blob(c,x,y,s,.22,seed,st,rot);c.fillStyle=mat(.45,.4,.5);c.fill()});
+  const rot=rnd(0,3),st=rnd(1.08,1.25),r2=mulberry(seed*5+3);
+  // a thin, flat slice with soft ripples, mottled pink with fat marbling
+  layer(A,c=>{blob(c,x,y,s*1.08,.32,seed,st,rot);c.fillStyle='rgba(200,120,100,.22)';c.fill()},{blur:s*.1});
+  layer(A,c=>{blob(c,x,y,s,.32,seed,st,rot);const g=c.createRadialGradient(x-s*.25,y-s*.25,0,x,y,s*1.25);g.addColorStop(0,'#EDB3AA');g.addColorStop(.55,'#DE9A92');g.addColorStop(1,'#C97E76');c.fillStyle=g;c.fill();
+    c.clip();
+    for(let i=0;i<70;i++){const bx=x+(r2()-.5)*2.4*s,by=y+(r2()-.5)*2.4*s,bs=s*(.08+r2()*.22);c.fillStyle=r2()<.5?`rgba(250,205,198,${.12+r2()*.14})`:`rgba(178,92,86,${.08+r2()*.1})`;c.beginPath();c.ellipse(bx,by,bs,bs*.7,r2()*3,0,7);c.fill()}
+    c.lineCap='round';for(let i=0;i<3;i++){c.strokeStyle=`rgba(250,232,224,${.45+r2()*.25})`;c.lineWidth=s*(.03+r2()*.04);c.filter=`blur(${s*.025}px)`;
+      const a=r2()*3,px=x+(r2()-.5)*s,py=y+(r2()-.5)*s;c.beginPath();c.moveTo(px-Math.cos(a)*s,py-Math.sin(a)*s);c.bezierCurveTo(px-Math.cos(a+.8)*s*.3,py-Math.sin(a+.8)*s*.3,px+Math.cos(a-.8)*s*.3,py+Math.sin(a-.8)*s*.3,px+Math.cos(a)*s,py+Math.sin(a)*s);c.stroke()}},{blur:s*.008});
+  layer(A,c=>{blob(c,x,y,s*.99,.32,seed,st,rot);c.lineWidth=s*.07;c.strokeStyle='rgba(170,96,70,.45)';c.stroke()},{blur:s*.04});
+  layer(H,c=>{blob(c,x,y,s,.32,seed,st,rot);c.fillStyle='#6c6c6c';c.fill();c.clip();
+    for(let i=0;i<3;i++){c.lineWidth=s*(.25+r2()*.2);c.strokeStyle='#8e8e8e';const a=rot+(r2()-.5),o=(r2()-.5)*s;c.beginPath();c.moveTo(x-Math.cos(a)*s*1.4-Math.sin(a)*o,y-Math.sin(a)*s*1.4+Math.cos(a)*o);c.lineTo(x+Math.cos(a)*s*1.4-Math.sin(a)*o,y+Math.sin(a)*s*1.4+Math.cos(a)*o);c.stroke()}},{blur:s*.3,op:'lighten'});
+  layer(M,c=>{blob(c,x,y,s,.32,seed,st,rot);c.fillStyle=mat(.4,.45,.45);c.fill()});
 }
 function spek({A,H,M},x,y,s,seed){
   const r2=mulberry(seed);
@@ -386,6 +404,16 @@ function jalapeno({A,H,M},x,y,s,seed){
   layer(M,c=>{blob(c,x,y,s,.06,seed);c.fillStyle=mat(.85,.2,.85);c.fill()});
 }
 function spinazie(L,x,y,s,rot,seed){basil(L,x,y,s,rot,seed,['#2B4A22','#1C3617','#0F220C'])}
+function hero(L){
+  const {cx,cy,PR}=L;
+  [[-.36,-.27,.12],[.15,-.45,.11],[.47,-.05,.1],[.3,.37,.12],[-.1,.48,.1],[-.5,.16,.1],[.04,.01,.13],[-.2,-.05,.08],[.19,.18,.09],[-.05,-.62,.07],[.42,-.38,.07],[-.4,.42,.08]]
+    .forEach(([a,b,s],i)=>mozzarella(L,cx+(a+rnd(-.03,.03))*PR,cy+(b+rnd(-.03,.03))*PR,PR*s,200+i*7));
+  [[-.06,-.55],[.42,-.31],[.57,.2],[.1,.55],[-.38,.43],[-.6,-.1],[-.33,-.5],[.16,-.2],[-.2,.22],[.3,.06]]
+    .forEach(([a,b],i)=>salame(L,cx+(a+rnd(-.03,.03))*PR,cy+(b+rnd(-.03,.03))*PR,PR*rnd(.085,.1),500+i));
+  [[-.04,-.32,.6],[.36,-.14,2.2],[.22,.3,-.7],[-.3,.26,1.4],[.54,-.42,.9],[-.55,.34,-.3],[0,.12,2.6]]
+    .forEach(([a,b,r],i)=>basil(L,cx+a*PR,cy+b*PR,PR*rnd(.085,.11),r,700+i));
+  oliveOil(L,cx,cy,PR);
+}
 function margherita(L){
   const {cx,cy,PR}=L;
   [[-.36,-.27,.12],[.15,-.45,.11],[.47,-.05,.1],[.3,.37,.12],[-.1,.48,.1],[-.5,.16,.1],[.04,.01,.13],[-.2,-.05,.08],[.19,.18,.09],[-.05,-.62,.07],[.42,-.38,.07],[-.4,.42,.08]]
@@ -394,5 +422,5 @@ function margherita(L){
     .forEach(([a,b,r],i)=>basil(L,cx+a*PR,cy+b*PR,PR*rnd(.085,.11),r,700+i));
   oliveOil(L,cx,cy,PR);
 }
-return {render,mozzarella,salame,basil,oliveOil,blob,layer,diavola,margherita,burrata,parmigiano,gorgonzola,prosciutto,nduja,salsiccia,funghi,pomodorino,oliva,rucola,cipolla,tartufo,drizzle,flakes,ham,spek,kip,geitenkaas,paprika,jalapeno,spinazie,rnd,mulberry,mat};
+return {render,mozzarella,salame,basil,oliveOil,blob,layer,diavola,margherita,burrata,parmigiano,gorgonzola,prosciutto,nduja,salsiccia,funghi,pomodorino,oliva,rucola,cipolla,tartufo,drizzle,flakes,ham,spek,kip,geitenkaas,paprika,jalapeno,spinazie,hero,rnd,mulberry,mat};
 })();

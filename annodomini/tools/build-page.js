@@ -12,6 +12,10 @@ window.buildAll = async function () {
   PZ.render(base, { toppings: () => {} });   // dough + tomato sauce only
   out('pizza/base.webp', base);
   manifest.base = 'pizza/base.webp';
+  // finished pizza for the start screen
+  const hero = cv(1400);
+  PZ.render(hero, { toppings: PZ.hero });
+  out('pizza/hero.webp', hero);
   await tick();
 
   for (const t of AD_CATALOG.toppings) {
