@@ -7,6 +7,8 @@
   const euro = v => '€ ' + v.toFixed(2).replace('.', ',');
   const wait = ms => new Promise(r => setTimeout(r, ms));
   const fast = /[?&]fast/.test(location.search) ? 15 : 1;
+  // assets resolve through AD_ASSETS when the app is bundled into one file
+  const asset = p => (window.AD_ASSETS && AD_ASSETS[p]) || p;
   const byId = Object.fromEntries(C.toppings.map(t => [t.id, t]));
 
   const state = { active: new Set(), cat: C.categories[0].id, time: null, method: null };
@@ -19,7 +21,7 @@
     const i = new Image();
     i.onload = () => { ready[src] = i; res(i) };
     i.onerror = rej;
-    i.src = 'assets/' + src;
+    i.src = asset('assets/' + src);
   }));
   const srcsFor = id => { const m = manifest.toppings[id]; return m.overlay ? [m.overlay] : m.variants.map(v => v.src) };
   const ensure = id => Promise.all(srcsFor(id).map(load));
@@ -141,7 +143,7 @@
   function renderList() {
     $('#list').innerHTML = C.toppings.filter(t => t.cat === state.cat).map(t => `
       <button class="item" data-id="${t.id}" aria-pressed="${state.active.has(t.id)}">
-        <img src="assets/thumbs/${t.id}.webp" alt="" loading="lazy">
+        <img src="${asset(`assets/thumbs/${t.id}.webp`)}" alt="" loading="lazy">
         <span><span class="n">${t.name}</span><span class="d" style="display:block">${t.desc}</span></span>
         <span class="p">+ ${euro(t.price)}<span class="tog"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 1v10M1 6h10"/></svg></span></span>
       </button>`).join('');
@@ -312,7 +314,7 @@
 
   // ---------- boot ----------
   renderTabs(); renderList();
-  fetch('assets/pizza/manifest.json').then(r => r.json()).then(m => {
+  (window.AD_MANIFEST ? Promise.resolve(AD_MANIFEST) : fetch('assets/pizza/manifest.json').then(r => r.json())).then(m => {
     manifest = m;
     load(m.base).then(fit);
     const order = C.toppings.slice().sort((a, b) => (a.cat === state.cat ? -1 : 0) - (b.cat === state.cat ? -1 : 0));
