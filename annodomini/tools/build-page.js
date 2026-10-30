@@ -54,5 +54,10 @@ window.buildAll = async function () {
     out(`thumbs/${t.id}.webp`, th);
     await tick();
   }
+  // wood-fired oven scene (phone portrait, 3x)
+  const oven = renderOven(1179, 2556);
+  files['oven/back.webp'] = oven.back.toDataURL('image/webp', .9);
+  files['oven/front.webp'] = oven.front.toDataURL('image/webp', .9);
+  manifest.oven = oven.geom;
   return { files, manifest };
 };

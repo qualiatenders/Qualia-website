@@ -5,6 +5,7 @@
   const easeOut = t => 1 - Math.pow(1 - t, 3);
   const easeBack = t => 1 + 2.2 * Math.pow(t - 1, 3) + 1.2 * Math.pow(t - 1, 2);
   const euro = v => '€ ' + v.toFixed(2).replace('.', ',');
+  const wait = ms => new Promise(r => setTimeout(r, ms));
   const fast = /[?&]fast/.test(location.search) ? 15 : 1;
   const byId = Object.fromEntries(C.toppings.map(t => [t.id, t]));
 
@@ -23,7 +24,6 @@
   const srcsFor = id => { const m = manifest.toppings[id]; return m.overlay ? [m.overlay] : m.variants.map(v => v.src) };
   const ensure = id => Promise.all(srcsFor(id).map(load));
 
-  // ---------- screens ----------
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.toggle('is-active', s.id === id));
     $('#app').scrollTop = 0;
@@ -33,7 +33,12 @@
   const cv = $('#pizza'), ctx = cv.getContext('2d');
   function fit() {
     const r = $('#stage').getBoundingClientRect();
-    const css = Math.floor(Math.max(200, Math.min(r.width - 28, r.height - 40)));
+    // open box: floor ≈ s·cos(tilt), standing lid ≈ s·0.45 above it
+    const s = Math.floor(Math.max(190, Math.min(r.width - 56, (r.height - 10) / 1.62)));
+    const scene = $('#box-build');
+    scene.style.setProperty('--s', s + 'px');
+    scene.style.marginTop = (s * .56) + 'px';
+    const css = Math.round(s * .9);
     dpr = Math.min(3, window.devicePixelRatio || 1);
     cv.style.width = cv.style.height = css + 'px';
     cv.width = cv.height = Math.round(css * dpr);
@@ -42,24 +47,23 @@
   let raf = 0;
   const kick = () => { if (!raf) raf = requestAnimationFrame(t => { raf = 0; draw(t) }) };
 
-  function draw(now) {
-    if (!manifest || !ready[manifest.base]) return;
-    const W = cv.width, k = W / manifest.size, PR = manifest.pr * k, c = W / 2;
-    ctx.clearRect(0, 0, W, W);
-    ctx.drawImage(ready[manifest.base], 0, 0, W, W);
+  function composite(c, W, now, animate) {
+    const k = W / manifest.size, PR = manifest.pr * k, mid = W / 2;
+    c.clearRect(0, 0, W, W);
+    c.drawImage(ready[manifest.base], 0, 0, W, W);
     let busy = false;
-    const list = C.toppings.filter(t => state.active.has(t.id) || anims.has(t.id)).sort((a, b) => a.z - b.z);
+    const list = C.toppings.filter(t => state.active.has(t.id) || (animate && anims.has(t.id))).sort((a, b) => a.z - b.z);
     for (const t of list) {
-      const m = manifest.toppings[t.id], a = anims.get(t.id);
+      const m = manifest.toppings[t.id], a = animate ? anims.get(t.id) : null;
       if (m.overlay) {
         const img = ready[m.overlay];
         if (!img) { busy = true; continue }
         let p = 1;
         if (a) { p = clamp((now - a.t0) / 600); if (a.dir < 0) p = 1 - p; if (now - a.t0 < 600) busy = true; else anims.delete(t.id) }
-        ctx.globalAlpha = easeOut(p);
-        const s = 1 + (1 - p) * .04, w = W * s;
-        ctx.drawImage(img, c - w / 2, c - w / 2, w, w);
-        ctx.globalAlpha = 1;
+        c.globalAlpha = easeOut(p);
+        const w = W * (1 + (1 - p) * .04);
+        c.drawImage(img, mid - w / 2, mid - w / 2, w, w);
+        c.globalAlpha = 1;
         continue;
       }
       const stagger = a && a.dir > 0 ? 45 : 16, dur = a && a.dir > 0 ? 520 : 260;
@@ -71,18 +75,37 @@
         if (p <= 0) return;
         const e = a && a.dir > 0 ? easeBack(p) : easeOut(p), fall = 1 - clamp(e);
         const w = v.w * k * (1 + fall * .35 + (e > 1 ? (e - 1) * -.25 : 0));
-        const x = c + pc.x * PR, y = c + pc.y * PR - fall * PR * .16;
-        ctx.globalAlpha = clamp(p * 1.8);
-        ctx.shadowColor = `rgba(45,14,4,${.4 * (1 - fall * .6)})`;
-        ctx.shadowBlur = PR * (.014 + fall * .05);
-        ctx.shadowOffsetX = PR * (.006 + fall * .03);
-        ctx.shadowOffsetY = PR * (.01 + fall * .06);
-        ctx.drawImage(img, x - w / 2, y - w / 2, w, w);
+        const x = mid + pc.x * PR, y = mid + pc.y * PR - fall * PR * .16;
+        c.globalAlpha = clamp(p * 1.8);
+        c.shadowColor = `rgba(45,14,4,${.4 * (1 - fall * .6)})`;
+        c.shadowBlur = PR * (.014 + fall * .05);
+        c.shadowOffsetX = PR * (.006 + fall * .03);
+        c.shadowOffsetY = PR * (.01 + fall * .06);
+        c.drawImage(img, x - w / 2, y - w / 2, w, w);
       });
-      ctx.shadowColor = 'transparent'; ctx.globalAlpha = 1;
+      c.shadowColor = 'transparent'; c.globalAlpha = 1;
       if (a) { if (now - a.t0 > stagger * (m.pieces.length - 1) + dur) anims.delete(t.id); else busy = true }
     }
-    if (busy) kick();
+    return busy;
+  }
+  function draw(now) {
+    if (!manifest || !ready[manifest.base]) return;
+    if (composite(ctx, cv.width, now, true)) kick();
+  }
+  // a still of the finished pizza at any resolution
+  function still(size) {
+    const c = document.createElement('canvas'); c.width = c.height = size;
+    composite(c.getContext('2d'), size, performance.now(), false);
+    return c;
+  }
+  // the same still with a dough rim, so it reads as a real pizza when seen at an angle
+  function extruded(size) {
+    const top = still(size), c = document.createElement('canvas'), depth = Math.round(size * .075);
+    c.width = size; c.height = size + depth;
+    const x = c.getContext('2d');
+    for (let k = depth; k > 0; k--) { x.filter = `brightness(${.42 + .4 * (1 - k / depth)}) saturate(.8)`; x.drawImage(top, 0, k) }
+    x.filter = 'none'; x.drawImage(top, 0, 0);
+    return c;
   }
 
   // ---------- build screen ----------
@@ -96,8 +119,7 @@
     if (on('salsiccia')) return on('funghi') ? 'Salsiccia e Funghi' : 'Salsiccia';
     if (on('prosciutto')) return 'Crudo';
     if (on('burrata')) return 'Burrata';
-    const cheeses = ['bufala', 'parmigiano', 'gorgonzola'].filter(on).length;
-    if (cheeses >= 2) return 'Formaggi';
+    if (['bufala', 'parmigiano', 'gorgonzola'].filter(on).length >= 2) return 'Formaggi';
     if (on('funghi')) return 'Funghi';
     if ([...state.active].every(id => byId[id].cat === 'verdure')) return 'Ortolana';
     return 'Margherita Speciale';
@@ -110,7 +132,6 @@
     const step = now => { const p = clamp((now - t0) / 380); shownTotal = from + (to - from) * easeOut(p); el.textContent = euro(shownTotal); if (p < 1) requestAnimationFrame(step) };
     requestAnimationFrame(step);
   }
-
   function renderTabs() {
     $('#tabs').innerHTML = C.categories.map(c => {
       const n = C.toppings.filter(t => t.cat === c.id && state.active.has(t.id)).length;
@@ -140,27 +161,23 @@
     navigator.vibrate?.(8);
     refresh(); kick();
   }
-
   $('#tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (!b) return; state.cat = b.dataset.cat; renderTabs(); renderList(); $('#list').scrollTop = 0 });
   $('#list').addEventListener('click', e => { const b = e.target.closest('.item'); if (b) toggle(b.dataset.id) });
   $('#reset').addEventListener('click', () => { [...state.active].forEach(toggle) });
   $('#start').addEventListener('click', () => { show('s-build'); requestAnimationFrame(fit) });
 
   // ---------- checkout ----------
-  function snapshot() {
-    anims.clear(); draw(performance.now());
-    return cv.toDataURL('image/webp', .9);
-  }
   function slots() {
     const d = new Date(Date.now() + 20 * 60e3);
     d.setMinutes(Math.ceil(d.getMinutes() / 5) * 5, 0, 0);
     return [0, 15, 30, 45].map(m => new Date(d.getTime() + m * 60e3)).map(t => t.toTimeString().slice(0, 5));
   }
   function renderPay() {
-    const img = snapshot(), chosen = C.toppings.filter(t => state.active.has(t.id));
-    $('#sum-img').src = img; $('#oven-img').src = img;
+    anims.clear(); draw(performance.now());
+    const chosen = C.toppings.filter(t => state.active.has(t.id));
+    $('#sum-img').src = still(240).toDataURL('image/webp', .9);
     $('#sum-name').textContent = pizzaName();
-    $('#sum-desc').textContent = chosen.length ? chosen.map(t => t.name.replace(/^'/, '’')).join(' · ') : C.base.desc;
+    $('#sum-desc').textContent = chosen.length ? chosen.map(t => t.name).join(' · ') : C.base.desc;
     $('#rows').innerHTML = `<div class="r"><span>Pizza ${C.base.name}</span><span>${euro(C.base.price)}</span></div>` +
       chosen.map(t => `<div class="r"><span>${t.name}</span><span>+ ${t.price.toFixed(2).replace('.', ',')}</span></div>`).join('') +
       `<div class="r t"><span>Totaal</span><span>${euro(total())}</span></div>`;
@@ -191,89 +208,105 @@
       no: '047·' + String(Math.floor(100 + Math.random() * 900)),
     };
     try { sessionStorage.setItem('ad-order', JSON.stringify(order)) } catch (_) {}
-    try { await P.start(order); startOven(order) }
+    try { await P.start(order); bake(order) }
     catch (err) { b.disabled = false; b.textContent = err.message; setTimeout(payButton, 2400) }
   });
 
   // ---------- oven ----------
-  function paintOven() {
-    const back = $('#oven-back'), front = $('#oven-front'), r = $('#s-oven').getBoundingClientRect();
-    const S = Math.min(2, window.devicePixelRatio || 1), W = Math.round(r.width * S), H = Math.round(r.height * S);
-    [back, front].forEach(c => { c.width = W; c.height = H });
-    const b = back.getContext('2d'), f = front.getContext('2d'), u = W / 393;
-    const cx = W / 2, my = H * .36, mw = W * .38, mh = W * .3, floor = my + mh * .55;
-    $('#oven-pizza').style.setProperty('--floor', (floor / S) + 'px');
-    let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-    // brick dome face, lit from the mouth
-    const bricks = ctx2 => {
-      const bw = 60 * u, bh = 26 * u;
-      for (let row = 0; row * bh < floor + bh; row++) for (let col = -1; col * bw < W + bw; col++) {
-        const x = col * bw + (row % 2) * bw / 2, y = row * bh, d = Math.hypot((x + bw / 2 - cx) / (mw * 1.3), (y + bh / 2 - my) / (mh * 1.7));
-        const glow = Math.max(0, 1.3 - d) * .9, v = 26 + rnd() * 16;
-        ctx2.fillStyle = `rgb(${v + glow * 150 | 0},${v * .82 + glow * 62 | 0},${v * .7 + glow * 22 | 0})`;
-        ctx2.fillRect(x + 1.2 * u, y + 1.2 * u, bw - 2.4 * u, bh - 2.4 * u);
-      }
-    };
-    b.fillStyle = '#0E0D0C'; b.fillRect(0, 0, W, H);
-    const arch = c => { c.beginPath(); c.moveTo(cx - mw, floor); c.lineTo(cx - mw, my); c.ellipse(cx, my, mw, mh, 0, Math.PI, 0); c.lineTo(cx + mw, floor); c.closePath() };
-    // fire inside
-    arch(b); const fg = b.createRadialGradient(cx, my + mh * .2, 10, cx, my, mw * 1.2);
-    fg.addColorStop(0, '#FFE3A6'); fg.addColorStop(.25, '#FFB357'); fg.addColorStop(.55, '#D9601E'); fg.addColorStop(.85, '#5A1A08'); fg.addColorStop(1, '#1A0703');
-    b.fillStyle = fg; b.fill();
-    b.save(); arch(b); b.clip(); b.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 70; i++) {
-      const fx = cx + (rnd() - .5) * mw * 1.7, fh = mh * (.4 + rnd() * .9), fw = mw * (.06 + rnd() * .12), by = floor;
-      const g = b.createLinearGradient(0, by, 0, by - fh);
-      g.addColorStop(0, 'rgba(255,210,120,.55)'); g.addColorStop(.5, 'rgba(255,120,40,.3)'); g.addColorStop(1, 'rgba(255,80,20,0)');
-      b.fillStyle = g; b.beginPath(); b.moveTo(fx - fw, by); b.quadraticCurveTo(fx - fw * .6, by - fh * .6, fx + (rnd() - .5) * fw * 1.5, by - fh); b.quadraticCurveTo(fx + fw * .6, by - fh * .5, fx + fw, by); b.fill();
-    }
-    b.restore();
-    // hearth in front of the mouth
-    const fl = b.createLinearGradient(0, floor, 0, H); fl.addColorStop(0, '#3A2216'); fl.addColorStop(.25, '#1C1410'); fl.addColorStop(1, '#0B0A09');
-    b.fillStyle = fl; b.fillRect(0, floor, W, H - floor);
-    const sp = b.createRadialGradient(cx, floor, 10, cx, floor, mw * 2.4); sp.addColorStop(0, 'rgba(255,150,60,.45)'); sp.addColorStop(1, 'rgba(255,150,60,0)');
-    b.fillStyle = sp; b.fillRect(0, my, W, H);
-    // front wall with the mouth cut out — the pizza slides behind it
-    f.save(); f.beginPath(); f.rect(0, 0, W, floor); f.clip(); f.fillStyle = '#0E0D0C'; f.fillRect(0, 0, W, floor); bricks(f);
-    f.globalCompositeOperation = 'destination-out'; arch(f); f.fill(); f.globalCompositeOperation = 'source-over';
-    f.lineWidth = 20 * u; f.strokeStyle = '#2B1E16'; f.beginPath(); f.ellipse(cx, my, mw + 10 * u, mh + 10 * u, 0, Math.PI, 0); f.stroke();
-    f.fillStyle = '#2B1E16'; f.fillRect(cx - mw - 20 * u, my, 20 * u, floor - my); f.fillRect(cx + mw, my, 20 * u, floor - my);
-    for (let i = 0; i <= 18; i++) { const a = Math.PI + i / 18 * Math.PI; f.strokeStyle = 'rgba(10,8,6,.9)'; f.lineWidth = 1.6 * u; f.beginPath(); f.moveTo(cx + Math.cos(a) * mw, my + Math.sin(a) * mh); f.lineTo(cx + Math.cos(a) * (mw + 20 * u), my + Math.sin(a) * (mh + 20 * u)); f.stroke() }
-    f.globalCompositeOperation = 'lighter';
-    for (let i = 0; i < 50; i++) { const ex = cx + (rnd() - .5) * W * .9, ey = my - mh * .95 + rnd() * mh * .75, s = (.5 + rnd() * 1.4) * u * 2; const g = f.createRadialGradient(ex, ey, 0, ex, ey, s * 4); g.addColorStop(0, 'rgba(255,190,110,.9)'); g.addColorStop(1, 'rgba(255,120,40,0)'); f.fillStyle = g; f.fillRect(ex - s * 4, ey - s * 4, s * 8, s * 8) }
-    f.restore();
+  let fire, flick = 0, ovenGeo;
+  function layoutOven() {
+    const g = manifest.oven, r = $('#s-oven').getBoundingClientRect(), W = r.width, H = r.height;
+    const s = Math.max(W / g.W, H / g.H), iw = g.W * s, ih = g.H * s, ox = (W - iw) / 2, oy = Math.min(0, (H - ih) * .35);
+    ['#ov-back', '#ov-front'].forEach(q => Object.assign($(q).style, { width: iw + 'px', height: ih + 'px', left: ox + 'px', top: oy + 'px' }));
+    const fc = $('#ov-fire'), fd = Math.min(2, window.devicePixelRatio || 1);
+    Object.assign(fc.style, { width: W + 'px', height: H + 'px' }); fc.width = Math.round(W * fd); fc.height = Math.round(H * fd);
+    const px = v => ox + v * iw, py = v => oy + v * ih;
+    ovenGeo = { W, H, floor: py(g.floor), fireX: px(g.fireX), fireY: py(g.fireY), mouthW: (g.mouthR - g.mouthL) * iw };
+    $('#ov-light').style.setProperty('--fx', (ovenGeo.fireX / W * 100) + '%');
+    $('#ov-light').style.setProperty('--fy', (ovenGeo.fireY / H * 100) + '%');
+    if (!fire) fire = window.ADFire && ADFire(fc);
+    if (fire) { fire.state.seat = [ovenGeo.fireX / W, 1 - ovenGeo.fireY / H]; fire.state.spread = .26 * ih / H * (2556 / g.H) }
   }
+  // pizza positions: on the peel in front of the oven / on the hearth inside
+  const baseW = () => ovenGeo.W * .84;
+  function poseT(where, w) {
+    const g = ovenGeo, out = where === 'out', target = out ? g.W * .84 : g.mouthW * .5;
+    const cx = g.W / 2 - (out ? 0 : g.W * .06), cy = out ? g.floor + (g.H - g.floor) * .32 : g.floor - g.W * .02;
+    return `translate(${cx - w / 2}px,${cy - w / 2}px) perspective(${g.W * 2}px) rotateX(${out ? 58 : 74}deg) scale(${target / w})`;
+  }
+  function placePizza(where) {
+    const el = $('#ov-pizza'); el.style.setProperty('--pw', baseW() + 'px'); el.style.transform = poseT(where, baseW());
+  }
+  function movePizza(from, to, ms) {
+    const w = baseW();
+    return $('#ov-pizza').animate([{ transform: poseT(from, w) }, { transform: poseT(to, w) }], { duration: ms, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'forwards' }).finished;
+  }
+  function flicker() {
+    if (!$('#s-oven').classList.contains('is-active')) return;
+    flick += (Math.random() - .5) * .25; flick *= .86;
+    const heat = 1 + flick;
+    if (fire) fire.state.heat = heat;
+    $('#ov-light').style.opacity = (.45 + flick * .6).toFixed(3);
+    setTimeout(flicker, 70);
+  }
+  function setClock(left) { const s = Math.ceil(left); $('#clock').textContent = `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}` }
 
-  let ovenTimer;
-  function startOven(order) {
-    const ov = $('#s-oven');
-    ov.classList.remove('is-in'); $('#again').hidden = true;
+  async function bake(order) {
+    show('s-oven'); layoutOven();
+    const pc = $('#ov-img'), ex = extruded(Math.round(Math.min(1080, ovenGeo.W * 2.4)));
+    pc.width = ex.width; pc.height = ex.height; pc.getContext('2d').drawImage(ex, 0, 0);
+    $('#ov-pizza').getAnimations().forEach(a => a.cancel());
+    $('.peel').classList.remove('away'); pc.style.filter = '';
+    placePizza('out');
     $('#order-no').textContent = `Bestelling #${order.no} · betaald`;
     $('#oven-title').innerHTML = 'Uw pizza gaat<br><i>de oven in</i>';
     $('#pickup-line').textContent = `Afhalen om ${order.pickup}`;
     ['st-1', 'st-2', 'st-3'].forEach((s, i) => $('#' + s).classList.toggle('on', i === 0));
-    $('#progress').style.width = '0%'; $('#clock').textContent = '01:30';
-    show('s-oven'); paintOven();
-    void ov.offsetWidth; ov.classList.add('is-in');
-    document.documentElement.style.setProperty('--bake', 90 / fast + 's');
-    clearInterval(ovenTimer);
-    const BAKE = 90, t0 = Date.now() + 3600 / fast;
-    ovenTimer = setInterval(() => {
-      const el = clamp((Date.now() - t0) / 1000 * fast, 0, BAKE), left = BAKE - el;
-      if (Date.now() >= t0) { $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'In de <i>houtoven</i>' }
-      const sec = Math.ceil(left); $('#clock').textContent = `${String(Math.floor(sec / 60)).padStart(2, '0')}:${String(sec % 60).padStart(2, '0')}`;
-      $('#progress').style.width = (el / BAKE * 100) + '%';
-      if (el >= BAKE) {
-        clearInterval(ovenTimer);
-        $('#clock').textContent = '00:00'; $('#st-3').classList.add('on');
-        $('#oven-title').innerHTML = 'Buon <i>appetito</i>';
-        $('#again').hidden = false; navigator.vibrate?.([20, 60, 20]);
-      }
-    }, 250);
+    $('#progress').style.width = '0%'; setClock(90);
+    fire?.start(); flicker();
+    await wait(900);
+    await movePizza('out', 'in', 2600);
+    $('.peel').classList.add('away');
+    $('#st-2').classList.add('on'); $('#oven-title').innerHTML = 'In de <i>houtoven</i>';
+    pc.style.transition = `filter ${90 / fast}s linear`; pc.style.filter = 'brightness(1.12) saturate(1.1) sepia(.06)';
+    const BAKE = 90, t0 = Date.now();
+    await new Promise(done => {
+      const iv = setInterval(() => {
+        const el = clamp((Date.now() - t0) / 1000 * fast, 0, BAKE);
+        setClock(BAKE - el); $('#progress').style.width = (el / BAKE * 100) + '%';
+        if (el >= BAKE) { clearInterval(iv); done() }
+      }, 200);
+    });
+    $('#oven-title').innerHTML = 'Perfetto — <i>uit de oven</i>';
+    $('.peel').classList.remove('away');
+    await wait(600);
+    await movePizza('in', 'out', 1900);
+    $('#st-3').classList.add('on');
+    await wait(300);
+    boxUp(order);
+  }
+
+  // ---------- into the box ----------
+  async function boxUp(order) {
+    const scene = $('#box-done'), r = $('#s-done').getBoundingClientRect();
+    const s = Math.round(Math.min(r.width - 80, r.height * .34));
+    scene.style.setProperty('--s', s + 'px'); scene.style.marginTop = (s * .3) + 'px';
+    const dc = $('#done-pizza'), size = Math.round(s * .9 * Math.min(3, window.devicePixelRatio || 1));
+    dc.width = dc.height = size; dc.style.width = dc.style.height = Math.round(s * .9) + 'px';
+    const top = still(size), x = dc.getContext('2d'); x.filter = 'brightness(1.06) saturate(1.06)'; x.drawImage(top, 0, 0);
+    $('#done-no').textContent = `Bestelling #${order.no}`;
+    $('#done-line').textContent = `Afhalen om ${order.pickup} · Anno Domini, Kampen`;
+    const done = $('#s-done');
+    done.classList.remove('shown'); scene.classList.remove('closing');
+    show('s-done'); fire?.stop();
+    await wait(450); void scene.offsetWidth; scene.classList.add('closing');
+    navigator.vibrate?.([0, 1900, 14]);
+    await wait(2200); done.classList.add('shown');
   }
   $('#again').addEventListener('click', () => {
-    clearInterval(ovenTimer); state.active.clear(); anims.clear(); shownTotal = C.base.price;
+    state.active.clear(); anims.clear(); shownTotal = C.base.price;
     $('#total').textContent = euro(C.base.price); $('#pizza-name').textContent = 'Margherita';
+    $('#box-done').classList.remove('closing');
     renderTabs(); renderList(); show('s-build'); fit();
   });
 
@@ -282,12 +315,11 @@
   fetch('assets/pizza/manifest.json').then(r => r.json()).then(m => {
     manifest = m;
     load(m.base).then(fit);
-    // warm the cache in the background, first category first
     const order = C.toppings.slice().sort((a, b) => (a.cat === state.cat ? -1 : 0) - (b.cat === state.cat ? -1 : 0));
     order.reduce((p, t) => p.then(() => ensure(t.id)).catch(() => {}), Promise.resolve());
     if (location.hash === '#oven') {
-      try { const o = JSON.parse(sessionStorage.getItem('ad-order')); if (o) { o.toppings.forEach(id => state.active.add(id)); Promise.all([load(m.base), ...o.toppings.map(ensure)]).then(() => { fit(); $('#oven-img').src = snapshot(); startOven(o) }) } } catch (_) {}
+      try { const o = JSON.parse(sessionStorage.getItem('ad-order')); if (o) { o.toppings.forEach(id => state.active.add(id)); Promise.all([load(m.base), ...o.toppings.map(ensure)]).then(() => { fit(); bake(o) }) } } catch (_) {}
     }
   });
-  addEventListener('resize', () => { fit(); if ($('#s-oven').classList.contains('is-active')) paintOven() });
+  addEventListener('resize', () => { fit(); if (manifest && $('#s-oven').classList.contains('is-active')) layoutOven() });
 })();
