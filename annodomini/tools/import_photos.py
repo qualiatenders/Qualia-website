@@ -34,7 +34,7 @@ SLATE = (40, 38, 35)
 def catalog():
     """Topping ids with their size (fraction of the pizza radius) from catalog.js."""
     src = (ROOT / 'app' / 'catalog.js').read_text()
-    return {m[0]: float(m[1]) for m in re.findall(r"\{ id: '([\w-]+)', cat: '[^']+'.*?art: \{ painter: '[\w]+'.*?s: ([\d.]+)", src, re.S)}
+    return {m[0]: float(m[1]) for m in re.findall(r"\{ id: '([\w-]+)', cat: '[^']+'[^\n]*\n\s*art: \{ painter: '\w+'[^}]*?\bs: ([\d.]+)", src)}
 
 
 def cut(img, session):
@@ -87,11 +87,27 @@ def square(piece, size, pad=1.25):
     return c
 
 
+def largest(rgba):
+    """The biggest separate object — drops stray frame lines and specks."""
+    parts = pieces(rgba)
+    return max(parts, key=lambda p: (np.array(p.getchannel('A')) > 40).sum()) if parts else rgba
+
+
 def disc(rgba, size):
     """Fit a cut-out whole pizza so its diameter matches the renderer (0.92 of the canvas)."""
-    bbox = rgba.getchannel('A').point(lambda v: 255 if v > 40 else 0).getbbox()
-    rgba = rgba.crop(bbox)
-    return square(rgba, size, pad=1 / .92)
+    return square(largest(rgba), size, pad=1 / .92)
+
+
+RINGS = {'cipolla', 'jalapeno'}   # the black background shows through the middle of a ring
+
+
+def key_black(rgba, lo=18, hi=48):
+    """Fade out near-black background that the cut-out kept, e.g. inside onion rings."""
+    px = np.array(rgba).astype(np.float32)
+    lum = px[..., :3].max(axis=2)
+    keep = np.clip((lum - lo) / (hi - lo), 0, 1)
+    px[..., 3] *= keep
+    return Image.fromarray(px.astype('uint8'), 'RGBA')
 
 
 def save(img, rel):
@@ -115,17 +131,22 @@ def main(only):
             print(src.name)
             save(disc(cut(Image.open(src), session), px), rel)
 
-    for src in sorted(PHOTOS.glob('*.*')):
+    for src in sorted(p for p in PHOTOS.glob('*.*') if not p.name.startswith('.')):
         tid = src.stem
         if tid not in sizes or (only and only != tid):
             continue
         found = True
         print(src.name)
-        parts = sorted(pieces(cut(Image.open(src), session)), key=lambda p: -p.size[0] * p.size[1])[:8]
+        sheet = cut(Image.open(src), session)
+        if tid in RINGS:
+            sheet = key_black(sheet)
+        parts = sorted(pieces(sheet), key=lambda p: -p.size[0] * p.size[1])[:8]
         if not parts:
             print('  !! no separate pieces found — use a plain dark background with space between pieces')
             continue
         px = round(sizes[tid] * pr * 2 * 1.35)
+        for old in (ASSETS / 'pizza').glob(f'{tid}-*.webp'):
+            old.unlink()
         variants = []
         for n, p in enumerate(parts):
             save(square(p, px, pad=1.35), f'pizza/{tid}-{n}.webp')
@@ -142,13 +163,15 @@ def main(only):
             th.alpha_composite(s, (x - s.width // 2, y - s.height // 2))
         save(th.convert('RGB'), f'thumbs/{tid}.webp')
 
-    for src in sorted((PHOTOS / 'extras').glob('*.*')) if (PHOTOS / 'extras').exists() else []:
+    # chili flakes and hot honey stay rendered: thin drizzles and tiny flakes don't cut out cleanly
+
+    for src in sorted(p for p in (PHOTOS / 'extras').glob('*.*') if not p.name.startswith('.')) if (PHOTOS / 'extras').exists() else []:
         if only and only != src.stem:
             continue
         found = True
         print('extras/' + src.name)
         bg = Image.new('RGBA', (240, 240), SLATE + (255,))
-        bg.alpha_composite(square(cut(Image.open(src), session), 240, pad=1.08))
+        bg.alpha_composite(square(largest(cut(Image.open(src), session)), 240, pad=1.08))
         save(bg.convert('RGB'), f'extras/{src.stem}.webp')
 
     MANIFEST.write_text(json.dumps(manifest))
