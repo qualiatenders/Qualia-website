@@ -74,8 +74,9 @@ export default async (req, res) => {
 ## Beeld
 
 De pizza en het beleg worden nu door de computer gerenderd. Voor een
-fotorealistisch resultaat vervang je de sprites in `assets/pizza/` door
-uitgeknipte foto's van bovenaf (zelfde bestandsnamen, transparante webp).
+fotorealistisch resultaat: zie `FOTOPLAN.md` (prompts en bestandsnamen), zet de
+foto's in `photos/` en draai `tools/import_photos.py`; die knipt alles uit en
+zet het in de app.
 
 
 ## Stempelkaart
