@@ -1,0 +1,848 @@
+<title>Assault Navigation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=Saira+Stencil+One&display=swap">
+<style>
+/* Layout: één scherm-app; inhoud boven, tabbalk onder. Dashboard = snelheid groot, statistiek in kimvlakken, mini-player vast onderin. */
+:root {
+  /* Merkkleuren (brandbook v1.0) */
+  --hull-black: #000000;
+  --alu-white: #F2F2F2;
+  --mill-alu: #999999;
+  --deck-grey: #4A4A4A;
+  --assault-red: #C0272C;
+  /* Afgeleid voor de app */
+  --bg: var(--hull-black);
+  --panel: #0E0E0E;
+  --panel-2: #161616;
+  --fg: var(--alu-white);
+  --fg-2: var(--mill-alu);
+  --line: var(--deck-grey);
+  --accent: var(--assault-red);
+  --warn: #FFC400;          /* signaalgeel: alleen waarschuwingen */
+  --warn-ink: #000000;
+  --ok: #F2F2F2;
+  --water: #3E5560;         /* kaart: staal, ontzadigd */
+  --land: #070707;
+  --font-head: "Archivo Black", "Arial Black", Arial, sans-serif;
+  --font-label: "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+  --font-body: "Barlow", Helvetica, Arial, sans-serif;
+  --font-code: "Saira Stencil One", "Arial Black", sans-serif;
+  --font-num: -apple-system, "SF Pro Display", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --gap: 10px;
+  --r-cut: 12px;
+  --tap: 56px;
+  color-scheme: dark;
+}
+:root.hc {
+  --panel: #000; --panel-2: #000; --fg-2: #FFFFFF; --fg: #FFFFFF; --line: #FFFFFF; --water: #7FA3B3; --land: #000;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); overflow: hidden;
+  -webkit-tap-highlight-color: transparent; -webkit-user-select: none; user-select: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; touch-action: manipulation; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--warn); outline-offset: 2px; }
+.sel { -webkit-user-select: text; user-select: text; }
+
+.label { font-family: var(--font-label); font-weight: 700; text-transform: uppercase; letter-spacing: .14em; font-size: 13px; color: var(--fg-2); }
+.head { font-family: var(--font-head); text-transform: uppercase; letter-spacing: -.015em; line-height: 1.05; text-wrap: balance; }
+.num { font-family: var(--font-num); font-variant-numeric: tabular-nums; font-weight: 700; }
+.kim { clip-path: polygon(var(--r-cut) 0, 100% 0, 100% calc(100% - var(--r-cut)), calc(100% - var(--r-cut)) 100%, 0 100%, 0 var(--r-cut)); }
+.rivet { height: 6px; background: radial-gradient(circle, var(--line) 1.6px, transparent 2px) 0 50% / 12px 6px repeat-x; }
+
+#app { height: 100%; display: grid; grid-template-rows: auto 1fr auto; }
+.topbar { display: flex; align-items: center; gap: 8px; padding-block: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.chip { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 1px solid var(--line);
+  font-family: var(--font-label); font-weight: 700; letter-spacing: .12em; font-size: 12px; text-transform: uppercase; color: var(--fg-2); white-space: nowrap; }
+.chip .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--fg-2); }
+.chip.live .dot { background: var(--fg); }
+.chip.on { color: var(--fg); border-color: var(--fg-2); }
+.topbar .spacer { flex: 1; }
+
+main { position: relative; min-height: 0; }
+.view { position: absolute; inset: 0; display: none; }
+.view.active { display: block; }
+
+/* Dashboard */
+#view-dash.active { display: grid; grid-template-rows: 1fr auto auto; gap: var(--gap); padding-block: 4px 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.speed { position: relative; display: grid; place-items: center; align-content: center; min-height: 0; }
+.speed .value { font-size: min(44vw, 30vh); line-height: .86; letter-spacing: -.04em; }
+.speed .unit { margin-top: 4px; font-size: 18px; color: var(--fg); }
+.speed.over .value { color: var(--warn); }
+.limit { position: absolute; top: 6px; right: 0; display: grid; place-items: center; width: 74px; height: 74px; border-radius: 50%;
+  border: 7px solid var(--fg-2); background: var(--panel); }
+.limit .num { font-size: 26px; }
+.limit.known { border-color: var(--accent); background: #fff; color: #000; }
+.limit.over { border-color: var(--warn); background: var(--warn); color: #000; animation: pulse 1s infinite; }
+.limit.unknown { border: 2px dashed var(--line); }
+.limit.unknown span { font-family: var(--font-label); font-weight: 700; font-size: 11px; letter-spacing: .1em; text-align: center; color: var(--fg-2); line-height: 1.1; }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+.stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--gap); }
+.stat { background: var(--panel); padding: 10px 14px 12px; min-width: 0; }
+.stat .num { font-size: clamp(30px, 9vw, 44px); line-height: 1.05; white-space: nowrap; }
+.stat .sub { font-size: 15px; color: var(--fg-2); font-weight: 600; margin-left: 4px; }
+
+.player { display: grid; grid-template-columns: 52px 1fr auto; align-items: center; gap: 12px; height: 72px; padding: 0 6px 0 10px;
+  background: var(--panel); }
+.player .cover { width: 52px; height: 52px; background: var(--panel-2); border: 1px solid var(--line); display: grid; place-items: center; }
+.player .meta { min-width: 0; }
+.player .t { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player .a { font-size: 14px; color: var(--fg-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.player .ctl { display: flex; }
+.player .ctl button { width: var(--tap); height: var(--tap); display: grid; place-items: center; }
+.player .ctl button[disabled] { opacity: .35; }
+
+/* Kaart */
+#map { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; background: var(--land); }
+.map-ui { position: absolute; display: flex; flex-direction: column; gap: 8px; right: max(12px, env(safe-area-inset-right, 0px)); top: 12px; }
+.mbtn { width: var(--tap); height: var(--tap); background: rgba(14,14,14,.92); border: 1px solid var(--line); display: grid; place-items: center; }
+.mbtn.on { border-color: var(--accent); }
+.mbtn.on svg { color: var(--accent); }
+.speedpill { position: absolute; left: max(12px, env(safe-area-inset-left, 0px)); top: 12px; background: rgba(0,0,0,.9); border: 1px solid var(--line);
+  padding: 6px 14px 8px; display: flex; align-items: baseline; gap: 6px; }
+.speedpill .num { font-size: 44px; line-height: 1; }
+.speedpill.over .num { color: var(--warn); }
+.sheet { position: absolute; left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: 12px;
+  background: var(--panel); border: 1px solid var(--line); padding: 14px 16px 16px; max-width: 520px; margin: 0 auto; }
+.sheet .h { display: flex; gap: 12px; align-items: flex-start; }
+.sheet .h .head { font-size: 22px; flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rows { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin-top: 10px; align-items: baseline; }
+.rows .v { font-weight: 600; font-size: 17px; min-width: 0; overflow-wrap: anywhere; }
+.rows .v .num { font-size: 20px; }
+.tag { display: inline-block; padding: 2px 8px; font-family: var(--font-label); font-weight: 700; letter-spacing: .1em; font-size: 12px; text-transform: uppercase; margin-left: 6px; vertical-align: 2px; }
+.tag.warn { background: var(--warn); color: var(--warn-ink); }
+.tag.ok { border: 1px solid var(--fg-2); color: var(--fg); }
+.closebtn { width: 44px; height: 44px; display: grid; place-items: center; margin: -8px -8px 0 0; }
+.note { font-size: 14px; color: var(--fg-2); margin-top: 10px; line-height: 1.45; }
+
+/* Trips en instellingen */
+.scroll { position: absolute; inset: 0; overflow-y: auto; padding-block: 8px 24px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); -webkit-user-select: text; user-select: text; }
+.scroll > * + * { margin-top: 12px; }
+.title { font-size: 28px; }
+.card { background: var(--panel); padding: 14px 16px; }
+.trip { display: grid; gap: 10px; width: 100%; text-align: left; }
+.trip .g { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.trip .g .num { font-size: 22px; }
+.trip canvas { width: 100%; height: 160px; background: var(--land); display: block; }
+.set { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 12px 16px; background: var(--panel); }
+.set .d { font-size: 14px; color: var(--fg-2); margin-top: 2px; }
+.seg { display: flex; border: 1px solid var(--line); }
+.seg button { min-width: 64px; height: 48px; padding: 0 12px; font-family: var(--font-label); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--fg-2); }
+.seg button.on { background: var(--fg); color: #000; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper button { width: 52px; height: 52px; border: 1px solid var(--line); font-size: 26px; font-weight: 600; }
+.stepper .num { min-width: 86px; text-align: center; font-size: 24px; }
+.empty { padding: 28px 16px; text-align: left; background: var(--panel); }
+.empty p { color: var(--fg-2); margin: 6px 0 0; line-height: 1.5; }
+.btn { height: var(--tap); padding: 0 22px; background: var(--fg); color: #000; font-family: var(--font-label); font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: 16px; }
+.btn.ghost { background: none; color: var(--fg); border: 1px solid var(--line); }
+.btn.red { background: var(--accent); color: #fff; }
+
+/* Tabbalk */
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); background: var(--bg);
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px); }
+.tabs button { height: 60px; display: grid; place-items: center; align-content: center; gap: 3px; font-family: var(--font-label); font-weight: 700;
+  letter-spacing: .14em; font-size: 12px; text-transform: uppercase; color: var(--fg-2); position: relative; }
+.tabs button.on { color: var(--fg); }
+.tabs button.on::before { content: ""; position: absolute; top: -1px; left: 30%; right: 30%; height: 3px; background: var(--accent); }
+
+/* Waarschuwing */
+/* Onderin, boven de tabbalk: valt over statistiek en speler, nooit over de snelheid */
+.alert { position: fixed; z-index: 30; left: max(10px, env(safe-area-inset-left, 0px)); right: max(10px, env(safe-area-inset-right, 0px));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 68px); max-width: 640px; margin: 0 auto; padding: 14px 16px; display: grid; grid-template-columns: 1fr auto; gap: 10px;
+  background: var(--panel); border: 2px solid var(--fg-2); }
+.alert.alarm { background: var(--warn); color: var(--warn-ink); border-color: var(--warn); }
+.alert.alarm .label { color: var(--warn-ink); }
+.alert .head { font-size: 24px; margin-top: 2px; }
+.alert .msg { font-size: 18px; font-weight: 600; margin-top: 6px; line-height: 1.35; }
+.alert .num { font-size: 22px; }
+.alert button { width: var(--tap); height: var(--tap); display: grid; place-items: center; border: 2px solid currentColor; }
+
+/* Start / disclaimer */
+.overlay { position: fixed; inset: 0; z-index: 40; background: var(--bg); overflow-y: auto; }
+.overlay .in { max-width: 560px; margin: 0 auto; padding-block: 28px 32px;
+  padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); display: grid; gap: 18px; }
+.overlay img { width: min(300px, 80%); height: auto; }
+.overlay .head { font-size: clamp(30px, 8vw, 40px); }
+.overlay p { margin: 0; line-height: 1.6; font-size: 17px; max-width: 60ch; }
+.code { font-family: var(--font-code); letter-spacing: .04em; color: var(--fg-2); font-size: 14px; }
+
+/* Landscape in een houder */
+@media (orientation: landscape) and (max-height: 560px) {
+  #view-dash.active { grid-template-columns: 1.15fr 1fr; grid-template-rows: 1fr auto; column-gap: 16px; }
+  .speed { grid-row: 1 / 3; }
+  .speed .value { font-size: min(30vw, 58vh); }
+  .stats { align-self: center; }
+  .stat .num { font-size: clamp(26px, 6vh, 40px); }
+  .tabs button { height: 48px; }
+  .topbar { padding-block: 4px; }
+  .alert { left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 56px); margin: 0; }
+  .alert .head { font-size: 20px; }
+  .alert .msg { font-size: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .limit.over { animation: none; } }
+</style>
+
+<div id="app">
+  <div class="topbar">
+    <span class="chip" id="srcChip"><span class="dot"></span><span id="srcTxt">Geen positie</span></span>
+    <span class="chip" id="tripChip">Geen trip</span>
+    <span class="spacer"></span>
+    <span class="chip" id="saveChip" hidden>Spaar</span>
+  </div>
+
+  <main>
+    <section class="view active" id="view-dash" aria-label="Vaardashboard">
+      <div class="speed" id="speedBox">
+        <div class="value num" id="speedVal">0</div>
+        <div class="unit label" id="speedUnit">km/u</div>
+        <div class="limit unknown" id="limitBadge" aria-label="Snelheidslimiet"><span>LIMIET<br>ONBEKEND</span></div>
+      </div>
+      <div class="stats">
+        <div class="stat kim"><div class="label">Koers</div><div class="num"><span id="stHeading">—</span><span class="sub" id="stHeadingTxt"></span></div></div>
+        <div class="stat kim"><div class="label">Afstand</div><div class="num"><span id="stDist">0,0</span><span class="sub">km</span></div></div>
+        <div class="stat kim"><div class="label">Max</div><div class="num"><span id="stMax">0</span><span class="sub" id="stMaxU">km/u</span></div></div>
+        <div class="stat kim"><div class="label">Vaartijd</div><div class="num"><span id="stTime">0:00</span></div></div>
+      </div>
+      <div class="player kim" aria-label="Spotify">
+        <div class="cover"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--fg-2)"><path d="M9 18V6l11-2v12"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div>
+        <div class="meta"><div class="t">Spotify niet gekoppeld</div><div class="a">Koppelen kan in de volgende versie.</div></div>
+        <div class="ctl">
+          <button disabled aria-label="Vorige"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h2v14H6zM20 5v14L9 12z"/></svg></button>
+          <button disabled aria-label="Afspelen"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4v16l13-8z"/></svg></button>
+          <button disabled aria-label="Volgende"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M16 5h2v14h-2zM4 5v14l11-7z"/></svg></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-map" aria-label="Kaart">
+      <canvas id="map"></canvas>
+      <div class="speedpill" id="mapSpeed"><span class="num" id="mapSpeedVal">0</span><span class="label" id="mapSpeedUnit">km/u</span></div>
+      <div class="map-ui">
+        <button class="mbtn on" id="followBtn" aria-label="Volg de boot"><svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l7 19-7-4-7 4z"/></svg></button>
+        <button class="mbtn" id="zoomIn" aria-label="Inzoomen"><svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="mbtn" id="zoomOut" aria-label="Uitzoomen"><svg width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14"/></svg></button>
+      </div>
+      <div class="sheet kim" id="sheet" hidden></div>
+    </section>
+
+    <section class="view" id="view-trips" aria-label="Trips">
+      <div class="scroll" id="tripsList"></div>
+    </section>
+
+    <section class="view" id="view-set" aria-label="Instellingen">
+      <div class="scroll">
+        <h1 class="head title">Instellingen</h1>
+        <div class="set"><div><div class="label">Boothoogte</div><div class="d">Inclusief beugel en antenne.</div></div>
+          <div class="stepper"><button id="hMinus" aria-label="Lager">−</button><span class="num" id="hVal">1,80 m</span><button id="hPlus" aria-label="Hoger">+</button></div></div>
+        <div class="set"><div><div class="label">Veiligheidsmarge</div><div class="d">Komt bovenop je boothoogte.</div></div>
+          <div class="stepper"><button id="mMinus" aria-label="Minder">−</button><span class="num" id="mVal">0,30 m</span><button id="mPlus" aria-label="Meer">+</button></div></div>
+        <div class="set"><div><div class="label">Eenheid</div></div>
+          <div class="seg" id="unitSeg"><button data-v="kmh">km/u</button><button data-v="kn">knopen</button></div></div>
+        <div class="set"><div><div class="label">Zonlicht</div><div class="d">Hoog contrast: puur wit op zwart.</div></div>
+          <div class="seg" id="hcSeg"><button data-v="0">Uit</button><button data-v="1">Aan</button></div></div>
+        <div class="set"><div><div class="label">Spaarmodus</div><div class="d">Minder GPS-updates en kaartwerk.</div></div>
+          <div class="seg" id="saveSeg"><button data-v="0">Uit</button><button data-v="1">Aan</button></div></div>
+        <div class="rivet" role="presentation"></div>
+        <div class="set"><div><div class="label">Positiebron</div><div class="d" id="srcNote">Demo vaart over de Wurdumer Feart bij Leeuwarden.</div></div>
+          <div class="seg" id="srcSeg"><button data-v="gps">GPS</button><button data-v="demo">Demo</button></div></div>
+        <div class="set"><div><div class="label">Demotempo</div><div class="d">Versnelt alleen de demo.</div></div>
+          <div class="seg" id="tempoSeg"><button data-v="1">×1</button><button data-v="4">×4</button><button data-v="10">×10</button></div></div>
+        <div class="set"><div><div class="label">Voorbeeldlimiet</div><div class="d">Alleen demo: 12 km/u, om de overschrijding te zien.</div></div>
+          <div class="seg" id="demoLimSeg"><button data-v="0">Uit</button><button data-v="1">Aan</button></div></div>
+        <div class="rivet" role="presentation"></div>
+        <div class="card">
+          <div class="label">Data</div>
+          <p class="note" id="dataNote" style="margin-top:6px"></p>
+        </div>
+        <button class="btn ghost" id="showDisc">Disclaimer tonen</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabs" aria-label="Navigatie">
+    <button class="on" data-view="dash"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16l4-5"/></svg>Varen</button>
+    <button data-view="map"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 4L3 6v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Kaart</button>
+    <button data-view="trips"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 19c4 0 4-6 8-6s4-6 8-6"/><circle cx="4" cy="19" r="1.5"/><circle cx="20" cy="7" r="1.5"/></svg>Trips</button>
+    <button data-view="set"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>Instellingen</button>
+  </nav>
+</div>
+
+<div class="alert kim" id="alert" role="alert" hidden>
+  <div><div class="label" id="alertLbl"></div><div class="head" id="alertHead"></div><div class="msg" id="alertMsg"></div></div>
+  <button id="alertClose" aria-label="Sluiten"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+</div>
+
+<div class="overlay" id="intro" hidden>
+  <div class="in">
+    <img alt="Assault Boats" src="data:image/webp;base64,__LOGO__">
+    <div class="label" style="color:var(--accent)">Assault Navigation · preview</div>
+    <h1 class="head">Kijk zelf. Vaar zelf.</h1>
+    <p>Deze app is een hulpmiddel. Hij is geen officieel navigatiemiddel. Hoogtes, bedieningstijden en limieten komen uit open data en kunnen verouderd of onvolledig zijn. Kijk altijd naar de borden en het water.</p>
+    <div class="set kim" style="padding:14px 16px"><div><div class="label">Jouw boothoogte</div><div class="d">Hoogste punt boven water, met beugel en antenne.</div></div>
+      <div class="stepper"><button id="ihMinus" aria-label="Lager">−</button><span class="num" id="ihVal">1,80 m</span><button id="ihPlus" aria-label="Hoger">+</button></div></div>
+    <div style="display:flex; gap:10px; flex-wrap:wrap">
+      <button class="btn red" id="startDemo">Start demovaart</button>
+      <button class="btn ghost" id="startGps">Gebruik GPS</button>
+    </div>
+    <p class="note">Door te starten ga je hiermee akkoord. De demo vaart over de Wurdumer Feart bij Leeuwarden, langs echte bruggen uit Vaarweginformatie.</p>
+    <div class="code">FIS-GEN __GEN__</div>
+  </div>
+</div>
+
+<script>__NAVDATA__</script>
+<script>
+"use strict";
+/* ============================================================
+   Assault Navigation · preview
+   Lagen: Data (NAVDATA, index) · Positie (GPS/Demo) · Filter & Trip · Waarschuwing · Kaart · UI
+   ============================================================ */
+const D = window.NAVDATA;
+const $ = id => document.getElementById(id);
+
+/* ---------- Opslag (alleen gemak per apparaat) ---------- */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("an." + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem("an." + k, JSON.stringify(v)); } catch {} }
+};
+const S = {
+  unit: store.get("unit", "kmh"), boatH: store.get("boatH", 1.80), margin: store.get("margin", 0.30),
+  hc: store.get("hc", false), save: store.get("save", false), src: store.get("src", "demo"),
+  tempo: store.get("tempo", 4), demoLimit: store.get("demoLimit", false), accepted: store.get("accepted", false)
+};
+function persist() { for (const k in S) store.set(k, S[k]); }
+
+/* ---------- Geo ---------- */
+const LAT0 = 52.2, LON0 = 5.3, KX = Math.cos(LAT0 * Math.PI / 180) * 111320, KY = 111320;
+const toX = lon => (lon - LON0) * KX, toY = lat => (lat - LAT0) * KY;
+const toLon = x => x / KX + LON0, toLat = y => y / KY + LAT0;
+function hav(a, b) { const R = 6371000, r = Math.PI / 180; const dLa = (b.lat - a.lat) * r, dLo = (b.lon - a.lon) * r;
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(a.lat * r) * Math.cos(b.lat * r) * Math.sin(dLo / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); }
+function bearing(a, b) { const r = Math.PI / 180; const y = Math.sin((b.lon - a.lon) * r) * Math.cos(b.lat * r);
+  const x = Math.cos(a.lat * r) * Math.sin(b.lat * r) - Math.sin(a.lat * r) * Math.cos(b.lat * r) * Math.cos((b.lon - a.lon) * r);
+  return (Math.atan2(y, x) / r + 360) % 360; }
+const angDiff = (a, b) => { const d = Math.abs(a - b) % 360; return d > 180 ? 360 - d : d; };
+const COMPASS = ["N", "NNO", "NO", "ONO", "O", "OZO", "ZO", "ZZO", "Z", "ZZW", "ZW", "WZW", "W", "WNW", "NW", "NNW"];
+
+/* ---------- Data: vaarwegen en objecten ---------- */
+const FW = [];
+for (const [ni, e] of D.fw) {
+  const a = new Float32Array(e.length); let x = 0, y = 0, x0 = 1e12, y0 = 1e12, x1 = -1e12, y1 = -1e12;
+  for (let i = 0; i < e.length; i += 2) { x += e[i]; y += e[i + 1]; const X = toX(x / 1e5), Y = toY(y / 1e5); a[i] = X; a[i + 1] = Y;
+    if (X < x0) x0 = X; if (X > x1) x1 = X; if (Y < y0) y0 = Y; if (Y > y1) y1 = Y; }
+  FW.push({ ni, a, x0, y0, x1, y1 });
+}
+const OBJ = D.s.map((r, i) => ({ id: i, k: r[0], name: r[1], lon: r[2], lat: r[3], x: toX(r[2]), y: toY(r[3]),
+  hc: r[4], ho: r[5], w: r[6], tel: r[7], vhf: r[8], ot: r[9], city: r[10] }));
+const CELL = 2000, GRID = new Map();
+for (const o of OBJ) { const k = Math.floor(o.x / CELL) + "," + Math.floor(o.y / CELL); (GRID.get(k) || GRID.set(k, []).get(k)).push(o); }
+function query(x0, y0, x1, y1, out = []) {
+  for (let cx = Math.floor(x0 / CELL); cx <= Math.floor(x1 / CELL); cx++)
+    for (let cy = Math.floor(y0 / CELL); cy <= Math.floor(y1 / CELL); cy++) {
+      const c = GRID.get(cx + "," + cy); if (!c) continue;
+      for (const o of c) if (o.x >= x0 && o.x <= x1 && o.y >= y0 && o.y <= y1) out.push(o);
+    }
+  return out;
+}
+const KIND = ["Vaste brug", "Beweegbare brug", "Sluis"];
+
+/* ---------- Bedieningstijden ---------- */
+const pad = n => String(n).padStart(2, "0");
+const hm = m => pad(Math.floor(m / 60)) + ":" + pad(m % 60);
+function otStatus(idx, date) {
+  const o = D.ot[idx]; if (!o) return null;
+  const md = pad(date.getMonth() + 1) + pad(date.getDate());
+  const per = o[1].find(([a, b]) => a <= b ? md >= a && md <= b : md >= a || md <= b);
+  if (!per) return { note: o[0], windows: [], open: false, known: false };
+  const dow = (date.getDay() + 6) % 7, now = date.getHours() * 60 + date.getMinutes();
+  const windows = per[2].filter(r => r[0] & (1 << dow)).map(r => [r[1], Math.min(r[2], 1439)]).filter(w => w[1] > w[0]).sort((a, b) => a[0] - b[0]);
+  const open = windows.some(([f, t]) => now >= f && now <= t);
+  const next = windows.find(([f]) => f > now);
+  return { note: o[0], windows, open, next, known: true };
+}
+function otText(st) {
+  if (!st) return "Geen tijden bekend";
+  if (!st.known) return "Vandaag geen periode bekend";
+  if (!st.windows.length) return "Vandaag geen bediening";
+  return st.windows.map(([f, t]) => hm(f) + "–" + (t >= 1439 ? "24:00" : hm(t))).join(", ");
+}
+
+/* ---------- Formatteren ---------- */
+const fmt1 = v => v.toFixed(1).replace(".", ",");
+const fmt2 = v => v.toFixed(2).replace(".", ",");
+const fmtH = v => v == null ? "Onbekend" : fmt2(v) + " m";
+function spd(ms) { return S.unit === "kn" ? ms * 1.943844 : ms * 3.6; }
+function spdTxt(ms) { const v = spd(ms); return S.unit === "kn" && v < 20 ? fmt1(v) : String(Math.round(v)); }
+const unitTxt = () => S.unit === "kn" ? "knopen" : "km/u";
+function dur(s) { s = Math.floor(s); const h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return h ? h + ":" + pad(m) + ":" + pad(ss) : m + ":" + pad(ss); }
+
+/* ---------- Snelheidsfilter en stilligdetectie ---------- */
+const nav = {
+  t: 0, lat: null, lon: null, acc: 99, v: 0, raw: 0, course: null, moving: false, movSince: 0, stillSince: 0, limit: null
+};
+function onFix(f) { // f: {t (s), lat, lon, speed (m/s|null), heading|null, acc}
+  const dt = nav.t ? Math.max(0.05, Math.min(10, f.t - nav.t)) : 1;
+  let raw = f.speed;
+  if (raw == null || raw < 0) raw = nav.lat != null ? hav(nav, f) / dt : 0;
+  const tau = S.save ? 3.0 : 2.0;
+  const trust = f.acc > 25 ? 0.35 : 1;                     // slechte fix: minder gewicht
+  const a = (1 - Math.exp(-dt / tau)) * trust;
+  nav.v = nav.v + a * (raw - nav.v);
+  nav.raw = raw;
+  // Hysterese: varen boven 3,6 km/u, stil onder 1,8 km/u
+  if (!nav.moving && nav.v > 1.0) { if (!nav.movSince) nav.movSince = f.t; if (f.t - nav.movSince >= 3) { nav.moving = true; nav.stillSince = 0; } }
+  else if (nav.v <= 1.0) nav.movSince = 0;
+  if (nav.moving && nav.v < 0.5) { if (!nav.stillSince) nav.stillSince = f.t; if (f.t - nav.stillSince >= 5) nav.moving = false; }
+  else if (nav.v >= 0.5) nav.stillSince = 0;
+  // Koers: GPS-koers of peiling tussen fixes, cirkelvormig gladgestreken
+  if (nav.moving && nav.lat != null) {
+    let c = f.heading != null && f.heading >= 0 ? f.heading : (hav(nav, f) > 2 ? bearing(nav, f) : null);
+    if (c != null) {
+      if (nav.course == null) nav.course = c;
+      else { const r = Math.PI / 180, k = Math.min(1, dt / 1.5);
+        const sx = Math.sin(nav.course * r) * (1 - k) + Math.sin(c * r) * k, cx = Math.cos(nav.course * r) * (1 - k) + Math.cos(c * r) * k;
+        nav.course = (Math.atan2(sx, cx) / r + 360) % 360; }
+    }
+  }
+  const prev = nav.lat != null ? { lat: nav.lat, lon: nav.lon } : null;
+  nav.t = f.t; nav.lat = f.lat; nav.lon = f.lon; nav.acc = f.acc;
+  trip.update(f, prev, dt);
+  nav.limit = S.src === "demo" && S.demoLimit ? 12 / 3.6 : null;
+  warn.check();
+  ui.dirty = true; map.dirty = true;
+}
+
+/* ---------- Trip: automatisch starten en stoppen ---------- */
+const trip = {
+  cur: null, fastSince: 0,
+  update(f, prev, dt) {
+    const kmh = nav.v * 3.6;
+    if (!this.cur) {
+      if (kmh > 5) { if (!this.fastSince) this.fastSince = f.t; if (f.t - this.fastSince >= 20) this.start(f); }
+      else this.fastSince = 0;
+      return;
+    }
+    const c = this.cur;
+    c.end = f.t; c.wall = Date.now();
+    if (nav.moving) { c.moving += dt; if (prev && f.acc < 30) c.dist += hav(prev, f); if (nav.v > c.max) c.max = nav.v; c.stillSince = 0; }
+    else { if (!c.stillSince) c.stillSince = f.t; if (f.t - c.stillSince >= 180) this.stop(); }
+    const last = c.pts[c.pts.length - 1];
+    if (!last || f.t - last[2] >= 5) c.pts.push([+f.lat.toFixed(5), +f.lon.toFixed(5), f.t]);
+  },
+  start(f) { this.cur = { startWall: Date.now(), start: f.t, end: f.t, dist: 0, max: 0, moving: 0, pts: [], src: S.src }; this.fastSince = 0; },
+  stop() {
+    const c = this.cur; this.cur = null; if (!c) return;
+    if (c.dist > 200) { const list = store.get("trips", []); list.unshift({ date: c.startWall, dur: c.end - c.start, dist: c.dist, max: c.max,
+      avg: c.moving ? c.dist / c.moving : 0, moving: c.moving, pts: c.pts.map(p => [p[0], p[1]]), src: c.src }); store.set("trips", list.slice(0, 50)); renderTrips(); }
+  }
+};
+
+/* ---------- Waarschuwingen: brug en sluis vooruit ---------- */
+const warn = {
+  done: new Map(), active: null,
+  check() {
+    if (nav.lat == null) return;
+    const x = toX(nav.lon), y = toY(nav.lat), R = 800;
+    const near = query(x - R, y - R, x + R, y + R);
+    const need = S.boatH + S.margin;
+    // Vergeten wat ver achter ons ligt, zodat een terugweg opnieuw waarschuwt
+    for (const [id] of this.done) { const o = OBJ[id]; if (Math.hypot(o.x - x, o.y - y) > 1500) this.done.delete(id); }
+    if (this.active) { const o = this.active.o, d = Math.hypot(o.x - x, o.y - y);
+      if (d > this.active.d + 40 || (d < 25 && nav.moving && angDiff(bearing(nav, o), nav.course ?? 0) > 100)) this.hide(); else this.active.d = Math.min(this.active.d, d); }
+    if (!nav.moving || nav.course == null) return;
+    const reach = Math.min(R, Math.max(150, nav.v * 60));
+    let best = null;
+    for (const o of near) {
+      if (this.done.has(o.id)) continue;
+      const d = Math.hypot(o.x - x, o.y - y); if (d > reach) continue;
+      if (d > 20 && angDiff(bearing(nav, o), nav.course) > 35) continue;
+      if (o.k === 0 && o.hc != null && o.hc >= need) { this.done.set(o.id, 1); continue; } // past: geen melding
+      if (!best || d < best.d) best = { o, d };
+    }
+    if (best) { this.done.set(best.o.id, 1); this.show(best.o, best.d); }
+  },
+  show(o, d) {
+    const need = S.boatH + S.margin, el = $("alert");
+    let lvl = "info", lbl, head, msg;
+    if (o.k === 0) {
+      lbl = "Vaste brug · " + Math.round(d) + " m";
+      head = o.hc == null ? "Hoogte onbekend" : "Brug te laag";
+      lvl = "alarm";
+      msg = o.hc == null ? `${o.name}. Geen doorvaarthoogte in de data. Jouw boot: <span class="num">${fmt2(S.boatH)}</span> m.`
+        : `${o.name}. Doorvaart <span class="num">${fmt2(o.hc)}</span> m. Jouw boot: <span class="num">${fmt2(S.boatH)}</span> m.`;
+    } else {
+      const st = otStatus(o.ot, new Date());
+      lbl = KIND[o.k] + " · " + Math.round(d) + " m";
+      head = o.name;
+      const fits = o.k === 1 && o.hc != null && o.hc >= need;
+      const parts = [];
+      if (o.k === 1) parts.push(fits ? `Past dicht: <span class="num">${fmt2(o.hc)}</span> m.` : `Dicht <span class="num">${fmtH(o.hc)}</span>. Moet open.`);
+      parts.push(st && st.known ? (st.open ? "Nu in bediening." : "Nu niet in bediening.") + " Vandaag " + otText(st) + "." : "Bedieningstijden onbekend.");
+      if (o.vhf) parts.push("VHF " + o.vhf + "."); else if (o.tel) parts.push("Tel. " + o.tel + ".");
+      msg = parts.join(" ");
+      if (o.k === 1 && !fits && st && st.known && !st.open) lvl = "alarm";
+    }
+    $("alertLbl").textContent = lbl; $("alertHead").textContent = head; $("alertMsg").innerHTML = msg;
+    el.className = "alert kim " + lvl; el.hidden = false;
+    this.active = { o, d };
+    if (lvl === "alarm") beep();
+  },
+  hide() { $("alert").hidden = true; this.active = null; }
+};
+$("alertClose").onclick = () => warn.hide();
+
+let actx = null;
+function beep() {
+  try { if (!actx) return; const t = actx.currentTime;
+    for (let i = 0; i < 2; i++) { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = 1180; o.connect(g); g.connect(actx.destination);
+      g.gain.setValueAtTime(0.0001, t + i * .28); g.gain.exponentialRampToValueAtTime(0.4, t + i * .28 + .02); g.gain.exponentialRampToValueAtTime(0.0001, t + i * .28 + .2);
+      o.start(t + i * .28); o.stop(t + i * .28 + .22); }
+  } catch {}
+  try { navigator.vibrate && navigator.vibrate([200, 100, 200]); } catch {}
+}
+
+/* ---------- Positiebronnen ---------- */
+const source = {
+  watch: null, timer: null, demo: null,
+  stop() { if (this.watch != null) { try { navigator.geolocation.clearWatch(this.watch); } catch {} this.watch = null; } clearInterval(this.timer); this.timer = null; },
+  start() {
+    this.stop(); resetNav();
+    if (S.src === "gps") this.gps(); else this.startDemo();
+    ui.src();
+  },
+  gps() {
+    srcState = "zoekt";
+    if (!navigator.geolocation) { srcState = "geen"; ui.src(); return; }
+    try {
+      this.watch = navigator.geolocation.watchPosition(p => {
+        srcState = "live";
+        onFix({ t: p.timestamp / 1000, lat: p.coords.latitude, lon: p.coords.longitude, speed: p.coords.speed, heading: p.coords.heading, acc: p.coords.accuracy });
+        ui.src();
+      }, () => { srcState = "geen"; ui.src(); }, { enableHighAccuracy: !S.save, maximumAge: S.save ? 5000 : 0, timeout: 20000 });
+    } catch { srcState = "geen"; ui.src(); }
+  },
+  startDemo() {
+    srcState = "demo";
+    const route = demoRoute();
+    let t = 0, s = 0, v = 0, phase = 0; // phase 0 = stil, 1 = varen, 2 = aangekomen
+    const gauss = () => { let u = 0, w = 0; while (!u) u = Math.random(); while (!w) w = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * w); };
+    const step = () => {
+      t += 1;
+      if (phase === 0 && t > 8) phase = 1;
+      if (phase === 1) {
+        const ahead = query(...(() => { const p = route.at(s + 40); return [p.x - 50, p.y - 50, p.x + 50, p.y + 50]; })()).length > 0;
+        const target = s > route.len - 120 ? 0 : ahead ? 10 / 3.6 : 28 / 3.6;
+        v += Math.max(-1.2, Math.min(0.9, target - v));
+        s = Math.min(route.len, s + v);
+        if (s >= route.len - 1 && v < 0.3) { phase = 2; v = 0; }
+      }
+      const p = route.at(s);
+      const nx = gauss() * 2.5, ny = gauss() * 2.5;
+      const speed = phase === 1 ? Math.max(0, v + gauss() * 0.3) : Math.abs(gauss() * 0.35);
+      onFix({ t, lat: toLat(p.y + ny), lon: toLon(p.x + nx), speed, heading: phase === 1 && v > 0.8 ? (p.h + gauss() * 3 + 360) % 360 : null, acc: 5 });
+    };
+    step();
+    this.timer = setInterval(step, 1000 / S.tempo);
+  }
+};
+let srcState = "geen";
+function resetNav() { Object.assign(nav, { t: 0, lat: null, lon: null, acc: 99, v: 0, raw: 0, course: null, moving: false, movSince: 0, stillSince: 0, limit: null });
+  trip.cur = null; trip.fastSince = 0; warn.done.clear(); warn.hide(); ui.dirty = true; map.dirty = true; }
+
+function demoRoute() {
+  const ni = D.names.indexOf("Wurdumer Feart");
+  let f = FW.filter(f => f.ni === ni).sort((a, b) => b.a.length - a.a.length)[0] || FW[0];
+  const pts = []; for (let i = 0; i < f.a.length; i += 2) pts.push([f.a[i], f.a[i + 1]]);
+  // Start bij het noordelijke eind (Leeuwarden) en vaar naar het zuiden
+  if (pts[0][1] < pts[pts.length - 1][1]) pts.reverse();
+  const cum = [0]; for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  return { len: cum[cum.length - 1], at(s) {
+    let i = 1; while (i < cum.length - 1 && cum[i] < s) i++;
+    const a = pts[i - 1], b = pts[i], k = Math.max(0, Math.min(1, (s - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1)));
+    return { x: a[0] + (b[0] - a[0]) * k, y: a[1] + (b[1] - a[1]) * k, h: (Math.atan2(b[0] - a[0], b[1] - a[1]) * 180 / Math.PI + 360) % 360 };
+  } };
+}
+
+/* ---------- Kaart (canvas, eigen renderer) ---------- */
+const cv = $("map"), cx2 = cv.getContext("2d");
+const map = {
+  cx: 0, cy: 0, sc: 0.05, follow: true, dirty: true, w: 0, h: 0, dpr: 1, sel: null, hits: [],
+  resize() { const r = cv.getBoundingClientRect(); this.dpr = Math.min(2, window.devicePixelRatio || 1); this.w = r.width; this.h = r.height;
+    cv.width = Math.round(r.width * this.dpr); cv.height = Math.round(r.height * this.dpr); this.dirty = true; },
+  sx(x) { return (x - this.cx) * this.sc + this.w / 2; }, sy(y) { return this.h / 2 - (y - this.cy) * this.sc; },
+  wx(px) { return (px - this.w / 2) / this.sc + this.cx; }, wy(py) { return this.cy - (py - this.h / 2) / this.sc; },
+  draw() {
+    if (!this.w) return;
+    const c = cx2, need = S.boatH + S.margin, css = getComputedStyle(document.documentElement);
+    const col = n => css.getPropertyValue(n).trim();
+    const cLand = col("--land"), cWater = col("--water"), cFg = col("--fg"), cFg2 = col("--fg-2"), cWarn = col("--warn"), cAcc = col("--accent");
+    c.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    c.fillStyle = cLand; c.fillRect(0, 0, this.w, this.h);
+    if (this.follow && nav.lat != null) { this.cx = toX(nav.lon); this.cy = toY(nav.lat); }
+    const x0 = this.wx(0), x1 = this.wx(this.w), y0 = this.wy(this.h), y1 = this.wy(0);
+    // Vaarwegen
+    c.strokeStyle = cWater; c.lineCap = "round"; c.lineJoin = "round";
+    c.lineWidth = Math.max(1.4, Math.min(16, this.sc * 22));
+    c.beginPath();
+    const step = this.sc < 0.004 ? 4 : this.sc < 0.02 ? 2 : 1;
+    for (const f of FW) {
+      if (f.x1 < x0 || f.x0 > x1 || f.y1 < y0 || f.y0 > y1) continue;
+      const a = f.a, n = a.length;
+      c.moveTo(this.sx(a[0]), this.sy(a[1]));
+      for (let i = 2 * step; i < n; i += 2 * step) c.lineTo(this.sx(a[i]), this.sy(a[i + 1]));
+      if ((n / 2 - 1) % step) c.lineTo(this.sx(a[n - 2]), this.sy(a[n - 1]));
+    }
+    c.stroke();
+    // Objecten: alleen viewport; clusteren bij uitzoomen
+    const objs = query(x0, y0, x1, y1);
+    this.hits = [];
+    if (objs.length > 180 || this.sc < 0.01) {
+      const G = 56, cells = new Map();
+      for (const o of objs) { const k = Math.floor(this.sx(o.x) / G) + "," + Math.floor(this.sy(o.y) / G);
+        const e = cells.get(k) || cells.set(k, { n: 0, x: 0, y: 0 }).get(k); e.n++; e.x += o.x; e.y += o.y; }
+      c.font = "700 13px " + col("--font-num"); c.textAlign = "center"; c.textBaseline = "middle";
+      for (const e of cells.values()) {
+        const px = this.sx(e.x / e.n), py = this.sy(e.y / e.n), r = e.n > 99 ? 17 : e.n > 9 ? 14 : 11;
+        c.fillStyle = "rgba(14,14,14,.95)"; c.strokeStyle = cFg2; c.lineWidth = 1.5;
+        c.beginPath(); c.arc(px, py, r, 0, 7); c.fill(); c.stroke();
+        c.fillStyle = cFg; c.fillText(e.n, px, py + 0.5);
+        this.hits.push({ px, py, zoom: true, wx: e.x / e.n, wy: e.y / e.n });
+      }
+    } else {
+      for (const o of objs) {
+        const px = this.sx(o.x), py = this.sy(o.y), sel = this.sel === o;
+        const low = o.k === 0 && (o.hc == null || o.hc < need);
+        const unknown = o.k === 0 && o.hc == null;
+        c.save(); c.translate(px, py);
+        const s = sel ? 1.35 : 1;
+        c.scale(s, s);
+        if (o.k === 2) { // sluis: vierkant met twee deuren
+          c.fillStyle = "#0E0E0E"; c.strokeStyle = cFg; c.lineWidth = 2;
+          c.beginPath(); c.rect(-10, -10, 20, 20); c.fill(); c.stroke();
+          c.beginPath(); c.moveTo(-4, -6); c.lineTo(-4, 6); c.moveTo(4, -6); c.lineTo(4, 6); c.stroke();
+        } else { // brug: boog
+          c.fillStyle = low && !unknown ? cWarn : "#0E0E0E";
+          c.strokeStyle = low ? cWarn : cFg; c.lineWidth = 2;
+          c.beginPath(); c.arc(0, 0, 11, 0, 7); c.fill(); c.stroke();
+          c.strokeStyle = low && !unknown ? "#000" : (o.k === 1 ? cFg : cFg); c.lineWidth = 2.2;
+          c.beginPath(); c.moveTo(-6, 4); c.quadraticCurveTo(0, -6, 6, 4); c.stroke();
+          if (o.k === 1) { c.beginPath(); c.moveTo(-6, 4); c.lineTo(-6, -4); c.stroke(); }
+          if (unknown) { c.fillStyle = cWarn; c.beginPath(); c.arc(8, -8, 4, 0, 7); c.fill(); }
+        }
+        c.restore();
+        this.hits.push({ px, py, o });
+      }
+      if (this.sc > 0.12) { // namen bij inzoomen
+        c.font = "600 13px " + col("--font-body"); c.textAlign = "left"; c.textBaseline = "middle"; c.fillStyle = cFg2;
+        for (const o of objs) c.fillText(o.name, this.sx(o.x) + 16, this.sy(o.y));
+      }
+    }
+    // Boot
+    if (nav.lat != null) {
+      const px = this.sx(toX(nav.lon)), py = this.sy(toY(nav.lat));
+      const ar = Math.max(4, nav.acc * this.sc);
+      if (ar > 14) { c.fillStyle = "rgba(242,242,242,.08)"; c.beginPath(); c.arc(px, py, ar, 0, 7); c.fill(); }
+      c.save(); c.translate(px, py); c.rotate(((nav.course ?? 0) * Math.PI) / 180);
+      c.fillStyle = cAcc; c.strokeStyle = "#fff"; c.lineWidth = 2.5;
+      c.beginPath(); c.moveTo(0, -17); c.lineTo(11, 12); c.lineTo(0, 6); c.lineTo(-11, 12); c.closePath(); c.fill(); c.stroke();
+      c.restore();
+    }
+    // Schaal
+    const m = [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000].find(v => v * this.sc > 60) || 50000;
+    c.strokeStyle = cFg2; c.lineWidth = 2; c.beginPath(); const bx = 16, by = this.h - 18;
+    c.moveTo(bx, by - 5); c.lineTo(bx, by); c.lineTo(bx + m * this.sc, by); c.lineTo(bx + m * this.sc, by - 5); c.stroke();
+    c.fillStyle = cFg2; c.font = "700 12px " + col("--font-label"); c.textAlign = "left"; c.textBaseline = "bottom";
+    c.fillText(m >= 1000 ? m / 1000 + " KM" : m + " M", bx + 4, by - 6);
+    c.textAlign = "right"; c.fillText("© RWS VAARWEGINFORMATIE", this.w - 12, this.h - 10);
+  }
+};
+function setFollow(on) { map.follow = on; $("followBtn").classList.toggle("on", on); map.dirty = true; }
+$("followBtn").onclick = () => { setFollow(true); if (nav.lat != null && map.sc < 0.05) map.sc = 0.08; };
+function zoomAt(f, px, py) {
+  const wx = map.wx(px), wy = map.wy(py);
+  map.sc = Math.max(0.0008, Math.min(2.5, map.sc * f));
+  if (!map.follow) { map.cx = wx - (px - map.w / 2) / map.sc; map.cy = wy + (py - map.h / 2) / map.sc; }
+  map.dirty = true;
+}
+$("zoomIn").onclick = () => zoomAt(1.8, map.w / 2, map.h / 2);
+$("zoomOut").onclick = () => zoomAt(1 / 1.8, map.w / 2, map.h / 2);
+cv.addEventListener("wheel", e => { e.preventDefault(); zoomAt(Math.exp(-e.deltaY * 0.0015), e.offsetX, e.offsetY); }, { passive: false });
+const ptrs = new Map(); let gesture = null, moved = 0, lastTap = 0;
+cv.addEventListener("pointerdown", e => { cv.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, { x: e.offsetX, y: e.offsetY }); moved = 0; gesture = null; });
+cv.addEventListener("pointermove", e => {
+  const p = ptrs.get(e.pointerId); if (!p) return;
+  const nx = e.offsetX, ny = e.offsetY;
+  if (ptrs.size === 1) {
+    const dx = nx - p.x, dy = ny - p.y; moved += Math.abs(dx) + Math.abs(dy);
+    if (moved > 6) { if (map.follow) setFollow(false); map.cx -= dx / map.sc; map.cy += dy / map.sc; map.dirty = true; }
+  } else if (ptrs.size === 2) {
+    const [a, b] = [...ptrs.values()]; const before = Math.hypot(a.x - b.x, a.y - b.y);
+    p.x = nx; p.y = ny; const [a2, b2] = [...ptrs.values()]; const after = Math.hypot(a2.x - b2.x, a2.y - b2.y);
+    if (before > 0) zoomAt(after / before, (a2.x + b2.x) / 2, (a2.y + b2.y) / 2); moved = 99; return;
+  }
+  p.x = nx; p.y = ny;
+});
+const endPtr = e => {
+  const had = ptrs.delete(e.pointerId);
+  if (!had || moved > 6 || ptrs.size) return;
+  const now = Date.now();
+  if (now - lastTap < 280) { zoomAt(2, e.offsetX, e.offsetY); lastTap = 0; return; }
+  lastTap = now;
+  let best = null, bd = 30;
+  for (const h of map.hits) { const d = Math.hypot(h.px - e.offsetX, h.py - e.offsetY); if (d < bd) { bd = d; best = h; } }
+  if (!best) { map.sel = null; $("sheet").hidden = true; map.dirty = true; return; }
+  if (best.zoom) { setFollow(false); map.cx = best.wx; map.cy = best.wy; map.sc *= 2.5; map.dirty = true; return; }
+  showSheet(best.o);
+};
+cv.addEventListener("pointerup", endPtr); cv.addEventListener("pointercancel", e => ptrs.delete(e.pointerId));
+
+function showSheet(o) {
+  map.sel = o; map.dirty = true;
+  const need = S.boatH + S.margin, st = o.ot >= 0 ? otStatus(o.ot, new Date()) : null;
+  const fit = o.hc == null ? "" : o.hc >= need ? '<span class="tag ok">Past</span>' : '<span class="tag warn">Te laag</span>';
+  const rows = [["Type", KIND[o.k]]];
+  if (o.k !== 2) rows.push(["Doorvaart dicht", (o.hc == null ? "Onbekend" : `<span class="num">${fmt2(o.hc)}</span> m`) + (o.k === 0 || o.hc != null ? fit : "")]);
+  if (o.k === 1 && o.ho != null) rows.push(["Open", `<span class="num">${fmt2(o.ho)}</span> m`]);
+  if (o.k !== 2) rows.push(["Beweegbaar", o.k === 1 ? "Ja" : "Nee"]);
+  if (o.w) rows.push(["Breedte", `<span class="num">${fmt1(o.w)}</span> m`]);
+  if (o.k !== 0) rows.push(["Vandaag", st && st.known ? `${st.open ? "Nu in bediening" : "Nu dicht"} · ${otText(st)}` : otText(st)]);
+  rows.push(["VHF", o.vhf ? "Kanaal " + o.vhf : "Onbekend"]);
+  rows.push(["Telefoon", o.tel ? `<span class="sel">${o.tel}</span>` : "Onbekend"]);
+  const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  $("sheet").innerHTML = `<div class="h"><div style="flex:1;min-width:0"><div class="label">${esc(o.city || KIND[o.k])}</div><div class="head">${esc(o.name)}</div></div>
+    <button class="closebtn" id="sheetClose" aria-label="Sluiten"><svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+    <div class="rows">${rows.map(([k, v]) => `<div class="label">${k}</div><div class="v">${v}</div>`).join("")}</div>
+    ${st && st.note ? `<div class="note sel">${esc(st.note)}</div>` : ""}`;
+  $("sheet").hidden = false;
+  $("sheetClose").onclick = () => { $("sheet").hidden = true; map.sel = null; map.dirty = true; };
+}
+
+/* ---------- UI ---------- */
+const ui = {
+  dirty: true, view: "dash",
+  src() {
+    const chip = $("srcChip"), t = { live: "GPS", zoekt: "GPS zoekt", geen: "Geen GPS", demo: "Demo" }[srcState];
+    $("srcTxt").textContent = t; chip.className = "chip" + (srcState === "live" || srcState === "demo" ? " live on" : "");
+    $("srcNote").textContent = S.src === "gps"
+      ? (srcState === "geen" ? "Geen toegang tot GPS. In deze preview werkt alleen de demo; GPS werkt in de gehoste versie." : "Echte positie van dit toestel.")
+      : "Demo vaart over de Wurdumer Feart bij Leeuwarden.";
+  },
+  render() {
+    const over = nav.limit != null && nav.v > nav.limit + 0.3;
+    const v = nav.moving ? nav.v : 0, txt = spdTxt(v);
+    $("speedVal").textContent = txt; $("mapSpeedVal").textContent = txt;
+    $("speedUnit").textContent = unitTxt(); $("mapSpeedUnit").textContent = unitTxt();
+    $("speedBox").classList.toggle("over", over); $("mapSpeed").classList.toggle("over", over);
+    const lb = $("limitBadge");
+    if (nav.limit == null) { lb.className = "limit unknown"; lb.innerHTML = "<span>LIMIET<br>ONBEKEND</span>"; }
+    else { lb.className = "limit known" + (over ? " over" : ""); lb.innerHTML = `<span class="num">${Math.round(spd(nav.limit))}</span>`; }
+    $("stHeading").textContent = nav.course == null ? "—" : String(Math.round(nav.course) % 360).padStart(3, "0") + "°";
+    $("stHeadingTxt").textContent = nav.course == null ? "" : COMPASS[Math.round(nav.course / 22.5) % 16];
+    const c = trip.cur;
+    $("stDist").textContent = fmt1((c ? c.dist : 0) / 1000);
+    $("stMax").textContent = spdTxt(c ? c.max : 0); $("stMaxU").textContent = unitTxt();
+    $("stTime").textContent = dur(c ? c.moving : 0);
+    $("tripChip").textContent = c ? "Trip loopt" : "Geen trip"; $("tripChip").classList.toggle("on", !!c);
+    $("saveChip").hidden = !S.save;
+  }
+};
+function loop() {
+  if (ui.dirty) { ui.dirty = false; ui.render(); }
+  if (map.dirty && ui.view === "map") { map.dirty = false; map.draw(); }
+  requestAnimationFrame(loop);
+}
+
+document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
+  ui.view = b.dataset.view;
+  document.querySelectorAll(".tabs button").forEach(x => x.classList.toggle("on", x === b));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "view-" + ui.view));
+  if (ui.view === "map") { map.resize(); if (nav.lat == null && map.cx === 0) { map.cx = toX(5.6); map.cy = toY(52.6); map.sc = 0.0025; } }
+  if (ui.view === "trips") renderTrips();
+});
+addEventListener("resize", () => { if (ui.view === "map") map.resize(); });
+
+function seg(id, key, conv, after) {
+  const el = $(id), sync = () => el.querySelectorAll("button").forEach(b => b.classList.toggle("on", conv(b.dataset.v) === S[key]));
+  el.querySelectorAll("button").forEach(b => b.onclick = () => { S[key] = conv(b.dataset.v); persist(); sync(); after && after(); ui.dirty = true; map.dirty = true; });
+  sync();
+}
+const bool = v => v === "1";
+seg("unitSeg", "unit", v => v);
+seg("hcSeg", "hc", bool, applyHc);
+seg("saveSeg", "save", bool, () => { if (S.src === "gps") source.start(); });
+seg("srcSeg", "src", v => v, () => source.start());
+seg("tempoSeg", "tempo", Number, () => { if (S.src === "demo") { clearInterval(source.timer); source.startDemo(); } });
+seg("demoLimSeg", "demoLimit", bool);
+function applyHc() { document.documentElement.classList.toggle("hc", S.hc); map.dirty = true; }
+function stepper(minus, plus, val, key, lo, hi, stepV) {
+  const show = () => { document.querySelectorAll(val).forEach(e => e.textContent = fmt2(S[key]) + " m"); };
+  const ch = d => { S[key] = Math.round(Math.max(lo, Math.min(hi, S[key] + d)) * 100) / 100; persist(); show(); warn.done.clear(); map.dirty = true; };
+  minus.forEach(id => $(id).onclick = () => ch(-stepV)); plus.forEach(id => $(id).onclick = () => ch(stepV)); show();
+}
+$("ihVal").classList.add("hval"); $("hVal").classList.add("hval");
+stepper(["hMinus", "ihMinus"], ["hPlus", "ihPlus"], ".hval", "boatH", 0.5, 4, 0.05);
+stepper(["mMinus"], ["mPlus"], "#mVal", "margin", 0, 1, 0.05);
+
+function renderTrips() {
+  const list = store.get("trips", []), el = $("tripsList");
+  const fixed = OBJ.filter(o => o.k === 0).length, known = OBJ.filter(o => o.k === 0 && o.hc != null).length;
+  let html = `<h1 class="head title">Trips</h1>`;
+  if (!list.length) html += `<div class="empty kim"><div class="label">Nog geen trips</div><p>Een trip start vanzelf na 20 seconden boven 5 km/u en stopt na 3 minuten stilliggen. Start de demo om het te zien; op ×10 duurt een demovaart ongeveer twee minuten.</p></div>`;
+  list.forEach((t, i) => {
+    const d = new Date(t.date);
+    html += `<div class="card kim trip"><div class="label">${d.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" })} · ${pad(d.getHours())}:${pad(d.getMinutes())}${t.src === "demo" ? " · demo" : ""}</div>
+      <canvas data-i="${i}"></canvas>
+      <div class="g"><div><div class="label">Afstand</div><div class="num">${fmt1(t.dist / 1000)}<span class="sub">km</span></div></div>
+      <div><div class="label">Duur</div><div class="num">${dur(t.dur)}</div></div>
+      <div><div class="label">Top</div><div class="num">${spdTxt(t.max)}</div></div>
+      <div><div class="label">Gem.</div><div class="num">${spdTxt(t.avg)}</div></div></div></div>`;
+  });
+  html += `<p class="note">Bron bruggen en sluizen: RWS Vaarweginformatie. Van ${fixed} vaste bruggen hebben er ${known} een doorvaarthoogte.</p>`;
+  el.innerHTML = html;
+  el.querySelectorAll("canvas[data-i]").forEach(c => drawRoute(c, list[+c.dataset.i].pts));
+}
+function drawRoute(c, pts) {
+  const r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1); c.width = r.width * dpr; c.height = r.height * dpr;
+  const g = c.getContext("2d"); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+  if (pts.length < 2) return;
+  const xs = pts.map(p => toX(p[1])), ys = pts.map(p => toY(p[0]));
+  const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const sc = Math.min((r.width - 32) / ((x1 - x0) || 1), (r.height - 32) / ((y1 - y0) || 1));
+  const ox = (r.width - (x1 - x0) * sc) / 2, oy = (r.height - (y1 - y0) * sc) / 2;
+  const css = getComputedStyle(document.documentElement);
+  // vaarwegen rond de route
+  g.strokeStyle = css.getPropertyValue("--water").trim(); g.lineWidth = 6; g.lineCap = "round"; g.beginPath();
+  const bx0 = x0 - 16 / sc - ox / sc, bx1 = x1 + ox / sc, by0 = y0 - oy / sc, by1 = y1 + oy / sc;
+  for (const f of FW) { if (f.x1 < bx0 || f.x0 > bx1 || f.y1 < by0 || f.y0 > by1) continue;
+    for (let i = 0; i < f.a.length; i += 2) { const X = ox + (f.a[i] - x0) * sc, Y = r.height - oy - (f.a[i + 1] - y0) * sc; i ? g.lineTo(X, Y) : g.moveTo(X, Y); } }
+  g.stroke();
+  g.strokeStyle = css.getPropertyValue("--fg").trim(); g.lineWidth = 3; g.lineJoin = "round"; g.beginPath();
+  xs.forEach((x, i) => { const X = ox + (x - x0) * sc, Y = r.height - oy - (ys[i] - y0) * sc; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.stroke();
+  g.fillStyle = css.getPropertyValue("--accent").trim(); const ex = ox + (xs.at(-1) - x0) * sc, ey = r.height - oy - (ys.at(-1) - y0) * sc;
+  g.beginPath(); g.arc(ex, ey, 6, 0, 7); g.fill();
+}
+
+/* ---------- Scherm aan ---------- */
+let wakeLock = null;
+async function keepAwake() { try { if (navigator.wakeLock && document.visibilityState === "visible") wakeLock = await navigator.wakeLock.request("screen"); } catch {} }
+document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") keepAwake(); });
+
+/* ---------- Start ---------- */
+function begin(src) {
+  S.src = src; S.accepted = true; persist();
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume && actx.resume(); } catch {}
+  $("intro").hidden = true; keepAwake();
+  document.querySelectorAll("#srcSeg button").forEach(b => b.classList.toggle("on", b.dataset.v === S.src));
+  source.start();
+}
+$("startDemo").onclick = () => begin("demo");
+$("startGps").onclick = () => begin("gps");
+$("showDisc").onclick = () => { $("intro").hidden = false; };
+$("dataNote").textContent = `RWS Vaarweginformatie (FIS), geogeneratie ${D.gen}, gepubliceerd ${new Date(D.pub).toLocaleDateString("nl-NL", { day: "numeric", month: "long", year: "numeric" })}. ${OBJ.filter(o => o.k < 2).length} bruggen en ${OBJ.filter(o => o.k === 2).length} sluizen. Snelheidslimieten zitten niet in deze bron. Feestdagen tellen in deze preview nog niet mee voor bedieningstijden.`;
+applyHc(); ui.src(); renderTrips();
+$("intro").hidden = false;           // disclaimer en boothoogte bij elke start van de preview
+requestAnimationFrame(loop);
+</script>
