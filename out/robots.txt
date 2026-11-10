@@ -1,0 +1,26 @@
+User-Agent: *
+Allow: /
+Disallow: /bedankt/
+
+User-Agent: OAI-SearchBot
+Allow: /
+Disallow: /bedankt/
+
+User-Agent: ChatGPT-User
+Allow: /
+Disallow: /bedankt/
+
+User-Agent: PerplexityBot
+Allow: /
+Disallow: /bedankt/
+
+User-Agent: ClaudeBot
+Allow: /
+Disallow: /bedankt/
+
+User-Agent: Google-Extended
+Allow: /
+Disallow: /bedankt/
+
+Host: https://assaultboats.nl
+Sitemap: https://assaultboats.nl/sitemap.xml

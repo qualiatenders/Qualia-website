@@ -73,7 +73,7 @@ export const HERO = {
   eyebrow: 'Model 2026 · Gebouwd in Nederland',
   title: 'Assault 500',
   lead: 'Eén boot. Twee manieren om het water op te gaan.',
-  body: 'Een moderne aluminium V-jon van 5 meter. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
+  body: 'Een moderne aluminium visboot van 5 meter, gebouwd in Nederland. Open en ruim voor lange dagen op het water, of als Fish met werpdek en slimme opbergruimte.',
   cta: { label: 'Ontdek de Assault 500', href: '#assault-500' },
   media: media('render-aft-quarter', 'De Assault 500 schuin van achteren', 'Render · hero', '16 / 9', { tone: 'dark' }),
   stats: [
@@ -170,6 +170,21 @@ export const SPECS = [
   { label: 'Max. belading', value: '4 pers.', unit: '360 kg' },
   { label: 'Max. motor', value: '80', unit: 'pk' },
 ];
+
+/**
+ * CE-categorie staat bewust NIET in SPECS: acht specs delen gelijk door twee
+ * en vier kolommen, een negende maakt de laatste rij rafelig. Hij staat als
+ * losse regel onder het raster — en zo wordt een CE-indeling ook normaal
+ * vermeld.
+ *
+ * Bron: opgave van Assault Boats (10-11-2026). Stond niet eerder op de site
+ * of in de prijslijst.
+ */
+export const CE_CATEGORY = {
+  value: 'D',
+  label: 'CE-ontwerpcategorie',
+  note: 'Beschutte wateren',
+};
 
 export type GalleryItem = MediaSlot & { caption: string };
 
@@ -360,3 +375,81 @@ export const MOTORS = [
 
 /** "9.575" — Nederlandse notatie, zonder decimalen want dat zijn hele euro's. */
 export const euro = (n: number) => n.toLocaleString('nl-NL');
+
+/* ==================================================================
+   VEELGESTELDE VRAGEN — homepage
+
+   De zes vragen die kopers daadwerkelijk stellen voordat ze bellen, en
+   precies de vragen waarop een zoekmachine of een AI-assistent een kort,
+   citeerbaar antwoord zoekt. Daarom staan ze op de homepage en niet
+   weggestopt op een onderpagina.
+
+   Harde regel: elk antwoord bevat alleen wat elders op deze site of in de
+   prijslijst staat. Prijzen komen uit MODEL_PRICES, dus ze kunnen niet uit
+   elkaar lopen met de prijslijst.
+================================================================== */
+export const FAQ_HOME = [
+  {
+    q: 'Wat kost een aluminium visboot van 5 meter?',
+    a: `De Assault 500 kost € ${euro(MODEL_PRICES.open)} inclusief btw als open uitvoering en € ${euro(MODEL_PRICES.fish)} als Fish met vast werpdek. Dat is de prijs van de boot: een gelaste romp van 5,00 meter in 4 mm aluminium 5083, een zelflozend dek en tiller-besturing. Een buitenboordmotor, trailer en opties staan apart in de prijslijst.`,
+  },
+  {
+    q: 'Wat zijn de voordelen van een gelaste aluminium visboot?',
+    a: 'Aluminium is sterk ten opzichte van zijn gewicht en corrodeert niet: 5083 is zeewaterbestendig. Bij een gelaste romp zitten er geen klinknagels of popnagelnaden in die op den duur water gaan laten. Wij lassen elke naad aan de binnen- én de buitenzijde. En een kras in aluminium blijft een kras, waar polyester een gelcoatbreuk oploopt.',
+  },
+  {
+    q: 'Welke visboot is geschikt voor roofvissen?',
+    a: 'Voor roofvissen wil je staand kunnen werpen. Dat vraagt een vlak, verhoogd dek zonder banken of randen waar je lijn achter blijft haken, en een romp die niet meteen kantelt als je naar de zijkant loopt. De Assault 500 Fish is daarop ingericht: een vast aluminium werpdek voorin met drie afsluitbare bakken eronder, waaronder een aparte hengelberging.',
+  },
+  {
+    q: 'Wat is een jon boat?',
+    a: 'Een jon boat is een aluminium boot met een vlakke bodem en rechte zijden, van oorsprong gebouwd voor ondiep en beschut water. De Assault 500 is een V-jon: voorin een V die de golf breekt, naar achteren vlakker voor draagvlak en stabiliteit. Daarmee klapt hij minder dan een volledig vlakke bodem en ligt hij stiller dan een diepe V.',
+  },
+  {
+    q: 'Welke buitenboordmotor past op een Assault 500?',
+    a: `Het maximaal toegestane vermogen is 80 pk. Wij leveren de Assault 500 met Honda-buitenboordmotoren van ${MOTORS.map((m) => m.pk).join(', ').replace(/, (\d+)$/, ' en $1')} pk; die prijzen staan in de prijslijst. Welk vermogen bij jou past hangt af van hoe je vaart en wat je meeneemt — bel of mail, dan rekenen we het samen door.`,
+  },
+  {
+    q: 'Waar kan ik een Assault bekijken?',
+    a: 'Aan Dingstede 6 in Zwartsluis, op afspraak van maandag tot en met zaterdag. Bel 06 55 32 43 50 of mail info@assaultboats.nl en we zetten een moment in de agenda.',
+  },
+];
+
+/**
+ * De verwijzingen onder de vragen. Dit is de enige plek op de homepage waar
+ * de onderpagina's in de lopende inhoud staan — ze staan bewust niet in het
+ * hoofdmenu, want de site moet als één pagina voelen. Maar ze moeten wel via
+ * een gewone HTML-link te vinden zijn, voor een bezoeker én voor een crawler.
+ */
+export const FAQ_LINKS = [
+  {
+    label: 'Assault 500',
+    description: 'De open uitvoering: alle maten, materialen en wat er standaard op zit.',
+    href: '/assault-500/',
+  },
+  {
+    label: 'Assault 500 Fish',
+    description: 'De uitvoering als roofvisboot, met vast werpdek en hengelberging.',
+    href: '/assault-500-fish/',
+  },
+  {
+    label: 'Aluminium visboot kopen',
+    description: 'Waar je op let bij materiaal, plaatdikte, indeling en besturing.',
+    href: '/aluminium-visboot/',
+  },
+  {
+    label: 'Wat is een V-jon',
+    description: 'Tussen een vlakke jon boat en een diepe V in — en wat je inlevert.',
+    href: '/aluminium-v-jon/',
+  },
+  {
+    label: 'Over Assault',
+    description: 'Wie de boten bouwt, waar ze vandaan komen en waarom in aluminium.',
+    href: '/over-assault/',
+  },
+  {
+    label: 'Kom langs in Zwartsluis',
+    description: 'Dingstede 6, op afspraak. Zelf aan boord stappen zegt meer dan een render.',
+    href: '/contact/',
+  },
+];

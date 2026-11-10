@@ -1,6 +1,5 @@
 node_modules/
 .next/
-out/
 build/
 .DS_Store
 *.tsbuildinfo
@@ -16,6 +15,9 @@ next-env.d.ts
 
 # out/ (de statische export) staat bewust WEL in git: zo is de map die naar
 # TransIP moet altijd te downloaden zonder eerst lokaal te hoeven bouwen.
+# Daarom staat out/ hierboven NIET in de negeerlijst: stond hij er wel, dan
+# moest elk nieuw bestand met de hand geforceerd worden toegevoegd, en dat
+# ging mis — de helft van de export ontbrak in git.
 
 # het ZIP-bestand is alleen een kopie van out/, dat al in git staat
 /assaultboats-website.zip

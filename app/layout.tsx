@@ -4,7 +4,7 @@ import { Analytics } from '@/components/Analytics';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
 import { StickyCTA } from '@/components/StickyCTA';
-import { jsonLd, organizationSchema } from '@/lib/seo';
+import { jsonLd, organizationSchema, websiteSchema } from '@/lib/seo';
 import { SITE, SITE_URL } from '@/lib/site';
 import './globals.css';
 
@@ -74,6 +74,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           gegevens te herhalen.
         */}
         <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(organizationSchema())} />
+        {/*
+          WebSite bindt de merknaam aan het domein. Hij verwijst via @id naar
+          de Organization hierboven, zodat beide als één geheel worden gelezen.
+        */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={jsonLd(websiteSchema())} />
       </head>
       <body>
         <noscript>

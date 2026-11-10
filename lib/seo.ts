@@ -100,6 +100,26 @@ export const organizationSchema = () => ({
   },
 });
 
+/**
+ * WebSite-schema. Doet twee dingen: het bindt de naam van de site aan het
+ * domein (zodat een zoekmachine "Assault Boats" als merknaam leest en niet
+ * als losse woorden), en het verklaart de zoekfunctie — die we niet hebben,
+ * dus geen SearchAction. Liever een eerlijk, klein schema dan een
+ * potentialAction die naar een pagina wijst die niet bestaat.
+ */
+export const websiteSchema = () => ({
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: SITE.name,
+  alternateName: 'Assault',
+  description:
+    'Aluminium visboten uit Nederland. De Assault 500 is een gelaste aluminium V-jon van 5 meter, open of als Fish met vast werpdek.',
+  inLanguage: SITE.lang,
+  publisher: { '@id': `${SITE_URL}/#organization` },
+});
+
 export const breadcrumbSchema = (trail: { name: string; path: string }[]) => ({
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
@@ -117,6 +137,7 @@ export const breadcrumbSchema = (trail: { name: string; path: string }[]) => ({
  * verandert. Beide komen uit lib/content.ts, dus dat gebeurt vanzelf.
  */
 export const productSchema = ({
+  id,
   name,
   description,
   path,
@@ -124,6 +145,13 @@ export const productSchema = ({
   price,
   extraProperties = [],
 }: {
+  /**
+   * Vast fragment, bijvoorbeeld 'product-assault-500'. Dezelfde boot kan op
+   * meer dan één pagina in de structured data staan (de homepage én de
+   * modelpagina). Met een gelijk @id en een gelijke url leest Google dat als
+   * één product in plaats van twee die met elkaar concurreren.
+   */
+  id: string;
   name: string;
   description: string;
   path: string;
@@ -133,6 +161,7 @@ export const productSchema = ({
 }) => ({
   '@context': 'https://schema.org',
   '@type': 'Product',
+  '@id': `${SITE_URL}/#${id}`,
   name,
   description,
   url: absoluteUrl(path),

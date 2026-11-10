@@ -72,11 +72,12 @@ export const P_ASSAULT_500 = {
 export const P_FISH = {
   eyebrow: 'Model · Assault 500 Fish',
   title: 'Assault 500 Fish',
-  lead: 'Dezelfde romp van 5 meter, maar met een vast aluminium werpdek voorin en drie afsluitbare opbergbakken eronder.',
+  lead: 'Dezelfde romp van 5 meter, ingericht als roofvisboot: een vast aluminium werpdek voorin en drie afsluitbare opbergbakken eronder.',
   intro: {
     title: 'Gebouwd om te vissen.',
     body: [
       'De Fish is de Assault 500 met een visindeling. Voorin ligt een groot vast werpdek van aluminium. Daaronder zitten drie afsluitbare opbergbakken, waarvan er één is ingericht voor je hengels.',
+      'Dat is de indeling waar je op snoek, baars en snoekbaars wat aan hebt: je staat hoog en vrij, en wat je meeneemt zit onder het dek in plaats van eromheen.',
       'Het idee is simpel: alles wat je aan boord meeneemt heeft een plek, zodat het dek waarop je staat leeg blijft.',
     ],
   },
@@ -208,7 +209,8 @@ export const P_VJON = {
   wat: {
     title: 'Van jon boat naar V-jon',
     body: [
-      'Een klassieke jon boat heeft een vlakke bodem en rechte zijden. Simpel te bouwen, licht, en hij ligt stil als een vlot — daarom is het van oorsprong een boot voor ondiep, beschut water.',
+      'Een klassieke jon boat heeft een vlakke bodem en rechte zijden. Simpel te bouwen, licht, en hij ligt stil als een vlot — daarom is het van oorsprong een boot voor ondiep, beschut water. In Nederland zie je ze vooral in aluminium, op plassen en kanalen.',
+      'Het woord platbodem wordt hier meestal voor traditionele zeilschepen gebruikt, maar het zegt letterlijk iets over de bodem. In die zin is een jon boat een aluminium platbodem: geen kiel, geen V, gewoon plat.',
       'Het nadeel merk je zodra er golfslag staat. Een vlakke bodem heeft niets om doorheen te snijden, dus die klapt op het water in plaats van erdoorheen te gaan.',
       'Een V-jon lost dat halverwege op: voorin een V die de golf breekt, naar achteren toe vlakker voor draagvlak en stabiliteit. Je levert wat comfort in ten opzichte van een diepe V, en je krijgt er stabiliteit en ondiepe gang voor terug.',
     ],

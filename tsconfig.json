@@ -17,5 +17,8 @@
     "paths": { "@/*": ["./*"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  // grotech/ is een los project met zijn eigen tsconfig en next.config. Zonder
+  // deze uitsluiting trekt de typecheck van de Assault-build die bestanden mee
+  // en faalt hij op imports die daar naar hun eigen lib/ verwijzen.
+  "exclude": ["node_modules", "grotech"]
 }

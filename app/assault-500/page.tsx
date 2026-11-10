@@ -10,10 +10,10 @@ import { breadcrumbSchema, faqSchema, jsonLd, pageMetadata, productSchema } from
 
 export const metadata = pageMetadata({
   route: 'assault-500',
-  title: 'Assault 500 — aluminium V-jon van 5 meter',
-  ogTitle: 'Assault 500 — aluminium V-jon van 5 meter',
+  title: 'Assault 500 — aluminium visboot van 5 meter',
+  ogTitle: 'Assault 500 — aluminium visboot van 5 meter',
   description:
-    'De Assault 500 is een aluminium V-jon van 5,00 m in 4 mm 5083, binnen en buiten gelast. Zelflozend dek, tiller standaard, max. 80 pk. Vanaf € 9.575 incl. btw.',
+    'Aluminium visboot van 5 meter in 4 mm 5083, binnen en buiten gelast. Zelflozend dek, tiller standaard, buitenboordmotor tot 80 pk. Vanaf € 9.575 incl. btw.',
 });
 
 const kruimels = [
@@ -30,6 +30,7 @@ export default function Assault500Page() {
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLd(
           productSchema({
+            id: 'product-assault-500',
             name: 'Assault 500',
             description:
               'Aluminium V-jon van 5,00 meter in 4 mm 5083, binnen en buiten gelast, met zelflozend dek en tiller-besturing als standaard.',
@@ -43,6 +44,7 @@ export default function Assault500Page() {
               { name: 'Gewicht romp', value: '320 kg' },
               { name: 'Maximaal motorvermogen', value: '80 pk' },
               { name: 'Besturing', value: 'Tiller standaard, stuurconsole optioneel' },
+              { name: 'CE-ontwerpcategorie', value: 'D (beschutte wateren)' },
             ],
           }),
         )}

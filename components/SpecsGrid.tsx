@@ -1,4 +1,5 @@
 import { SPECS, SPECS_PLAN } from '@/lib/content';
+import { CeCategory } from './SpecList';
 import { Media } from './Media';
 import { Reveal } from './Reveal';
 import { SectionHeader } from './SectionHeader';
@@ -8,7 +9,8 @@ import { SectionHeader } from './SectionHeader';
  *
  * One strict grid: two columns on a phone, four from the small breakpoint
  * up. Eight specs divide evenly into both, so no row is ever left ragged
- * and every hairline lines up across the block.
+ * and every hairline lines up across the block. The CE design category
+ * therefore sits under the grid as its own line, not as a ninth cell.
  */
 export function SpecsGrid() {
   return (
@@ -65,6 +67,7 @@ export function SpecsGrid() {
             </Reveal>
           ))}
         </dl>
+        <CeCategory />
       </div>
     </section>
   );

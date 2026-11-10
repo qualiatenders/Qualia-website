@@ -8,10 +8,10 @@ import { breadcrumbSchema, jsonLd, pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
   route: 'aluminium-v-jon',
-  title: 'Aluminium V-jon — wat het is en hoe het vaart',
-  ogTitle: 'Aluminium V-jon — wat het is en hoe het vaart',
+  title: 'Aluminium V-jon en jon boat in Nederland',
+  ogTitle: 'Aluminium V-jon en jon boat in Nederland',
   description:
-    'Een V-jon zit tussen een vlakke jon boat en een diepe V in. Uitleg over vaargedrag, stabiliteit, ondiepe gang, materiaal en motorisering — inclusief wat je inlevert.',
+    'Een V-jon zit tussen een vlakke jon boat en een diepe V in. Uitleg over vaargedrag, stabiliteit, ondiepe gang en motorisering — inclusief wat je inlevert.',
 });
 
 const kruimels = [

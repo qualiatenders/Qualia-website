@@ -9,7 +9,7 @@ import { COMPANY, MAPS_URL } from '@/lib/site';
 
 export const metadata = pageMetadata({
   route: 'over-assault',
-  title: 'Over Assault — aluminium bootbouwer in Zwartsluis',
+  title: 'Aluminium bootbouwer in Zwartsluis',
   ogTitle: 'Over Assault Boats',
   description:
     'Assault Boats bouwt aluminium V-jons in Zwartsluis. Eén model, twee opbouwen, binnen en buiten gelast. Kom langs in de werkplaats.',

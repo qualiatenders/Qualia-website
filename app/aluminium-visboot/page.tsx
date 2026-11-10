@@ -7,10 +7,10 @@ import { breadcrumbSchema, jsonLd, pageMetadata } from '@/lib/seo';
 
 export const metadata = pageMetadata({
   route: 'aluminium-visboot',
-  title: 'Aluminium visboot kiezen — waar je op let',
-  ogTitle: 'Aluminium visboot kiezen',
+  title: 'Aluminium visboot kopen — waar je op let',
+  ogTitle: 'Aluminium visboot kopen — waar je op let',
   description:
-    'Materiaal, indeling, romp en besturing: waar je op let als je een aluminium visboot koopt. Praktische uitleg van een Nederlandse aluminium bootbouwer.',
+    'Materiaal, plaatdikte, indeling, romp en besturing: waar je op let als je een aluminium visboot wilt kopen. Praktische uitleg van een Nederlandse bootbouwer.',
 });
 
 const kruimels = [

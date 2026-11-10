@@ -10,10 +10,10 @@ import { breadcrumbSchema, faqSchema, jsonLd, pageMetadata, productSchema } from
 
 export const metadata = pageMetadata({
   route: 'assault-500-fish',
-  title: 'Assault 500 Fish — aluminium visboot met werpdek',
-  ogTitle: 'Assault 500 Fish — aluminium visboot met werpdek',
+  title: 'Assault 500 Fish — aluminium roofvisboot',
+  ogTitle: 'Assault 500 Fish — aluminium roofvisboot met werpdek',
   description:
-    'Aluminium visboot van 5 meter met een vast werpdek voorin en drie afsluitbare opbergbakken, waaronder een aparte hengelberging. € 10.375 incl. btw.',
+    'Roofvisboot van 5 meter in gelast aluminium, met vast werpdek voorin en drie afsluitbare opbergbakken, waaronder een aparte hengelberging. € 10.375 incl. btw.',
 });
 
 const kruimels = [
@@ -30,6 +30,7 @@ export default function FishPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={jsonLd(
           productSchema({
+            id: 'product-assault-500-fish',
             name: 'Assault 500 Fish',
             description:
               'Aluminium visboot van 5,00 meter met een vast aluminium werpdek voorin en drie geïntegreerde afsluitbare opbergbakken, waaronder een aparte hengelberging.',
@@ -43,6 +44,7 @@ export default function FishPage() {
               { name: 'Werpdek', value: 'Vast aluminium werpdek voorin' },
               { name: 'Berging', value: 'Drie afsluitbare opbergbakken' },
               { name: 'Maximaal motorvermogen', value: '80 pk' },
+              { name: 'CE-ontwerpcategorie', value: 'D (beschutte wateren)' },
             ],
           }),
         )}
